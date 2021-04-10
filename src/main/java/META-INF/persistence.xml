@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+	<persistence-unit name="QuizOnline">
+		<class>hl.quizonline.entity.Account</class>
+		<class>hl.quizonline.entity.Category</class>
+		<class>hl.quizonline.entity.Answer</class>
+		<class>hl.quizonline.entity.ExamPackage</class>
+		<class>hl.quizonline.entity.Examination</class>
+		<class>hl.quizonline.entity.Image</class>
+		<class>hl.quizonline.entity.JoinExamination</class>
+		<class>hl.quizonline.entity.JoinExaminationPK</class>
+		<class>hl.quizonline.entity.Question</class>
+		<class>hl.quizonline.entity.Role</class>
+	</persistence-unit>
+</persistence>
