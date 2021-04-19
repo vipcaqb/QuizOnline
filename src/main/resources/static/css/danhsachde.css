@@ -1,0 +1,16 @@
+#content{
+	margin-top: 100px;
+	}
+.card{
+	width: 32%;
+	margin-top: 20px;
+	background: white;
+	box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
+	padding: 20px;
+}
+
+#main-content{
+	display: flex;	
+	flex-wrap: wrap;
+	justify-content: space-between;
+}

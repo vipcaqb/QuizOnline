@@ -24,4 +24,28 @@ public class ExamPackageImpl implements ExamPackageService {
 		List<ExamPackage> list = Arrays.asList(eP1,eP2,eP3,eP4);
 		return list;
 	}
+
+	@Override
+	public List<ExamPackage> findWith(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void create(String username, ExamPackage examPackage) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(String username, Integer examPackageID) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(String username, ExamPackage examPackage) {
+		// TODO Auto-generated method stub
+		
+	}
 }

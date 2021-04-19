@@ -23,34 +23,23 @@ public class AccountController {
 		return "login";
 	}
 	
-	@PostMapping("/login")
-	@ResponseBody
-	public String login(@RequestParam String username, @RequestParam String password) {
-		Boolean loginSuccess = accountService.checkLogin(username, password);
-		if(loginSuccess) {
-			return "thanh cong";
-		}
-		else {
-			return "that bai";
-		}
-	}
-	
 	@GetMapping("/register")
 	public String registerForm(Model model) {
-		model.addAttribute("message","trang dang ky");
-		return "index";
+		return "register";
 	}
 	
 	@PostMapping("/register")
-	public String register(@ModelAttribute Account account,Model model) {
-		Account acc = new Account();
-		acc.setUsername("vipcaqb");
-		acc.setPassword("1234");
-		acc.setFullname("Hoang Loc");
-		acc.setGender(Gender.MALE);
+	public String register(@ModelAttribute Account acc,Model model) {
+		System.out.println("post register");
+		acc.setRole("ROLE_STUDENT");
+		acc.setEnable(true);
 		accountService.registerAccount(acc);
-		model.addAttribute("message","dang ky thanh cong");
-		return "index";
+		
+		return "redirect:/profile";
 	}
 	
+	@GetMapping("/profile")
+	public String showProfile(Model model){
+		return "manage/profile";
+	}
 }

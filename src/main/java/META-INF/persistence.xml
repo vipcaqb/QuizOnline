@@ -10,6 +10,7 @@
 		<class>hl.quizonline.entity.JoinExamination</class>
 		<class>hl.quizonline.entity.JoinExaminationPK</class>
 		<class>hl.quizonline.entity.Question</class>
-		<class>hl.quizonline.entity.Role</class>
+		<class>hl.quizonline.entity.MailBox</class>
+		<class>hl.quizonline.entity.MailTo</class>
 	</persistence-unit>
 </persistence>

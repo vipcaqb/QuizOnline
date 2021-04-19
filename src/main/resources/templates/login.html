@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+	<title>Login</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+	<!--===============================================================================================-->
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+	
+	<!--===============================================================================================-->
+	<link rel="stylesheet" th:href="@{/css/login.css}">
+<!--===============================================================================================-->
 </head>
 <body>
-
+<div class="login-page">
+  <div class="form">
+    <form class="login-form" action="/login" method="post">
+    	<h4>Đăng nhập</h4>
+      <input type="text" placeholder="username" name="username"/>
+      <input type="password" placeholder="password" name="password"/>
+      <button>login</button>
+      <p class="message">Chưa có tài khoản? <a th:href="@{/register}">Đăng ký tài khoản</a></p>
+    </form>
+  </div>
+</div>
 </body>
 </html>

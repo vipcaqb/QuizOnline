@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.Account;
@@ -18,9 +19,13 @@ import hl.quizonline.service.AccountService;
 public class AccountServiceImpl implements AccountService{
 	@Autowired
 	AccountRepository accRepository;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Override
 	public void registerAccount(Account acc) {
+		acc.setPassword(passwordEncoder.encode(acc.getPassword()));
 		Optional<Account> rs = accRepository.findByUsername(acc.getUsername());
 		if(rs.isEmpty()) {
 			accRepository.save(acc);

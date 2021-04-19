@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Login</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+	<!--===============================================================================================-->
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+	
+	<!--===============================================================================================-->
+	<link rel="stylesheet" th:href="@{/css/login.css}">
+<!--===============================================================================================-->
+</head>
+<body>
+<div class="login-page">
+  <div class="form">
+    <form class="register-form" action="/register" method="post"> 
+    	<h4>Đăng ký</h4>
+    	<input type="text" placeholder="Username" name="username"/>
+      	<input type="text" placeholder="Họ và tên" name="fullname"/>
+      	<input type="password" placeholder="Mật khẩu" name = "password"/>
+      	<input type="password" placeholder="Nhập lại mật khẩu"/>
+      	<input type="date" placeholder="Ngày sinh" name="dateOfBirth">
+      	<select name="gender">
+		  <option value="MALE">Nam</option>
+		  <option value="FEMALE">Nữ</option>
+		  <option value="OTHER">Khác</option>
+		</select>
+      	<button>create</button>
+      	<p class="message">Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a></p>
+    </form>
+  </div>
+</div>
+</body>
+</html>

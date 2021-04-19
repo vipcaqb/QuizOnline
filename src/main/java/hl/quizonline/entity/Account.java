@@ -5,6 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Nationalized;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import hl.quizonline.enumrable.Gender;
 
@@ -25,7 +26,8 @@ public class Account implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int accountID;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
 	
 	@Column
@@ -46,12 +48,17 @@ public class Account implements Serializable {
 	private String username;
 	
 	@Column
+	private String phone;
+	
+	@Column
+	private String email;
+	
+	@Column
 	private Boolean enable;
 
-	//bi-directional many-to-one association to Role
-	@ManyToOne
-	@JoinColumn(name="roleID")
-	private Role role;
+
+	@JoinColumn(name="role")
+	private String role;
 
 	//bi-directional many-to-one association to ExamPackage
 	@OneToMany(mappedBy="account")
@@ -65,7 +72,7 @@ public class Account implements Serializable {
 	}
 
 	public Account(int accountID, Date dateOfBirth, @NotBlank String fullname, String password, Gender gender,
-			String urlAvatar, String username, Role role, List<ExamPackage> examPackages,
+			String urlAvatar, String username, Boolean enable, String role, List<ExamPackage> examPackages,
 			List<JoinExamination> joinExaminations) {
 		super();
 		this.accountID = accountID;
@@ -75,6 +82,7 @@ public class Account implements Serializable {
 		this.gender = gender;
 		this.urlAvatar = urlAvatar;
 		this.username = username;
+		this.enable = enable;
 		this.role = role;
 		this.examPackages = examPackages;
 		this.joinExaminations = joinExaminations;
@@ -144,12 +152,28 @@ public class Account implements Serializable {
 		this.username = username;
 	}
 
-	public Role getRole() {
+	public String getRole() {
 		return this.role;
 	}
 
-	public void setRole(Role role) {
+	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public List<ExamPackage> getExamPackages() {
@@ -196,23 +220,13 @@ public class Account implements Serializable {
 		return joinExamination;
 	}
 
-	public Account(int accountID, Date dateOfBirth, String fullname, String password, String urlAvatar, String username,
-			Role role, List<ExamPackage> examPackages, List<JoinExamination> joinExaminations) {
-		super();
-		this.accountID = accountID;
-		this.dateOfBirth = dateOfBirth;
-		this.fullname = fullname;
-		this.password = password;
-		this.urlAvatar = urlAvatar;
-		this.username = username;
-		this.role = role;
-		this.examPackages = examPackages;
-		this.joinExaminations = joinExaminations;
-	}
-
 	@Override
 	public String toString() {
-		return "Account [password=" + password + ", username=" + username + "]";
+		return "Account [dateOfBirth=" + dateOfBirth + ", fullname=" + fullname + ", password=" + password + ", gender="
+				+ gender + ", urlAvatar=" + urlAvatar + ", username=" + username + ", enable=" + enable + ", role="
+				+ role + "]";
 	}
+
+	
 
 }

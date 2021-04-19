@@ -3,6 +3,7 @@ package hl.quizonline.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,17 +35,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-	        .authorizeRequests()
-	        	.antMatchers("/", "/home","/js/**","/css/**","/webjars/**")
-	        	.permitAll() 
-	        .anyRequest()
-	        	.authenticated()
+        .csrf().disable()
+			.authorizeRequests()
+		    	.antMatchers("/", "/home","/js/**","/css/**","/webjars/**","/images/**","/fonts/**","/register","/test","/assets/**",
+		    			"/listexam")
+		    		.permitAll()
+		    	.antMatchers("/profile").hasAnyRole("STUDENT","CREATOR")	
+		    	.antMatchers("/admin/**").hasRole("ADMIN")
+		    	.antMatchers(HttpMethod.POST,"/register")
+					.permitAll()
+				.anyRequest().authenticated()
         .and()
 	        .formLogin()
-	        .defaultSuccessUrl("/hello")
+	        .loginPage("/login")
+	        .defaultSuccessUrl("/home")
 	        .permitAll()
         .and()
 	        .logout()
 	        .permitAll();
+	    
+	    	
     }
 }
