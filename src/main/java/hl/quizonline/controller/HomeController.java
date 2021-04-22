@@ -23,4 +23,10 @@ public class HomeController {
 	public String showListExamination() {
 		return "examlist";
 	}
+	
+	@GetMapping(value = "/examdetail/{examPackageID}")
+	public String examDetailShow(Model model) {
+		return "exam-detail";
+	}
+	
 }

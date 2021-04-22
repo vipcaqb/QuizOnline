@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>admin</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- VENDOR CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<link rel="stylesheet" th:href="@{/css/manage-exam.css}">
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<!-- GOOGLE FONTS -->
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
+	rel="stylesheet">
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/assets/img/apple-icon.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/assets/img/favicon.png}">
+<link rel = "stylesheet" th:href="@{/css/mystyle.css}">
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:insert="/admin/shared/navbar::navbar"></div>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<div th:insert="/admin/shared/sidebar::sidebar"></div>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="">
+				<div class="panel" style="padding: 0 40px;">
+					<div class="panel-heading">
+						<div class="panel-title">Thêm mới bộ đề</div>
+					</div>
+					<form action="/manage/exam/addpackage" method="post" enctype="multipart/form-data">
+						
+						<div class="form-group">
+							<label>Tiêu đề:</label>
+							<input class="form-control" type="text" name="examPackageTitle">
+						</div>
+						
+						<div class="form-group">
+							<label>Danh mục</label>
+							<select name="categoryID" multiple="multiple" class="form-control" >
+								<th:block th:each="category: ${categoryList}">
+									<option th:value ="${category.categoryID}" th:utext="${category.categoryName}">
+										
+									</option>
+								</th:block>
+							</select>
+						</div>
+						
+						<div class="form-check">
+							<label>Đề ôn tập:</label>
+							<input id="exerciseExam" class="form-check-input" type="checkbox" value="1" name ="isExerciseExam">
+						</div>
+						
+						<div id="startTime">
+						<div class="form-group">
+							<label>Thời gian bắt đầu thi:</label>
+							<input type="datetime-local" name="startDatetime">
+						</div>
+						
+						<div class="form-group">
+							<label>Thời gian làm bài (phút) :</label>
+							<input class="form-control" type="number" name = "doExamTime" required>
+						</div>
+						</div>
+						
+						<div class="form-group">
+							<label>Xáo trộn câu hỏi :</label>
+							<input class="form-check-input" type="checkbox" name="isMix" value="1" >
+						</div>
+						
+						<div class="form-group">
+							<label>Dùng mật khẩu:</label>
+							<input id="usePass" class="form-check-input" type="checkbox" name="usePass" value="1" >
+						</div>
+						
+						<div id="pass" class="form-group">
+							<label>Mật khẩu :</label>
+							<input class="form-control" type="text" name="pass">
+						</div>
+						
+						<div class="mb-3">
+							<button class="btn btn-success">Xác nhận</button>
+							<button class="btn btn-secondary">Reset</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			//set defaul inteface
+			
+			if(!$('#userPass').prop('checked')){
+				$('#pass').prop('hidden',true);
+			}
+			//change when check
+			// exercise
+			$('#exerciseExam').click(function(){
+				if($('#exerciseExam').prop('checked')){
+					$('#startTime').prop('hidden',true);
+				}
+				else {
+					$('#startTime').prop('hidden',false);
+				}
+			})
+			
+			//pass
+			$('#usePass').click(function(){
+				if($('#usePass').prop('checked')){
+					$('#pass').prop('hidden',false);
+				}
+				else {
+					$('#pass').prop('hidden',true);
+				}
+			})
+			
+		})
+	</script>
+</body>
+
+</html>

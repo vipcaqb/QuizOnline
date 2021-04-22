@@ -70,4 +70,10 @@ public class AccountServiceImpl implements AccountService{
 		}
 	}
 
+
+	@Override
+	public Optional<Account> getAccountByUsername(String username) {
+		return accRepository.findByUsername(username);
+	}
+
 }

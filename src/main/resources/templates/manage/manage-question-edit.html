@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>admin</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- VENDOR CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<link rel="stylesheet" th:href="@{/css/manage-exam.css}">
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<!-- GOOGLE FONTS -->
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
+	rel="stylesheet">
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/assets/img/apple-icon.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/assets/img/favicon.png}">
+<link rel="stylesheet" th:href="@{/css/mystyle.css}">
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:insert="/admin/shared/navbar::navbar"></div>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<div th:insert="/admin/shared/sidebar::sidebar"></div>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="">
+				<div class="panel" style="padding: 0 40px;">
+					<div class="panel-heading">
+						<div class="panel-title" th:utext="@{'Thêm câu hỏi cho gói câu hỏi: ' + ${questionPackage.name}}"></div>
+					</div>
+					<div class="row">
+						<a class="btn btn-info">Thêm bằng file excel</a>
+						<form class="col-md-6" th:action="@{'/manage/question/addquestion/'+${questionPackage.questionPackageID}}" method="post">
+							<div class="form-group">
+								<label for="exampleFormControlInput1">Danh sách ảnh</label>
+								<div class="alert alert-info">Trống</div>
+								<input type="file">
+							</div>
+							<div class="form-group">
+								<label for="exampleFormControlInput1">Nội dung câu hỏi</label>
+								<input type="text" class="form-control" name = "content" th:value="${question.questionContent}"
+									id="exampleFormControlInput1" placeholder="nội dung">
+							</div>
+							<div>
+								<label>
+									Số phương án
+									<input class="form-control" type="number" value="4">
+								</label>
+							</div>
+							<label>Phương án</label>
+							<th:block th:each="answer,itor : ${question.answers}">
+								<div style="margin-bottom:10px;">
+									<input th:if="${answer.idCorrect}==true" checked="checked" type="checkbox" th:value="${itor.index+1}" name="cb-pa" class="form-check-label">
+									<input th:if="${answer.idCorrect}==false" type="checkbox" th:value="${itor.index+1}" name="cb-pa" class="form-check-label">
+									
+									<input type="text" name ="txt-pa" th:value="${answer.answerContent}"
+									style="width:90%;background: #fcfcfc;outline:none; border:#ebebeb solid 1px;box-shadow: 0 0 1px;">
+								</div>
+							</th:block>
+							
+							
+							<div>
+								<button class="btn btn-success">Xác nhận</button>
+								<a class="btn btn-secondary">Reset</a>
+							</div>
+						</form>
+						<div class="col-md-6">
+							<div>Danh sách câu hỏi</div>
+							<div class="d-flex">
+								<a class="btn btn-outline-primary" th:href="@{'/manage/question/addquestion/' + ${questionPackage.questionPackageID}}">+</a>
+								<th:block th:each="question,itor : ${questionList}">
+									<a class="btn btn-outline-primary"
+									th:href="@{'/manage/question/editquestion/'+${questionPackage.questionPackageID}+'/'+${question.questionID}}"
+									 th:utext="${itor.index+1}">1</a>
+								</th:block>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+
+</body>
+
+</html>

@@ -2,38 +2,43 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>admin</title>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<!-- VENDOR CSS -->
-	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
-	<link rel="stylesheet" th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
-	<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
-	<link rel="stylesheet" th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<title>admin</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- VENDOR CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
 
-	<!-- MAIN CSS -->
-	<link rel="stylesheet" th:href="@{/assets/css/main.css}">
-	<!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
-	<link rel="stylesheet" th:href="@{/assets/css/demo.css}">
-	<!-- GOOGLE FONTS -->
-	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
-	<!-- ICONS -->
-	<link rel="apple-touch-icon" sizes="76x76" th:href="@{/assets/img/apple-icon.png}">
-	<link rel="icon" type="image/png" sizes="96x96" th:href="@{/assets/img/favicon.png}">
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
+<link rel="stylesheet" th:href="@{/assets/css/demo.css}">
+<!-- GOOGLE FONTS -->
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
+	rel="stylesheet">
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/assets/img/apple-icon.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/assets/img/favicon.png}">
 </head>
 
 <body>
 	<!-- WRAPPER -->
 	<div id="wrapper">
 		<!-- NAVBAR -->
-		<div th:insert="/admin/shared/navbar::navbar">
-			
-		</div>
+		<div th:insert="/admin/shared/navbar::navbar"></div>
 		<!-- END NAVBAR -->
 		<!-- LEFT SIDEBAR -->
-		<div th:insert="/admin/shared/sidebar::sidebar">
-		</div>
+		<div th:insert="/admin/shared/sidebar::sidebar"></div>
 		<!-- END LEFT SIDEBAR -->
 		<!-- MAIN -->
 		<div class="main">
@@ -41,148 +46,183 @@
 			<div class="main-content">
 				<div class="container-fluid">
 					<div class="container bootstrap snippet">
-    <div class="row">
-  		<div class="col-sm-10"><h1>User name</h1></div>
-    </div>
-    <div class="row">
-  		<div class="col-sm-3"><!--left col-->
-              
+						<div class="row">
+							<div class="col-sm-10">
+								<h1>User name</h1>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3">
+								<!--left col-->
 
-      <div class="text-center">
-        <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar">
-        <h6>Chọn ảnh khác...</h6>
-        <input type="file" class="text-center center-block file-upload">
-      </div></hr><br>
 
-               
-          <div class="panel panel-default">
-            <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i></div>
-            <div class="panel-body"><a href="http://bootnipets.com">bootnipets.com</a></div>
-          </div>
-          
-          
-          <ul class="list-group">
-            <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Shares</strong></span> 125</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Likes</strong></span> 13</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 78</li>
-          </ul> 
-          
-        </div><!--/col-3-->
-    	<div class="col-sm-9">
-            <ul class="nav nav-tabs">
-              <li class="active"><a data-toggle="tab" href="#info">Thông tin</a></li>
-              <li><a data-toggle="tab" href="#changepass">Đổi mật khẩu</a></li>
-            </ul>
+								<div class="text-center">
+									<img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
+										class="avatar img-circle img-thumbnail" alt="avatar">
+									<h6>Chọn ảnh khác...</h6>
+									<input type="file" class="text-center center-block file-upload">
+								</div>
+								</hr>
+								<br>
 
-              
-          <div class="tab-content">
-            <div class="tab-pane active" id="info">
-                <hr>
-                  <form class="form" action="##" method="post" id="registrationForm">
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                              <label for="first_name"><h4>Họ và tên</h4></label>
-                              <input type="text" class="form-control" name="fullname" id="first_name" placeholder="Họ và tên" title="enter your first name if any.">
-                          </div>
-                      </div>
-          
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6">
-                              <label for="phone"><h4>Số điện thoại</h4></label>
-                              <input type="text" class="form-control" name="phone" id="phone" placeholder="Số điện thoại" title="enter your phone number if any.">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                              <label for="email"><h4>Email</h4></label>
-                              <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                              <label for="gender"><h4>Giới tính</h4></label>
-                              <select class="form-control" name="gender">
-                              	<option value="MALE">Nam</option>
-                              	<option value="FEMALE">Nữ</option>
-                              	<option value="OTHER">Khác</option>
-                              </select>
-                              </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                              <label for="dob"><h4>Ngày sinh</h4></label>
-                              <input type="date" class="form-control" name="dateOfBirth" id="dob">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                           <div class="col-xs-12">
-                                <br>
-                              	<button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Thay đổi</button>
-                               	<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
-                            </div>
-                      </div>
-              	</form>
-              
-              <hr>
-              
-             </div><!--/tab-pane-->
-             <div class="tab-pane" id="changepass">
-               <h2></h2>
-               
-               <hr>
-                  <form class="form" action="##" method="post" id="registrationForm">
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                              <label for="password"><h4>Mật khẩu</h4></label>
-                              <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                            <label for="password2"><h4>Xác nhận mật khẩu</h4></label>
-                              <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                           <div class="col-xs-12">
-                                <br>
-                              	<button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Đổi mật khẩu</button>
-                               	<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
-                            </div>
-                      </div>
-              	</form>
-               
-             </div><!--/tab-pane-->
-               
-              </div><!--/tab-pane-->
-          </div><!--/tab-content-->
 
-        </div><!--/col-9-->
-    </div><!--/row-->
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Website <i class="fa fa-link fa-1x"></i>
+									</div>
+									<div class="panel-body">
+										<a href="http://bootnipets.com">bootnipets.com</a>
+									</div>
+								</div>
+
+
+								<ul class="list-group">
+									<li class="list-group-item text-muted">Activity <i
+										class="fa fa-dashboard fa-1x"></i></li>
+									<li class="list-group-item text-right"><span
+										class="pull-left"><strong>Shares</strong></span> 125</li>
+									<li class="list-group-item text-right"><span
+										class="pull-left"><strong>Likes</strong></span> 13</li>
+									<li class="list-group-item text-right"><span
+										class="pull-left"><strong>Posts</strong></span> 37</li>
+									<li class="list-group-item text-right"><span
+										class="pull-left"><strong>Followers</strong></span> 78</li>
+								</ul>
+
+							</div>
+							<!--/col-3-->
+							<div class="col-sm-9">
+								<ul class="nav nav-tabs">
+									<li class="active"><a data-toggle="tab" href="#info">Thông
+											tin</a></li>
+									<li><a data-toggle="tab" href="#changepass">Đổi mật
+											khẩu</a></li>
+								</ul>
+
+
+								<div class="tab-content">
+									<div class="tab-pane active" id="info">
+										<hr>
+										<form class="form" action="##" method="post"
+											id="registrationForm">
+											<div class="form-group">
+												<div class="col-xs-6">
+													<label for="first_name"><h4>Họ và tên</h4></label> <input
+														type="text" class="form-control" name="fullname"
+														id="first_name" placeholder="Họ và tên"
+														title="enter your first name if any.">
+												</div>
+											</div>
+
+											<div class="form-group">
+
+												<div class="col-xs-6">
+													<label for="phone"><h4>Số điện thoại</h4></label> <input
+														type="text" class="form-control" name="phone" id="phone"
+														placeholder="Số điện thoại"
+														title="enter your phone number if any.">
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-xs-6">
+													<label for="email"><h4>Email</h4></label> <input
+														type="email" class="form-control" name="email" id="email"
+														placeholder="you@email.com" title="enter your email.">
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-xs-6">
+													<label for="gender"><h4>Giới tính</h4></label> <select
+														class="form-control" name="gender">
+														<option value="MALE">Nam</option>
+														<option value="FEMALE">Nữ</option>
+														<option value="OTHER">Khác</option>
+													</select>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-xs-6">
+													<label for="dob"><h4>Ngày sinh</h4></label> <input
+														type="date" class="form-control" name="dateOfBirth"
+														id="dob">
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-xs-12">
+													<br>
+													<button class="btn btn-lg btn-success" type="submit">
+														<i class="glyphicon glyphicon-ok-sign"></i> Thay đổi
+													</button>
+													<button class="btn btn-lg" type="reset">
+														<i class="glyphicon glyphicon-repeat"></i> Reset
+													</button>
+												</div>
+											</div>
+										</form>
+
+										<hr>
+
+									</div>
+									<!--/tab-pane-->
+									<div class="tab-pane" id="changepass">
+										<h2></h2>
+
+										<hr>
+										<form class="form" action="##" method="post"
+											id="registrationForm">
+											<div class="form-group">
+												<div class="col-xs-6">
+													<label for="password"><h4>Mật khẩu</h4></label> <input
+														type="password" class="form-control" name="password"
+														id="password" placeholder="password"
+														title="enter your password.">
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-xs-6">
+													<label for="password2"><h4>Xác nhận mật khẩu</h4></label> <input
+														type="password" class="form-control" name="password2"
+														id="password2" placeholder="password2"
+														title="enter your password2.">
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-xs-12">
+													<br>
+													<button class="btn btn-lg btn-success" type="submit">
+														<i class="glyphicon glyphicon-ok-sign"></i> Đổi mật khẩu
+													</button>
+													<button class="btn btn-lg" type="reset">
+														<i class="glyphicon glyphicon-repeat"></i> Reset
+													</button>
+												</div>
+											</div>
+										</form>
+
+									</div>
+									<!--/tab-pane-->
+
+								</div>
+								<!--/tab-pane-->
+							</div>
+							<!--/tab-content-->
+
+						</div>
+						<!--/col-9-->
+					</div>
+					<!--/row-->
 				</div>
 			</div>
 			<!-- END MAIN CONTENT -->
 		</div>
 		<!-- END MAIN -->
 		<div class="clearfix"></div>
-		<footer>
-			<div class="container-fluid">
-				<p class="copyright">&copy; 2017 <a href="https://www.themeineed.com" target="_blank">Theme I Need</a>. All Rights Reserved.</p>
-			</div>
-		</footer>
 	</div>
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
-	<script src="assets/vendor/jquery/jquery.min.js"></script>
-	<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-	<script src="assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-	<script src="assets/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
-	<script src="assets/vendor/chartist/js/chartist.min.js"></script>
-	<script src="assets/scripts/klorofil-common.js"></script>
-	
+	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+
 </body>
 
 </html>

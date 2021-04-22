@@ -42,4 +42,9 @@ public class AccountController {
 	public String showProfile(Model model){
 		return "manage/profile";
 	}
+	
+	@GetMapping("/history")
+	public String showHistory(Model model) {
+		return "404";
+	}
 }

@@ -12,5 +12,7 @@
 		<class>hl.quizonline.entity.Question</class>
 		<class>hl.quizonline.entity.MailBox</class>
 		<class>hl.quizonline.entity.MailTo</class>
+		<class>hl.quizonline.entity.ExamQuestion</class>
+		<class>hl.quizonline.entity.QuestionPackage</class>
 	</persistence-unit>
 </persistence>

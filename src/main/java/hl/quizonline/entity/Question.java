@@ -19,7 +19,7 @@ public class Question implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int questionID;
 
 	@Column(length = 1000)
@@ -36,8 +36,8 @@ public class Question implements Serializable {
 
 	//bi-directional many-to-one association to Examination
 	@ManyToOne
-	@JoinColumn(name="examinationID")
-	private Examination examination;
+	@JoinColumn(name="question_packageid")
+	private QuestionPackage questionPackage;
 
 	public Question() {
 	}
@@ -72,6 +72,16 @@ public class Question implements Serializable {
 
 		return answer;
 	}
+	
+	
+
+	public QuestionPackage getQuestionPackage() {
+		return questionPackage;
+	}
+
+	public void setQuestionPackage(QuestionPackage questionPackage) {
+		this.questionPackage = questionPackage;
+	}
 
 	public Answer removeAnswer(Answer answer) {
 		getAnswers().remove(answer);
@@ -100,14 +110,6 @@ public class Question implements Serializable {
 		image.setQuestion(null);
 
 		return image;
-	}
-
-	public Examination getExamination() {
-		return this.examination;
-	}
-
-	public void setExamination(Examination examination) {
-		this.examination = examination;
 	}
 
 }

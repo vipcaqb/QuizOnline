@@ -34,6 +34,17 @@ public class JoinExamination implements Serializable {
 	@JoinColumn(name="examinationID",insertable=false, updatable=false)
 	private Examination examination;
 
+	@Column
+	private int correctQuestionNumber;
+	
+	public int getCorrectQuestionNumber() {
+		return correctQuestionNumber;
+	}
+
+	public void setCorrectQuestionNumber(int correctQuestionNumber) {
+		this.correctQuestionNumber = correctQuestionNumber;
+	}
+
 	public JoinExamination() {
 	}
 

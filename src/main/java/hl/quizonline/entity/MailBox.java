@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Nationalized;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -29,9 +30,11 @@ public class MailBox implements Serializable {
 	private int mailBoxID;
 	
 	@Column
+	@Nationalized
 	private String title;
 	
 	@Column
+	@Nationalized
 	private String content;
 	
 	@Temporal(TemporalType.TIMESTAMP)

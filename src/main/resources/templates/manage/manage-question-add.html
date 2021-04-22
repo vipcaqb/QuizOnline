@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>admin</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- VENDOR CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<link rel="stylesheet" th:href="@{/css/manage-exam.css}">
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<!-- GOOGLE FONTS -->
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
+	rel="stylesheet">
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/assets/img/apple-icon.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/assets/img/favicon.png}">
+<link rel="stylesheet" th:href="@{/css/mystyle.css}">
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:insert="/admin/shared/navbar::navbar"></div>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<div th:insert="/admin/shared/sidebar::sidebar"></div>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="">
+				<div class="panel" style="padding: 0 40px;">
+					<div class="panel-heading">
+						<div class="panel-title" th:utext="@{'Thêm câu hỏi cho gói câu hỏi: ' + ${questionPackage.name}}"></div>
+					</div>
+					<div class="row">
+						<a class="btn btn-info">Thêm bằng file excel</a>
+						<form class="col-md-6" th:action="@{'/manage/question/addquestion/'+${questionPackage.questionPackageID}}" method="post">
+							<div class="form-group">
+								<label for="exampleFormControlInput1">Nội dung câu hỏi</label>
+								<input type="text" class="form-control" name = "content" required="required"
+									id="exampleFormControlInput1" placeholder="nội dung">
+							</div>
+							
+							<label for="answerNumber">Số phương án</label>
+							<div class="form-group row">
+								<div class="col-md-6">
+									<input id="answerNumber" class="form-control" type="number" value="4" min="2" max="10" >
+								</div>
+								<div class="col-md-6">
+									<button id="btnAnswerNumber" class="btn btn-primary">Chọn</button>
+								</div>
+							</div>
+							<div id="answerNumberError" class="alert alert-danger hide">
+								Số phương án tốt thiểu là 2, tối đa là 10
+							</div>	
+							<label>Phương án</label>
+							<div id="answerSide">
+								
+								<div style="margin-bottom:10px;">
+									<input type="checkbox" value="2" name="cb-pa" class="form-check-label">
+									<input type="text" name ="txt-pa"
+									style="width:90%;background: #fcfcfc;outline:none; border:#ebebeb solid 1px;box-shadow: 0 0 1px;">
+								</div>
+							</div>
+							<div class="alert alert-danger hide" id="errorCorrect">
+								Phải có ít nhất 1 phương án đúng
+							</div>
+							<div>
+								<button class="btn btn-success" id="btnSubmit">Xác nhận</button>
+								<a class="btn btn-secondary">Reset</a>
+							</div>
+						</form>
+						<div class="col-md-6">
+							<div>Danh sách câu hỏi</div>
+							<div class="d-flex">
+								<a class="btn btn-outline-primary" th:href="@{'/manage/question/addquestion/' + ${questionPackage.questionPackageID}}">+</a>
+								<th:block th:each="question,itor : ${questionList}">
+									<a class="btn btn-outline-primary"
+									th:href="@{'/manage/question/editquestion/'+${questionPackage.questionPackageID}+'/'+${question.questionID}}"
+									 th:utext="${itor.index+1}">1</a>
+								</th:block>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		//error handle message
+		var msg1="Số lượng phương án phải >=2";
+		var msg2="Phải có ít nhất một phương án đúng";
+		
+		//set defaul number of answer
+		var answerNumber = $('#answerNumber').val();
+		$('#answerSide').text("");
+		var formInputHead ="<div style='margin-bottom:10px;'><input type='checkbox' value='";
+		var formInputTail ="' name='cb-pa' class='cb-correct form-check-label'> <input required='required' type='text' name ='txt-pa'style='width:90%;background: #fcfcfc;outline:none; border:#ebebeb solid 1px;box-shadow: 0 0 1px;'></div>"
+		for(let i = 0; i<answerNumber;i++){
+			$('#answerSide').append(formInputHead+(i+1)+formInputTail);
+		}
+		
+		//set number of answer when click 'Chọn'
+		$('#btnAnswerNumber').click(function(){
+			event.preventDefault();
+			var answerNumber = $('#answerNumber').val();
+			if(answerNumber <2 || answerNumber>10){
+				$('#answerNumberError').removeClass('hide');
+				return;
+			}
+			
+			$('#answerSide').text("");
+			for(let i = 0; i<answerNumber;i++){
+				$('#answerSide').append(formInputHead+(i+1)+formInputTail);
+			}
+			$('#answerNumberError').addClass('hide');
+		})
+		
+		//Check before submit
+		
+		$('#btnSubmit').click(function(){
+			let isOk = false;
+			$('.cb-correct').each(function(index,value){
+				if(value.checked == true){
+					isOk = true;
+					return;
+				}
+			})
+			if(!isOk){
+				$('#errorCorrect').removeClass('hide');
+				event.preventDefault();
+			}
+		})
+	})
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>admin</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- VENDOR CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<link rel="stylesheet" th:href="@{/css/manage-exam.css}">
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<!-- GOOGLE FONTS -->
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
+	rel="stylesheet">
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/assets/img/apple-icon.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/assets/img/favicon.png}">
+<link rel = "stylesheet" th:href="@{/css/mystyle.css}">
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:insert="/admin/shared/navbar::navbar"></div>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<div th:insert="/admin/shared/sidebar::sidebar"></div>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="row">
+				<div class="col-md-3">
+					<div class="panel">
+						<div class="panel-heading">
+							<div class="panel-title">Các gói câu hỏi</div>
+						</div>
+						<div class="ml-1 mb-1">
+							<button class= "btn btn-success">Thêm</button>
+							<button class="btn btn-primary">Sửa</button>
+							<button class= "btn btn-danger">Xóa</button>
+						</div>
+						<div id="add-exampackage border" style="padding-left: 10px;margin-bottom: 10px;	">
+							<form action="/manage/question/addpackage" method="post">
+								<label>Tên gói câu hỏi: <input class="form-control" name="questionPackageName" type="text">  </label>
+								<input class="btn btn-success" type="submit" value="Thêm">
+							</form>
+						</div>
+						<ul class="list-group pb-3">	
+							<th:block th:each="qp : ${questionPackageList}">
+								<li class="list-group-item" th:if="${qp.questionPackageID} != ${questionPackageID}">
+									<a th:href="@{'/manage/question/'+${qp.questionPackageID}}" th:utext="${qp.name}">Gói câu hỏi về toán học</a>
+								</li>
+								
+								<li class="list-group-item active" th:if="${qp.questionPackageID} == ${questionPackageID}">
+									<a th:href="@{'/manage/question/'+${qp.questionPackageID}}" th:utext="${qp.name}">Gói câu hỏi về toán học</a>
+								</li>
+							</th:block>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-9">
+					<div class="panel">
+						<div class="panel-heading">
+							<div class="panel-title" th:if="${questionPackageID}!=null" >Danh sách câu hỏi trong "Gói câu hỏi về toán học"</div>
+						</div>
+						<div class="ml-1">
+							<div class="alert alert-info" th:if="${questionPackageID} == null">Vui lòng tạo trước gói câu hỏi</div>
+							<a th:if="${questionPackageID}!=null" class= "btn btn-success" th:href="@{'/manage/question/addquestion/' + ${questionPackageID}}">Thêm</a>
+							<button class= "btn btn-info">Thêm bằng file excel</button>
+						</div>
+						<div class="panel-body">
+							<div class="alert alert-info" th:if="${questionList}==null">
+								Danh sách trống
+							</div>
+							<table class="table" th:if="${questionList}!=null">
+								<thead>
+									<tr>
+										<th>Mã câu hỏi</th>
+										<th>Câu hỏi </th>
+										<th>Phương án </th>
+										<th> </th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="question : ${questionList}">
+										<td th:utext="${question.questionID}">1</td>
+										<td th:utext = "${question.questionContent}">Steve adsfasdfs asdf asdf asdf asdf </td>
+										<td>
+											<ul class="list-group">
+												<th:block th:each="answer : ${question.answers}">
+													<li th:if="${answer.idCorrect}==false" class="list-group-item" th:utext="${answer.answerContent}">
+													Phương án 1
+													</li>
+													<li th:if="${answer.idCorrect}==true" class="list-group-item active" th:utext="${answer.answerContent}">
+													Phương án 1
+													</li>
+												</th:block>
+											</ul>
+										</td>
+										<td>
+										<a th:href="@{'/manage/question/editquestion/' + ${questionPackageID}+'/'+${question.questionID}}" 
+										class="btn btn-primary">Sửa</a>
+										<a class= "btn btn-danger">Xóa</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						
+					</div>
+					
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+
+</body>
+
+</html>

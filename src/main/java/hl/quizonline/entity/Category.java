@@ -18,7 +18,7 @@ public class Category implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private int categoryID;
 
 	@Column
@@ -54,6 +54,24 @@ public class Category implements Serializable {
 
 	public void setExamPackages(List<ExamPackage> examPackages) {
 		this.examPackages = examPackages;
+	}
+
+	public Category(int categoryID, String categoryName, List<ExamPackage> examPackages) {
+		super();
+		this.categoryID = categoryID;
+		this.categoryName = categoryName;
+		this.examPackages = examPackages;
+	}
+
+	public Category(String categoryName, List<ExamPackage> examPackages) {
+		super();
+		this.categoryName = categoryName;
+		this.examPackages = examPackages;
+	}
+
+	public Category(String categoryName) {
+		super();
+		this.categoryName = categoryName;
 	}
 
 }

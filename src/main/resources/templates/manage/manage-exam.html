@@ -2,65 +2,116 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>admin</title>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<!-- VENDOR CSS -->
-	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
-	<link rel="stylesheet" th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
-	<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
-	<link rel="stylesheet" th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<title>admin</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- VENDOR CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<link rel="stylesheet" th:href="@{/css/manage-exam.css}">
 
-	<!-- MAIN CSS -->
-	<link rel="stylesheet" th:href="@{/assets/css/main.css}">
-	<!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
-	<link rel="stylesheet" th:href="@{/assets/css/demo.css}">
-	<!-- GOOGLE FONTS -->
-	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
-	<!-- ICONS -->
-	<link rel="apple-touch-icon" sizes="76x76" th:href="@{/assets/img/apple-icon.png}">
-	<link rel="icon" type="image/png" sizes="96x96" th:href="@{/assets/img/favicon.png}">
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<!-- GOOGLE FONTS -->
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
+	rel="stylesheet">
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/assets/img/apple-icon.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/assets/img/favicon.png}">
+<link rel = "stylesheet" th:href="@{/css/mystyle.css}">
 </head>
 
 <body>
 	<!-- WRAPPER -->
 	<div id="wrapper">
 		<!-- NAVBAR -->
-		<div th:insert="/admin/shared/navbar::navbar">
-			
-		</div>
+		<div th:insert="/admin/shared/navbar::navbar"></div>
 		<!-- END NAVBAR -->
 		<!-- LEFT SIDEBAR -->
-		<div th:insert="/admin/shared/sidebar::sidebar">
-		</div>
+		<div th:insert="/admin/shared/sidebar::sidebar"></div>
 		<!-- END LEFT SIDEBAR -->
 		<!-- MAIN -->
 		<div class="main">
 			<!-- MAIN CONTENT -->
-			<div class="main-content">
-				<div class="container-fluid">
-					
+			<div class="row">
+				<div class="col-md-3">
+					<div class="panel">
+						<div class="panel-heading">
+							<div class="panel-title">Danh sách bộ đề</div>
+						</div>
+						<div class="ml-1 mb-1">
+							<a class= "btn btn-success" href="/manage/exam/addpackage">Thêm</a>
+							<button class="btn btn-primary">Sửa</button>
+							<button class= "btn btn-danger">Xóa</button>
+						</div>
+						<div th:if="${examPackageList.size} == 0" class="alert alert-warning">Bạn chưa có bộ đề thi nào, bấm 'Thêm' để tạo</div>
+						<ul th:unless="${examPackageList.size} == 0" class="list-group pb-3 pt-1">
+						
+							<th:block th:each="exam : ${examPackageList}">
+								<li class="list-group-item">
+									<a href="#" th:utext="${exam.examPackageTitle}"></a>
+								</li>
+							</th:block>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-9">
+					<div class="panel">
+						<div class="panel-heading" th:if="${examPackageID}!=null">
+							<div class="panel-title">Các đề trong "Đề thi toán học lớp 12 khối không chuyên"</div>
+						</div>
+						<div class="panel-heading" th:if="${examPackageID}==null">
+							<div class="alert alert-info">Chưa có bộ đề nào được chọn, vui lòng chọn hoặc tạo mới 1 bộ đề</div>
+						</div>
+						<div class="ml-1" th:if="${examPackageID}!=null">
+							<a th:href="@{'/manage/exam/addexam/'+${examPackageID}}" class= "btn btn-success">Thêm</a>
+						</div>
+						<div class="panel-body">
+							<table class="table" th:if="${examList} !=null">
+								<thead>
+									<tr>
+										<th>Mã đề</th>
+										<th>Tiêu đề </th>
+										<th> </th>
+									</tr>
+								</thead>
+								<tbody >
+									
+									<th:block th:each="exam : ${examList}">
+										<tr>
+											<td th:utext="${exam.examinationID}">1</td>
+											<td th:utext="${exam.examinationTitle}">aaa</td>
+											<td>
+											<button class="btn btn-primary">Sửa</button>
+											<button class= "btn btn-danger">Xóa</button>
+											</td>
+										</tr>
+									</th:block>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div>
 			<!-- END MAIN CONTENT -->
 		</div>
 		<!-- END MAIN -->
 		<div class="clearfix"></div>
-		<footer>
-			<div class="container-fluid">
-				<p class="copyright">&copy; 2017 <a href="https://www.themeineed.com" target="_blank">Theme I Need</a>. All Rights Reserved.</p>
-			</div>
-		</footer>
 	</div>
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
-	<script src="assets/vendor/jquery/jquery.min.js"></script>
-	<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-	<script src="assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-	<script src="assets/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
-	<script src="assets/vendor/chartist/js/chartist.min.js"></script>
-	<script src="assets/scripts/klorofil-common.js"></script>
+	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
 
 </body>
 

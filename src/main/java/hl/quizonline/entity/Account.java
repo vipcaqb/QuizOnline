@@ -67,6 +67,9 @@ public class Account implements Serializable {
 	//bi-directional many-to-one association to JoinExamination
 	@OneToMany(mappedBy="account")
 	private List<JoinExamination> joinExaminations;
+	
+	@OneToMany(mappedBy="account")
+	private List<QuestionPackage> questionPackages;
 
 	public Account() {
 	}

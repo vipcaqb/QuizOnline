@@ -17,7 +17,7 @@ public class Answer implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int answerID;
 
 	@Column(length = 1000)
@@ -66,5 +66,14 @@ public class Answer implements Serializable {
 	public void setQuestion(Question question) {
 		this.question = question;
 	}
+
+	public Answer(String answerContent, boolean idCorrect, Question question) {
+		super();
+		this.answerContent = answerContent;
+		this.idCorrect = idCorrect;
+		this.question = question;
+	}
+	
+	
 
 }

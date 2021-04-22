@@ -2,50 +2,68 @@ package hl.quizonline.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hl.quizonline.entity.Account;
 import hl.quizonline.entity.ExamPackage;
+import hl.quizonline.repository.AccountRepository;
+import hl.quizonline.repository.ExamPackageRepository;
 import hl.quizonline.service.ExamPackageService;
+import javassist.NotFoundException;
 
 @Service
 public class ExamPackageImpl implements ExamPackageService {
+	
+	@Autowired
+	ExamPackageRepository examPackageRepository;
+	
+	@Autowired
+	AccountRepository accountRepository;
 
 	@Override
-	public List<ExamPackage> getList() {
-		ExamPackage eP1 = new ExamPackage();
-		ExamPackage eP2 = new ExamPackage();
-		ExamPackage eP3 = new ExamPackage();
-		ExamPackage eP4 = new ExamPackage();
-		eP1.setExamPackageTitle("exam 1");
-		eP2.setExamPackageTitle("exam 2");
-		eP3.setExamPackageTitle("exam 3");
-		eP4.setExamPackageTitle("exam 4");
-		List<ExamPackage> list = Arrays.asList(eP1,eP2,eP3,eP4);
-		return list;
+	public List<ExamPackage> getList(String username) throws NotFoundException{
+		Optional<Account> acc = accountRepository.findByUsername(username);
+		if(acc.isPresent()) {
+			List<ExamPackage> list = examPackageRepository.findByAccount(acc.get());
+			return list;
+		}
+		else {
+			throw new NotFoundException("Khong tim thay tai khoan");
+		}
 	}
 
 	@Override
 	public List<ExamPackage> findWith(String key) {
-		// TODO Auto-generated method stub
+		return examPackageRepository.findByExamPackageTitleContaining(key);
+	}
+
+	@Override
+	public void create(ExamPackage examPackage) {
+		examPackageRepository.save(examPackage);
+	}
+
+	@Override
+	public void delete(Integer examPackageID) {
+		examPackageRepository.deleteById(examPackageID);
+	}
+
+	@Override
+	public void update(ExamPackage examPackage) {
+		Optional<ExamPackage> eOptional = examPackageRepository.findById(examPackage.getExamPackageID());
+		if(eOptional.isPresent()) {
+			examPackageRepository.save(examPackage);
+		}
+	}
+
+	@Override
+	public ExamPackage getExamPackage(int examPackageID) {
+		Optional<ExamPackage> oep = examPackageRepository.findById(examPackageID);
+		if(oep.isPresent()) {
+			return oep.get();
+		}
 		return null;
-	}
-
-	@Override
-	public void create(String username, ExamPackage examPackage) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void delete(String username, Integer examPackageID) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update(String username, ExamPackage examPackage) {
-		// TODO Auto-generated method stub
-		
 	}
 }

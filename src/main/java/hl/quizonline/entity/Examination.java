@@ -19,7 +19,7 @@ public class Examination implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int examinationID;
 
 	@Column
@@ -37,7 +37,7 @@ public class Examination implements Serializable {
 
 	//bi-directional many-to-one association to Question
 	@OneToMany(mappedBy="examination")
-	private List<Question> questions;
+	private List<ExamQuestion> examQuestions;
 
 	public Examination() {
 	}
@@ -86,28 +86,6 @@ public class Examination implements Serializable {
 		joinExamination.setExamination(null);
 
 		return joinExamination;
-	}
-
-	public List<Question> getQuestions() {
-		return this.questions;
-	}
-
-	public void setQuestions(List<Question> questions) {
-		this.questions = questions;
-	}
-
-	public Question addQuestion(Question question) {
-		getQuestions().add(question);
-		question.setExamination(this);
-
-		return question;
-	}
-
-	public Question removeQuestion(Question question) {
-		getQuestions().remove(question);
-		question.setExamination(null);
-
-		return question;
 	}
 
 }

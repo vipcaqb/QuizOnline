@@ -4,6 +4,7 @@ package hl.quizonline.service;
 import java.util.List;
 
 import hl.quizonline.entity.ExamPackage;
+import javassist.NotFoundException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -14,9 +15,11 @@ public interface ExamPackageService {
 	/**
 	 * Gets the list.
 	 *
+	 * @param username the username
 	 * @return the list
+	 * @throws NotFoundException the not found exception
 	 */
-	List<ExamPackage> getList();
+	List<ExamPackage> getList(String username) throws NotFoundException;
 	
 	/**
 	 * Find with.
@@ -29,25 +32,31 @@ public interface ExamPackageService {
 	/**
 	 * Creates the exampackage.
 	 *
-	 * @param username the username
 	 * @param examPackage the exam package
 	 */
-	void create(String username,ExamPackage examPackage);
+	void create(ExamPackage examPackage);
 	
 	/**
 	 * Delete one exampackage.
 	 *
-	 * @param username the username
 	 * @param examPackageID the exam package ID
 	 */
-	void delete(String username,Integer examPackageID);
+	void delete(Integer examPackageID);
 	
 	/**
 	 * Update a exampackage.
 	 *
-	 * @param username the username
 	 * @param examPackage the exam package
 	 */
-	void update(String username, ExamPackage examPackage);
+	void update(ExamPackage examPackage);
+	
+	/**
+	 * Gets the exam package.
+	 *
+	 * @param examPackageID the exam package ID
+	 * @return the exam package
+	 */
+	ExamPackage getExamPackage(int examPackageID);
+	
 	
 }
