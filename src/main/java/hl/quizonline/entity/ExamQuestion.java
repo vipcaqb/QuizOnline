@@ -26,6 +26,31 @@ public class ExamQuestion implements Serializable  {
 	@ManyToOne
 	@JoinColumn(name = "question_packageid",updatable = false,insertable = false)
 	private QuestionPackage questionPackage;
+
+	public int getExamQuestionID() {
+		return examQuestionID;
+	}
+
+	public void setExamQuestionID(int examQuestionID) {
+		this.examQuestionID = examQuestionID;
+	}
+
+	public Examination getExamination() {
+		return examination;
+	}
+
+	public void setExamination(Examination examination) {
+		this.examination = examination;
+	}
+
+	public QuestionPackage getQuestionPackage() {
+		return questionPackage;
+	}
+
+	public void setQuestionPackage(QuestionPackage questionPackage) {
+		this.questionPackage = questionPackage;
+	}
+	
 	
 	
 }

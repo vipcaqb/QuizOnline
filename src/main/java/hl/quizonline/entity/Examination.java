@@ -73,6 +73,16 @@ public class Examination implements Serializable {
 	public void setJoinExaminations(List<JoinExamination> joinExaminations) {
 		this.joinExaminations = joinExaminations;
 	}
+	
+	
+
+	public List<ExamQuestion> getExamQuestions() {
+		return examQuestions;
+	}
+
+	public void setExamQuestions(List<ExamQuestion> examQuestions) {
+		this.examQuestions = examQuestions;
+	}
 
 	public JoinExamination addJoinExamination(JoinExamination joinExamination) {
 		getJoinExaminations().add(joinExamination);

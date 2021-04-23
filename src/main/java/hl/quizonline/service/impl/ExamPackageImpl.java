@@ -1,6 +1,7 @@
 package hl.quizonline.service.impl;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,5 +66,27 @@ public class ExamPackageImpl implements ExamPackageService {
 			return oep.get();
 		}
 		return null;
+	}
+
+	@Override
+	public List<ExamPackage> getList() {
+		return (List<ExamPackage>) examPackageRepository.findAll();
+	}
+
+	@Override
+	public List<ExamPackage> getListPresent() {
+		Date now = new Date(System.currentTimeMillis());
+		return examPackageRepository.findByIsExamAndPresent(now);
+	}
+
+	@Override
+	public List<ExamPackage> getListExercise() {
+		return examPackageRepository.findByIsExerciseExam(true);
+	}
+
+	@Override
+	public List<ExamPackage> getListIncoming() {
+		Date now = new Date(System.currentTimeMillis());
+		return examPackageRepository.findByIsExamAndCommingSoon(now);
 	}
 }

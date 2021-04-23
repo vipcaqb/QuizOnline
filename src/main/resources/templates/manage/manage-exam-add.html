@@ -44,37 +44,38 @@
 		<div class="main">
 			<!-- MAIN CONTENT -->
 			<div class="">
-				<div class="panel" style="padding: 0 40px;">
+				<div class="panel" style="padding: 0 40px;min-height: 100vh;">
 					<div class="panel-heading">
 						<div class="panel-title" th:utext="@{'Thêm đề thi vào bộ đề: '+ ${examPackage.examPackageTitle}}">Thêm đề thi</div>
 					</div>
-					<form action="/manage/exam/addexam" method="post">
-						<div class="form-group">
-							<label for="exampleFormControlSelect1">Thuộc bộ đề </label> 
-							<select name = "examPackageID"
-								class="form-control" id="exampleFormControlSelect1">
-								<th:block th:each="examPackage : ${examPackageList}">
-									<option th:value="${examPackage.examPackageID}" th:utext="${examPackage.examPackageTitle}">Đề thi lại</option>
-								</th:block>
-							</select>
-						</div>
+					<form th:action="@{'/manage/exam/addexam/'+${examPackageID}}" method="post">
 						<div class="form-group">
 							<label for="exampleFormControlInput1">Tiêu đề của đề thi</label>
-							<input type="email" class="form-control"
-								id="exampleFormControlInput1" placeholder="title">
+							<input type="text" class="form-control"
+								id="exampleFormControlInput1" name="title" placeholder="title">
 						</div>
-						<div>
-							<label>Gói câu hỏi</label> 
-							<div th:if="${questionPackageListSize>0}==true">	
+						<div class="myborder p-1 mb-2">
+							<label>Chọn gói câu hỏi muốn thêm</label> 
+							<div th:if="${questionPackageListSize>0}">	
 								<th:block th:each="questionPackage : ${questionPackageList}">
-									<div> <input type="checkbox" th:value="${questionPackage.questionPackageID}"> <span th:utext="${questionPackage.name}">Gói toán</span> </div>
+									<hr>
+									<div> 
+										<input type="checkbox" th:value="${questionPackage.questionPackageID}" name="questionPackageID"> 
+										<span th:utext="@{${questionPackage.name} + '('+${questionPackage.questions.size()}+' câu hỏi)'}">Gói toán</span> 
+									</div>
 								</th:block>
 							</div>
 							
-							<div class="alert alert-info" th:if="${questionPackageListSize>0}==false">
+							<div class="alert alert-info" th:if="${questionPackageListSize==0}">
 								Bạn chưa có gói câu hỏi nào, <a href="/manage/question" class="badge badge-primary">Tạo ngay</a>
 							</div>
 						</div>	
+						
+						<div class="alert alert-success">
+						Tổng cộng có : 0 câu hỏi
+						</div>
+						
+						<div class="alert alert-danger">Số câu tối thiểu cần có : <span th:utext="${examPackage.numberOfQuestion}">30</span> </div>
 						<div class="mb-3">
 							<button class="btn btn-success">Xác nhận</button>
 							<button class="btn btn-secondary">Reset</button>

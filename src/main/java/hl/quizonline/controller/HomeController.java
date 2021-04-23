@@ -1,5 +1,8 @@
 package hl.quizonline.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,8 +10,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import hl.quizonline.entity.ExamPackage;
+import hl.quizonline.service.ExamPackageService;
+
 @Controller
 public class HomeController {
+	
+	@Autowired
+	ExamPackageService examPackageService;
+	
+	
 	@GetMapping(value = {"/","/home"})
 	public String showMyHome(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -21,6 +32,14 @@ public class HomeController {
 	
 	@GetMapping(value = "/listexam")
 	public String showListExamination() {
+		
+		//lay danh sach cuoc thi dang dien ra
+		List<ExamPackage> examPackagePresentList = examPackageService.getListPresent();
+		
+		//danh sach de on tap
+		
+		//de thi sap dien ra
+		
 		return "examlist";
 	}
 	

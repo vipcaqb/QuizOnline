@@ -1,6 +1,7 @@
 package hl.quizonline.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,26 +28,31 @@ public class ExaminationServiceImpl implements ExaminationService {
 	}
 
 	@Override
-	public void create(Examination exam) {
-		examinationRepository.save(exam);
+	public Examination create(Examination exam) {
+		return examinationRepository.save(exam);
 	}
 
 	@Override
 	public void edit(Examination exam) {
-		// TODO Auto-generated method stub
-		
+		Optional<Examination> oe = examinationRepository.findById(exam.getExaminationID());
+		if(oe.isPresent()) {
+			examinationRepository.save(exam);
+		}
 	}
 
 	@Override
 	public void delete(Integer examID) {
-		// TODO Auto-generated method stub
-		
+		examinationRepository.deleteById(examID);
 	}
 
 	@Override
 	public void delete(Examination exam) {
-		// TODO Auto-generated method stub
-		
+		examinationRepository.delete(exam);
+	}
+
+	@Override
+	public Examination getExam(int examID) {
+		return examinationRepository.findById(examID).get();
 	}
 
 }

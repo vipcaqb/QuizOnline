@@ -44,48 +44,43 @@
 		<div class="main">
 			<!-- MAIN CONTENT -->
 			<div class="">
-				<div class="panel" style="padding:0 40px;">
+				<div class="panel" style="padding: 0 40px;min-height: 100vh;">
 					<div class="panel-heading">
-						<div class="panel-title">
-							Chỉnh sửa thông tin đề thi
+						<div class="panel-title" th:utext="@{Chỉnh sửa đề thi}"></div>
+					</div>
+					<form th:action="@{'/manage/exam/editexam/'+${exam.examinationID}}" th:object="${exam}" method="post">
+						<div class="form-group">
+							<label for="exampleFormControlInput1">Tiêu đề của đề thi</label>
+							<input type="text" class="form-control"
+								id="exampleFormControlInput1" th:field="*{examinationTitle}" placeholder="Tiêu đề">
 						</div>
-					</div>
-					<form>
-				  <div class="form-group">
-				    <label for="exampleFormControlInput1">Email address</label>
-				    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-				  </div>
-				  <div class="form-group">
-				    <label for="exampleFormControlSelect1">Example select</label>
-				    <select class="form-control" id="exampleFormControlSelect1">
-				      <option>1</option>
-				      <option>2</option>
-				      <option>3</option>
-				      <option>4</option>
-				      <option>5</option>
-				    </select>
-				  </div>
-				  <div class="form-group">
-				    <label for="exampleFormControlSelect2">Example multiple select</label>
-				    <select multiple class="form-control" id="exampleFormControlSelect2">
-				      <option>1</option>
-				      <option>2</option>
-				      <option>3</option>
-				      <option>4</option>
-				      <option>5</option>
-				    </select>
-				  </div>
-				  <div class="form-group">
-				    <label for="exampleFormControlTextarea1">Example textarea</label>
-				    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-				  </div>
-				  
-				  
-					<div class="mb-3">
-						<button class="btn btn-success">Submit</button>
-						<button class="btn btn-secondary">Reset</button>
-					</div>
-				</form>
+						<div class="myborder p-1 mb-2">
+							<label>Chọn gói câu hỏi muốn thêm</label> 
+							<div th:if="${examPackageModelList.size()>0}">	
+								<th:block th:each="questionPackageModel : ${examPackageModelList}">
+									<hr>
+									<div> 
+										<input type="checkbox" th:value="${questionPackageModel.questionPackageID}" name="questionPackageID" th:checked="${questionPackageModel.checked}"> 
+										<span th:utext="@{${questionPackageModel.questionPackageName} + '('+${questionPackageModel.questionSize}+' câu hỏi)'}">Gói toán</span> 
+									</div>
+								</th:block>
+							</div>
+							
+							<div class="alert alert-info" th:if="${examPackageModelList.size()==0}">
+								Bạn chưa có gói câu hỏi nào, <a href="/manage/question" class="badge badge-primary">Tạo ngay</a>
+							</div>
+						</div>	
+						
+						<div class="alert alert-success">
+						Tổng cộng có : 0 câu hỏi
+						</div>
+						
+						<div class="alert alert-danger">Số câu tối thiểu cần có : <span th:utext="${exam.examPackage.numberOfQuestion}">30</span> </div>
+						<div class="mb-3">
+							<button class="btn btn-success">Xác nhận</button>
+							<button class="btn btn-secondary">Reset</button>
+						</div>
+					</form>
 				</div>
 			</div>
 			<!-- END MAIN CONTENT -->

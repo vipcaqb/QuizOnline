@@ -22,6 +22,34 @@ public interface ExamPackageService {
 	List<ExamPackage> getList(String username) throws NotFoundException;
 	
 	/**
+	 * Gets the list.
+	 *
+	 * @return the list
+	 */
+	List<ExamPackage> getList();
+	
+	/**
+	 * Gets the list present.
+	 *
+	 * @return the list present
+	 */
+	List<ExamPackage> getListPresent();
+	
+	/**
+	 * Gets the list exercise.
+	 *
+	 * @return the list exercise
+	 */
+	List<ExamPackage> getListExercise();
+	
+	/**
+	 * Gets the list incoming start.
+	 *
+	 * @return the list incoming
+	 */
+	List<ExamPackage> getListIncoming();
+	
+	/**
 	 * Find with.
 	 *
 	 * @param key the key

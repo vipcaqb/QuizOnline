@@ -43,23 +43,24 @@
 		<!-- MAIN -->
 		<div class="main">
 			<!-- MAIN CONTENT -->
-			<div>
+			<div class="">
 				<div class="panel" style="padding: 0 40px; min-height: 100vh;">
 					<div class="panel-heading">
 						<div class="panel-title">Thêm mới bộ đề</div>
 					</div>
-					<form action="/manage/exam/addpackage" method="post" enctype="multipart/form-data">
-						
+					<form th:action="@{'/manage/exam/editpackage/'+ ${examPackageID}}" th:object="${examPackage}" method="post">
 						<div class="form-group">
 							<label>Tiêu đề:</label>
-							<input class="form-control" type="text" name="examPackageTitle">
+							<input class="form-control" type="text" th:field="*{examPackageTitle}">
 						</div>
 						
 						<div class="form-group">
 							<label>Danh mục</label>
 							<select name="categoryID" multiple="multiple" class="form-control" >
-								<th:block th:each="category: ${categoryList}">
-									<option th:value ="${category.categoryID}" th:utext="${category.categoryName}">
+								<th:block th:each="categoryModel: ${categoryModelList}">
+									<option th:value="${categoryModel.categoryID}" 
+									th:utext="${categoryModel.categoryName}" 
+									th:selected="${categoryModel.selected}">
 									</option>
 								</th:block>
 							</select>
@@ -67,44 +68,44 @@
 						
 						<div class="form-check">
 							<label>Đề ôn tập:</label>
-							<input id="exerciseExam" class="form-check-input" type="checkbox" value="1" name ="isExerciseExam">
+							<input id="exerciseExam" class="form-check-input" type="checkbox" value="1" th:checked="${examPackage.isExerciseExam}" name ="isExerciseExam">
 						</div>
 						
 						<div id="startTime">
 						<div class="form-group">
 							<label>Thời gian bắt đầu thi:</label>
-							<input type="datetime-local" name="startDatetime">
+							<input type="datetime-local" name="startDatetime" th:field="*{startDatetime}">
 						</div>
 						
 						<div class="form-group">
 							<label>Thời gian làm bài (phút) :</label>
-							<input class="form-control" type="number" name = "doExamTime">
+							<input class="form-control" type="number" name = "doExamTime" th:field="*{doExamTime}">
 						</div>
 						</div>
 						
 						<div class="form-group">
 							<label>Số câu hỏi sẽ thi :</label>
-							<input class="form-control" type="number" name = "numberOfQuestion">
+							<input class="form-control" type="number" th:field="*{numberOfQuestion}">
 						</div>
 						
 						<div class="form-group">
 							<label>Xáo trộn câu hỏi :</label>
-							<input class="form-check-input" type="checkbox" name="isMix" value="1" >
+							<input class="form-check-input" type="checkbox" name="isMix" th:checked="${examPackage.mixQuestion}" value="1" >
 						</div>
 						
 						<div class="form-group">
 							<label>Cho phép xem lại đáp án :</label>
-							<input class="form-check-input" type="checkbox" name="showResult" value="1" >
+							<input class="form-check-input" type="checkbox" name="showResult" value="1" th:checked="${examPackage.showResults}" >
 						</div>
 						
 						<div class="form-group">
 							<label>Dùng mật khẩu:</label>
-							<input id="usePass" class="form-check-input" type="checkbox" name="usePass" value="1" >
+							<input id="usePass" class="form-check-input" type="checkbox" name="usePassword" th:checked="${examPackage.usePassword}" value="1" >
 						</div>
 						
 						<div id="pass" class="form-group">
 							<label>Mật khẩu :</label>
-							<input class="form-control" type="text" name="pass">
+							<input class="form-control" type="text" th:field="*{password}">
 						</div>
 						
 						<div class="mb-3">
@@ -126,6 +127,13 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			//set defaul inteface
+			
+			if($('#exerciseExam').prop('checked')){
+				$('#startTime').prop('hidden',true);
+			}
+			else {
+				$('#startTime').prop('hidden',false);
+			}
 			
 			if(!$('#userPass').prop('checked')){
 				$('#pass').prop('hidden',true);

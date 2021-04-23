@@ -14,17 +14,26 @@ public interface ExaminationService {
 	/**
 	 * Gets the all.
 	 *
-	 * @param ep the ep
+	 * @param exampackageID the exampackage ID
 	 * @return the all
 	 */
 	List<Examination> getAll(int exampackageID);
 	
 	/**
+	 * Gets the exam.
+	 *
+	 * @param examID the exam ID
+	 * @return the exam
+	 */
+	Examination getExam(int examID);
+	
+	/**
 	 * Creates the.
 	 *
 	 * @param exam the exam
+	 * @return the examination
 	 */
-	void create(Examination exam);
+	Examination create(Examination exam);
 	
 	/**
 	 * Edits the.

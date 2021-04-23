@@ -46,8 +46,14 @@ public class ExamPackage implements Serializable {
 	@Column
 	private boolean isExerciseExam;
 	
+	@Column
+	private int numberOfQuestion;
+	
+	@Column
+	private boolean showResults;
+	
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date startDatetime;
 	
 	@Column
@@ -96,6 +102,14 @@ public class ExamPackage implements Serializable {
 	
 	public Account getAccount() {
 		return this.account;
+	}
+
+	public int getNumberOfQuestion() {
+		return numberOfQuestion;
+	}
+
+	public void setNumberOfQuestion(int numberOfQuestion) {
+		this.numberOfQuestion = numberOfQuestion;
 	}
 
 	public void setAccount(Account account) {
@@ -181,14 +195,23 @@ public class ExamPackage implements Serializable {
 	public void setDoExamTime(int doExamTime) {
 		this.doExamTime = doExamTime;
 	}
-	
-	
+
+	public boolean isShowResults() {
+		return showResults;
+	}
+
+	public void setShowResults(boolean showResults) {
+		this.showResults = showResults;
+	}
+
 
 	@Override
 	public String toString() {
-		return "ExamPackage [examPackageTitle=" + examPackageTitle + ", mixQuestion=" + mixQuestion + ", usePassword="
-				+ usePassword + ", password=" + password + ", isExerciseExam=" + isExerciseExam + ", startDatetime="
-				+ startDatetime + ", doExamTime=" + doExamTime + ", account=" + account + "]";
+		return "ExamPackage [examPackageID=" + examPackageID + ", examPackageTitle=" + examPackageTitle
+				+ ", mixQuestion=" + mixQuestion + ", joinAmount=" + joinAmount + ", usePassword=" + usePassword
+				+ ", password=" + password + ", isPublic=" + isPublic + ", isExerciseExam=" + isExerciseExam
+				+ ", showResults=" + showResults + ", startDatetime=" + startDatetime + ", doExamTime=" + doExamTime
+				+ ", account=" + account + ", categories=" + categories + ", examinations=" + examinations + "]";
 	}
 
 	public Examination addExamination(Examination examination) {
