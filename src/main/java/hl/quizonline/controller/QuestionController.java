@@ -158,7 +158,7 @@ public class QuestionController {
 		//do add question
 		questionService.create(question);
 		System.out.println("Đã tạo xong câu hỏi");
-		return "redirect:/manage/question";
+		return "redirect:/manage/question/addquestion/"+questionPackageID;
 	}
 	
 	@GetMapping("/editquestion/{questionPackageID}/{questionID}")

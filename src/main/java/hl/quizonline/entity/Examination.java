@@ -31,10 +31,6 @@ public class Examination implements Serializable {
 	@JoinColumn(name="examPackageID")
 	private ExamPackage examPackage;
 
-	//bi-directional many-to-one association to JoinExamination
-	@OneToMany(mappedBy="examination")
-	private List<JoinExamination> joinExaminations;
-
 	//bi-directional many-to-one association to Question
 	@OneToMany(mappedBy="examination")
 	private List<ExamQuestion> examQuestions;
@@ -65,15 +61,6 @@ public class Examination implements Serializable {
 	public void setExamPackage(ExamPackage examPackage) {
 		this.examPackage = examPackage;
 	}
-
-	public List<JoinExamination> getJoinExaminations() {
-		return this.joinExaminations;
-	}
-
-	public void setJoinExaminations(List<JoinExamination> joinExaminations) {
-		this.joinExaminations = joinExaminations;
-	}
-	
 	
 
 	public List<ExamQuestion> getExamQuestions() {
@@ -83,19 +70,6 @@ public class Examination implements Serializable {
 	public void setExamQuestions(List<ExamQuestion> examQuestions) {
 		this.examQuestions = examQuestions;
 	}
-
-	public JoinExamination addJoinExamination(JoinExamination joinExamination) {
-		getJoinExaminations().add(joinExamination);
-		joinExamination.setExamination(this);
-
-		return joinExamination;
-	}
-
-	public JoinExamination removeJoinExamination(JoinExamination joinExamination) {
-		getJoinExaminations().remove(joinExamination);
-		joinExamination.setExamination(null);
-
-		return joinExamination;
-	}
+	
 
 }

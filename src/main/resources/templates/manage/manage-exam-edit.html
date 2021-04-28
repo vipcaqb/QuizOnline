@@ -54,6 +54,14 @@
 							<input type="text" class="form-control"
 								id="exampleFormControlInput1" th:field="*{examinationTitle}" placeholder="Tiêu đề">
 						</div>
+						<label>Thuộc bộ đề:</label>
+						<select class="form-group" name="examPackageID">
+							<th:block th:each="examPackage : ${examPackageList}">
+								<option th:value= "${examPackage.examPackageID}" th:utext="${examPackage.examPackageTitle}">
+								
+								</option>
+							</th:block>
+						</select>
 						<div class="myborder p-1 mb-2">
 							<label>Chọn gói câu hỏi muốn thêm</label> 
 							<div th:if="${examPackageModelList.size()>0}">	
@@ -92,7 +100,11 @@
 	<!-- Javascript -->
 	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
 	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
-
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#qlde').addClass('active');
+		})
+	</script>
 </body>
 
 </html>

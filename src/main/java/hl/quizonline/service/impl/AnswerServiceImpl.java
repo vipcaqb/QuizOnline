@@ -45,4 +45,9 @@ public class AnswerServiceImpl implements AnswerService {
 		answerRepository.delete(answer);
 	}
 
+	@Override
+	public Answer getAnswer(int answerID) {
+		return answerRepository.findById(answerID).get();
+	}
+
 }

@@ -1,0 +1,27 @@
+@charset "ISO-8859-1";
+
+.part-title {
+	font-weight: bold;
+}
+
+.answer label{
+	width: 100%;
+}
+
+#exam-detail-info p{
+	padding: 10px;
+}
+
+#exam-detail-info button{
+	margin-bottom: 30px;
+}
+
+.title{
+	margin-top: 10px;
+	width: 100%;
+	background: #ffffff;
+	padding: 15px;
+	box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
+	font-size: 20px;
+	font-weight: bold;
+}

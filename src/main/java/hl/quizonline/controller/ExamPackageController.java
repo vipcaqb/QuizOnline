@@ -96,29 +96,25 @@ public class ExamPackageController {
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 		    String currentUserName = authentication.getName();
 		    List<ExamPackage> listExamPackage;
-			try {
-				//get exam package list
-				listExamPackage = examPackageService.getList(currentUserName);
-				//get exam list selected
-				
-				model.addAttribute("examPackageList", listExamPackage);
-				if(packageid==null) {
-					if(listExamPackage.size()>0) {
-						packageid=listExamPackage.get(0).getExamPackageID();
-						
-						
-					}
+			//get exam package list
+			listExamPackage = examPackageService.getList(currentUserName);
+			//get exam list selected
+			
+			model.addAttribute("examPackageList", listExamPackage);
+			if(packageid==null) {
+				if(listExamPackage!=null &&listExamPackage.size()>0) {
+					packageid=listExamPackage.get(0).getExamPackageID();
 				}
-				if(packageid!=null) {
-					List<Examination> examList = examinationService.getAll(packageid);
-					model.addAttribute("examList", examList);
-				}
+			}
+			if(packageid!=null) {
+				List<Examination> examList = examinationService.getAll(packageid);
+				model.addAttribute("examList", examList);
 				ExamPackage currentPackage = examPackageService.getExamPackage(packageid);
 				model.addAttribute("currentPackage", currentPackage);
-				model.addAttribute("examPackageID", packageid);
-			} catch (NotFoundException e) {
-				e.printStackTrace();
 			}
+			
+			
+			model.addAttribute("examPackageID", packageid);
 		}
 		return "manage/manage-exam";
 	}
@@ -133,8 +129,6 @@ public class ExamPackageController {
 	public String addExamPackageForm(Model model){
 		//get all category
 		List<Category> categoryList = categoryService.getAll();
-		
-		
 		
 		model.addAttribute("categoryList", categoryList);
 		return "manage/manage-exampackage-add";
@@ -165,22 +159,29 @@ public class ExamPackageController {
 			 @RequestParam(name="pass",required = false) String pass,
 			 @RequestParam(name="categoryID") List<Integer> categoryIDList,
 			 @RequestParam(name="showResult",required =  false) Integer showResult ,
-			 @RequestParam(name="numberOfQuestion",required = false) Integer numberOfQuestion
+			 @RequestParam(name="numberOfQuestion",required = false) Integer numberOfQuestion,
+			 @RequestParam(name="endDatetime",required = false) String endDatetime,
+			 @RequestParam(name="description",required = false) String description
 			 ) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 		    String currentUserName = authentication.getName();
 		    Account acc = accountService.getAccountByUsername(currentUserName).get();	    
 		    ExamPackage ep = new ExamPackage(examPackageTitle,acc);
+		    
+		    ep.setDescription(description);
 
 		   //if the exam is exercise
 		    if(isExerciseExam==null) {
 		    	DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
 		    	Date date;
+		    	Date endDate;
 				try {
 					date = (Date)formatter.parse(startDatetime);
+					endDate = (Date)formatter.parse(endDatetime);
 					ep.setExerciseExam(false);
 			    	ep.setStartDatetime(date);
+			    	ep.setEndDatetime(endDate);
 			    	ep.setDoExamTime(doExamTime);
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -280,6 +281,7 @@ public class ExamPackageController {
 	 * @param showResult the show result
 	 * @param usePassword the use password
 	 * @param password the password
+	 * @param numberOfQuestion the number of question
 	 * @return the string
 	 */
 	@PostMapping("/editpackage/{examPackageID}")
@@ -293,7 +295,9 @@ public class ExamPackageController {
 			@RequestParam(name="showResult",required = false) Integer showResult,
 			@RequestParam(name="usePassword",required = false) Integer usePassword,
 			@RequestParam(name="password",required = false) String password,
-			@RequestParam(name="numberOfQuestion",required = false) Integer numberOfQuestion
+			@RequestParam(name="numberOfQuestion",required = false) Integer numberOfQuestion,
+			@RequestParam(name="endDatetime",required = false) String endDatetime,
+			@RequestParam(name="description",required = false) String description
 			) {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -302,14 +306,18 @@ public class ExamPackageController {
 		    
 		    ep.setExamPackageTitle(examPackageTitle);
 		    
+		    ep.setDescription(description);
+		    
 		   //if the exam is exercise
 		    if(isExerciseExam==null) {
 		    	DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
-		    	Date date;
+		    	Date date,date2;
 				try {
 					date = (Date)formatter.parse(startDatetime);
+					date2 = (Date)formatter.parse(endDatetime);
 					ep.setExerciseExam(false);
 			    	ep.setStartDatetime(date);
+			    	ep.setEndDatetime(date2);
 			    	ep.setDoExamTime(doExamTime);
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -374,17 +382,12 @@ public class ExamPackageController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 		    String currentUserName = authentication.getName();
-		    try {
-				List<ExamPackage> examPackageList = examPackageService.getList(currentUserName);
-				List<QuestionPackage> questionPackageList  = questionPackageService.getList(currentUserName);
-				model.addAttribute("examPackageList", examPackageList);
-				model.addAttribute("examPackageListSize", examPackageList.size());
-				model.addAttribute("questionPackageList", questionPackageList);
-				model.addAttribute("questionPackageListSize", questionPackageList.size());
-			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			List<ExamPackage> examPackageList = examPackageService.getList(currentUserName);
+			List<QuestionPackage> questionPackageList  = questionPackageService.getList(currentUserName);
+			model.addAttribute("examPackageList", examPackageList);
+			model.addAttribute("examPackageListSize", examPackageList.size());
+			model.addAttribute("questionPackageList", questionPackageList);
+			model.addAttribute("questionPackageListSize", questionPackageList.size());
 		}
 		
 		model.addAttribute("examPackage", examPackage);
@@ -411,6 +414,7 @@ public class ExamPackageController {
 		//create exam object
 		Examination exam = new Examination();
 		exam.setExaminationTitle(title);
+		exam.setExamPackage(new ExamPackage(examPackageID));
 		
 		Examination eCreated = examinationService.create(exam);
 		
@@ -418,31 +422,40 @@ public class ExamPackageController {
 		
 		for(int i =0;i<questionPackageIDList.size();i++) {
 			QuestionPackage questionpackage = questionPackageService.findByID(questionPackageIDList.get(i)); 
+			System.out.println(questionPackageIDList.get(i));
 			ExamQuestion eq = new ExamQuestion();
 			eq.setExamination(eCreated);
 			eq.setQuestionPackage(questionpackage);
+			System.out.println(eq);
 			examQuestionService.create(eq);
 		}
 		
 		return "redirect:/manage/exam";
 	}
 
+	/**
+	 * Edits the exam form.
+	 *
+	 * @param examID the exam ID
+	 * @param model the model
+	 * @return the string
+	 */
 	@GetMapping("/editexam/{examID}")
 	public String editExamForm(
 			@PathVariable(name="examID") Integer examID,
 			Model model) {
 		
 		Examination exam = examinationService.getExam(examID);
-		System.out.println(exam.getExamPackage().getNumberOfQuestion());
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(!(authentication instanceof AnonymousAuthenticationToken)) {
+			
 			String currentUserName = authentication.getName();
 			List<QuestionPackage> questionPackageList = questionPackageService.getList(currentUserName);
 			List<QuestionPackageModel> questionPackageModelList = new ArrayList<QuestionPackageModel>();
 			for(int i =0;i<questionPackageList.size();i++) {
 				boolean checked = false;
 				for(int j=0;j<exam.getExamQuestions().size();j++) {
-					if(questionPackageList.get(i).getQuestionPackageID() == exam.getExamQuestions().get(j).getExamQuestionID()) {
+					if(questionPackageList.get(i).getQuestionPackageID() == exam.getExamQuestions().get(j).getQuestionPackage().getQuestionPackageID()) {
 						checked = true;
 						break;
 					}
@@ -457,11 +470,54 @@ public class ExamPackageController {
 						size
 						));
 			}
+			
+			//get exampackageList
+			List<ExamPackage> examPackageList = examPackageService.getList(currentUserName);
+			
+			model.addAttribute("examPackageList", examPackageList);
 			model.addAttribute("examPackageModelList", questionPackageModelList);
 			model.addAttribute("exam", exam);
 			return "manage/manage-exam-edit";
 		}
 		
 		return "redirect:/login";
+	}
+
+	/**
+	 * Edits the exam.
+	 *
+	 * @param examinationID the examination ID
+	 * @param examinationTitle the examination title
+	 * @param questionPackageIDList the question package ID list
+	 * @param examPackageID the exam package ID
+	 * @return the string
+	 */
+	@PostMapping("/editexam/{examinationID}")
+	@Transactional
+	public String editExam(
+			@PathVariable(name = "examinationID") Integer examinationID,
+			@RequestParam(name="examinationTitle") String examinationTitle,
+			@RequestParam(name = "questionPackageID") List<Integer> questionPackageIDList,
+			@RequestParam(name ="examPackageID") Integer examPackageID
+			) {
+		//get exam
+		Examination exam = examinationService.getExam(examinationID);
+		//delete connection
+		examQuestionService.delete(exam);
+		//set value
+		exam.setExaminationTitle(examinationTitle);
+		exam.setExamPackage(new ExamPackage(examPackageID));
+		//set new connection
+		for(int i =0;i<questionPackageIDList.size();i++) {
+			QuestionPackage questionpackage = questionPackageService.findByID(questionPackageIDList.get(i)); 
+			ExamQuestion eq = new ExamQuestion();
+			eq.setExamination(exam);
+			eq.setQuestionPackage(questionpackage);
+			examQuestionService.create(eq);
+		}
+		
+		//do edit
+		
+		return "redirect:/manage/exam";
 	}
 }

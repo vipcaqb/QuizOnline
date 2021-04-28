@@ -20,6 +20,14 @@ public interface AnswerService {
 	List<Answer> getAll(Question question);
 	
 	/**
+	 * Gets the answer.
+	 *
+	 * @param answerID the answer ID
+	 * @return the answer
+	 */
+	Answer getAnswer(int answerID);
+	
+	/**
 	 * Creates the.
 	 *
 	 * @param answer the answer

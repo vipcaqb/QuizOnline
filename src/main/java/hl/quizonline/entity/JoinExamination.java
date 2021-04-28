@@ -17,26 +17,63 @@ import javax.persistence.*;
 public class JoinExamination implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private JoinExaminationPK id;
-
-	@Column
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date timeFinish;
-
-	//bi-directional many-to-one association to Account
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long joinExamID;
+	
 	@ManyToOne
-	@JoinColumn(name="accountID",insertable=false, updatable=false)
+	@JoinColumn(name="exam_packageid")
+	private ExamPackage examPackage;
+
+	@ManyToOne
+	@JoinColumn(name="accountid")
 	private Account account;
 
-	//bi-directional many-to-one association to Examination
-	@ManyToOne
-	@JoinColumn(name="examinationID",insertable=false, updatable=false)
-	private Examination examination;
+	@Temporal(TemporalType.TIMESTAMP)
+	private java.util.Date timeFinish;
+
 
 	@Column
 	private int correctQuestionNumber;
 	
+	@Column
+	private int score;
+	
+	@Column
+	private int examTimes;
+
+	public Long getJoinExamID() {
+		return joinExamID;
+	}
+
+	public void setJoinExamID(Long joinExamID) {
+		this.joinExamID = joinExamID;
+	}
+
+	public ExamPackage getExamPackage() {
+		return examPackage;
+	}
+
+	public void setExamPackage(ExamPackage examPackage) {
+		this.examPackage = examPackage;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	public java.util.Date getTimeFinish() {
+		return timeFinish;
+	}
+
+	public void setTimeFinish(java.util.Date timeFinish) {
+		this.timeFinish = timeFinish;
+	}
+
 	public int getCorrectQuestionNumber() {
 		return correctQuestionNumber;
 	}
@@ -45,39 +82,22 @@ public class JoinExamination implements Serializable {
 		this.correctQuestionNumber = correctQuestionNumber;
 	}
 
-	public JoinExamination() {
+	public int getScore() {
+		return score;
 	}
 
-	public JoinExaminationPK getId() {
-		return this.id;
+	public void setScore(int score) {
+		this.score = score;
 	}
 
-	public void setId(JoinExaminationPK id) {
-		this.id = id;
+	public int getExamTimes() {
+		return examTimes;
 	}
 
-	public Date getTimeFinish() {
-		return this.timeFinish;
+	public void setExamTimes(int examTimes) {
+		this.examTimes = examTimes;
 	}
-
-	public void setTimeFinish(Date timeFinish) {
-		this.timeFinish = timeFinish;
-	}
-
-	public Account getAccount() {
-		return this.account;
-	}
-
-	public void setAccount(Account account) {
-		this.account = account;
-	}
-
-	public Examination getExamination() {
-		return this.examination;
-	}
-
-	public void setExamination(Examination examination) {
-		this.examination = examination;
-	}
+	
+	
 
 }

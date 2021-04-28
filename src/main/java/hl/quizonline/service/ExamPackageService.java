@@ -17,9 +17,8 @@ public interface ExamPackageService {
 	 *
 	 * @param username the username
 	 * @return the list
-	 * @throws NotFoundException the not found exception
 	 */
-	List<ExamPackage> getList(String username) throws NotFoundException;
+	List<ExamPackage> getList(String username);
 	
 	/**
 	 * Gets the list.
@@ -47,7 +46,14 @@ public interface ExamPackageService {
 	 *
 	 * @return the list incoming
 	 */
-	List<ExamPackage> getListIncoming();
+	List<ExamPackage> getListIsComing();
+	
+	/**
+	 * Gets the list expired.
+	 *
+	 * @return the list expired
+	 */
+	List<ExamPackage> getListExpired();
 	
 	/**
 	 * Find with.
@@ -86,5 +92,10 @@ public interface ExamPackageService {
 	 */
 	ExamPackage getExamPackage(int examPackageID);
 	
-	
+	/**
+	 * Checks if this exam package is present.
+	 *
+	 * @return true, if is present
+	 */
+	boolean isPresent(ExamPackage examPackage);
 }

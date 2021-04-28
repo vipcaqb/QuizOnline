@@ -20,11 +20,11 @@ public class ExamQuestion implements Serializable  {
 	private int examQuestionID;
 	
 	@ManyToOne
-	@JoinColumn(name = "examinationid",updatable = false,insertable = false)
+	@JoinColumn(name = "examinationid")
 	private Examination examination;
 	
 	@ManyToOne
-	@JoinColumn(name = "question_packageid",updatable = false,insertable = false)
+	@JoinColumn(name = "question_packageid")
 	private QuestionPackage questionPackage;
 
 	public int getExamQuestionID() {
@@ -50,7 +50,11 @@ public class ExamQuestion implements Serializable  {
 	public void setQuestionPackage(QuestionPackage questionPackage) {
 		this.questionPackage = questionPackage;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "ExamQuestion [examQuestionID=" + examQuestionID + ", examination=" + examination + ", questionPackage="
+				+ questionPackage + "]";
+	}
 	
 }

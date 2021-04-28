@@ -42,66 +42,85 @@
 						Cuộc thi đang diễn ra
 					</div>
 					
-					<div class="card shadow">
-						Đề thi 1
-						<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-						</p>
-						<div>
-							<i class="fas fa-clock">Thời gian thi: 20 phút</i>
-							<br>
-							<i class="fas fa-question">Số câu hỏi: 50</i>
-							<br>
-							<i class="fas fa-user">Người tạo: Tèo Văn</i>
-							<br>
+					<th:block th:each="examPresent: ${examPackagePresentList}">
+						<div class="card shadow">
+							<h3 th:text="${examPresent.examPackageTitle}">Đề thi 1</h3>
+							<p th:utext="${examPresent.description}">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+							</p>
+							<div>
+								<i class="fas fa-clock" >Thời gian còn lại: 50 phút</i>
+								<br>
+								<i class="fas fa-question" th:utext="${examPresent.numberOfQuestion}">Số câu hỏi: 50</i>
+								<br>
+								<i class="fas fa-user" th:utext="${examPresent.account.fullname}">Người tạo: Tèo Văn</i>
+								<br>
+							</div>
+							<a th:href="@{'/examdetail/'+${examPresent.examPackageID}}" class="btn btn-outline-primary">Chi tiết</a>
 						</div>
-						<a class="btn btn-outline-primary">Chi tiết</a>
+					</th:block>
+					<div style="margin-top: 10px;width: 100%;background: #ffffff;padding: 15px;box-shadow: 0 2px 6px rgb(0 0 0 / 8%);font-size: 20px;">
+						Cuộc thi sắp diễn ra
 					</div>
-					<div class="card shadow">
-						Đề thi 1
-						<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-						</p>
-						<div>
-							<i class="fas fa-clock">Thời gian thi: 20 phút</i>
-							<br>
-							<i class="fas fa-question">Số câu hỏi: 50</i>
-							<br>
-							<i class="fas fa-user">Người tạo: Tèo Văn</i>
-							<br>
+					
+					<th:block th:each="examComming: ${examPackageIsCommingList}">
+						<div class="card shadow">
+							<h3 th:text="${examComming.examPackageTitle}">Đề thi 1</h3>
+							<p th:utext="${examComming.description}">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+							</p>
+							<div>
+								<i class="fas fa-clock" >Bắt đầu sau: 1h 50 phút</i>
+								<br>
+								<i class="fas fa-question" th:utext="${examComming.numberOfQuestion}">Số câu hỏi: 50</i>
+								<br>
+								<i class="fas fa-user" th:utext="${examComming.account.fullname}">Người tạo: Tèo Văn</i>
+								<br>
+							</div>
+							<a th:href="@{'/examdetail/'+${examComming.examPackageID}}" class="btn btn-outline-primary">Chi tiết</a>
 						</div>
-						<a class="btn btn-outline-primary">Chi tiết</a>
+					</th:block>
+					<div style="margin-top: 10px;width: 100%;background: #ffffff;padding: 15px;box-shadow: 0 2px 6px rgb(0 0 0 / 8%);font-size: 20px;">
+						Cuộc thi đã kết thúc
 					</div>
-					<div class="card shadow">
-						Đề thi 1
-						<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-						</p>
-						<div>
-							<i class="fas fa-clock">Thời gian thi: 20 phút</i>
-							<br>
-							<i class="fas fa-question">Số câu hỏi: 50</i>
-							<br>
-							<i class="fas fa-user">Người tạo: Tèo Văn</i>
-							<br>
+					
+					<th:block th:each="examExpired: ${examPackageExpiredList}">
+						<div class="card shadow">
+							<h3 th:text="${examExpired.examPackageTitle}">Đề thi 1</h3>
+							<p th:utext="${examExpired.description}">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+							</p>
+							<div>
+								<i class="fas fa-clock" >Bắt đầu sau: 1h 50 phút</i>
+								<br>
+								<i class="fas fa-question" th:utext="${examExpired.numberOfQuestion}">Số câu hỏi: 50</i>
+								<br>
+								<i class="fas fa-user" th:utext="${examExpired.account.fullname}">Người tạo: Tèo Văn</i>
+								<br>
+							</div>
+							<a th:href="@{'/examdetail/'+${examExpired.examPackageID}}" class="btn btn-outline-primary">Chi tiết</a>
 						</div>
-						<a class="btn btn-outline-primary">Chi tiết</a>
+					</th:block>
+					
+					<div style="margin-top: 10px;width: 100%;background: #ffffff;padding: 15px;box-shadow: 0 2px 6px rgb(0 0 0 / 8%);font-size: 20px;">
+						Đề ôn tập
 					</div>
-					<div class="card shadow">
-						Đề thi 1
-						<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-						</p>
-						<div>
-							<i class="fas fa-clock">Thời gian thi: 20 phút</i>
-							<br>
-							<i class="fas fa-question">Số câu hỏi: 50</i>
-							<br>
-							<i class="fas fa-user">Người tạo: Tèo Văn</i>
-							<br>
+					
+					<th:block th:each="examExercise: ${examPackageExerciseList}">
+						<div class="card shadow">
+							<h3 th:text="${examExercise.examPackageTitle}">Đề thi 1</h3>
+							<p th:utext="${examExercise.description}">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+							</p>
+							<div>
+								<i class="fas fa-question" th:utext="${examExercise.numberOfQuestion}">Số câu hỏi: 50</i>
+								<br>
+								<i class="fas fa-user" th:utext="${examExercise.account.fullname}">Người tạo: Tèo Văn</i>
+								<br>
+							</div>
+							<a th:href="@{'/examdetail/'+${examExercise.examPackageID}}" class="btn btn-outline-primary">Chi tiết</a>
 						</div>
-						<a class="btn btn-outline-primary">Chi tiết</a>
-					</div>
+					</th:block>
 				</div>
 				<div class="col-md-3">
 				<p>
@@ -112,18 +131,12 @@
 						</div>
 						<div class="panel-body">
 							<ul class="list-unstyled activity-list">
-								<li>
-									<img src="assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Thi tiếng anh B1</a> trong khoảng 3 tiếng nữa <span class="timestamp">Văn Tèo</span></p>
-								</li>
-								<li>
-									<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Thi sinh học lớp 12</a> Trong khoảng 6 tiếng nữa<span class="timestamp">Quân Kun</span></p>
-								</li>
-								<li>
-									<img src="assets/img/user3.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Quân kun</a> created a new heatmap view <a href="#">Landing Page</a> <span class="timestamp">2 days ago</span></p>
-								</li>
+								<th:block th:each="examComming: ${examPackageIsCommingList}">
+									<li>
+										<img src="assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
+										<p th:utext="${examComming.examPackageTitle}"><a th:href="@{'/examdetail/' + ${examComming.examPackageID}}">Thi tiếng anh B1</a> trong khoảng 3 tiếng nữa <span class="timestamp">Văn Tèo</span></p>
+									</li>
+								</th:block>
 							</ul>
 							<button type="button" class="btn btn-primary btn-bottom center-block">Hiển thị tất cả</button>
 						</div>
@@ -190,8 +203,8 @@
 	</div>
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
-	<script src="assets/vendor/jquery/jquery.min.js"></script>
-	<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/assets/vendor/jquery/jquery.min.js"></script>
+	<script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 </body>
 
 </html>

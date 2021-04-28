@@ -6,6 +6,7 @@ import javax.persistence.*;
 import org.hibernate.annotations.Nationalized;
 import org.springframework.format.annotation.DateTimeFormat;
 
+
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,10 @@ public class ExamPackage implements Serializable {
 	@Column
 	@Nationalized
 	private String examPackageTitle;
+	
+	@Column
+	@Nationalized
+	private String description;
 	
 	@Column
 	private boolean mixQuestion;
@@ -56,6 +61,10 @@ public class ExamPackage implements Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date startDatetime;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private Date endDatetime;
+	
 	@Column
 	private int doExamTime;
 
@@ -80,6 +89,10 @@ public class ExamPackage implements Serializable {
 	//bi-directional many-to-one association to Examination
 	@OneToMany(mappedBy="examPackage")
 	private List<Examination> examinations;
+	
+	//bi-directional many-to-one association to joinExaminations
+	@OneToMany(mappedBy="examPackage")
+	private List<JoinExamination> joinExaminations;
 
 	public ExamPackage() {
 	}
@@ -100,6 +113,22 @@ public class ExamPackage implements Serializable {
 		this.examPackageTitle = examPackageTitle;
 	}
 	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getEndDatetime() {
+		return endDatetime;
+	}
+
+	public void setEndDatetime(Date endDatetime) {
+		this.endDatetime = endDatetime;
+	}
+
 	public Account getAccount() {
 		return this.account;
 	}
@@ -204,6 +233,10 @@ public class ExamPackage implements Serializable {
 		this.showResults = showResults;
 	}
 
+	public ExamPackage(int examPackageID) {
+		super();
+		this.examPackageID = examPackageID;
+	}
 
 	@Override
 	public String toString() {

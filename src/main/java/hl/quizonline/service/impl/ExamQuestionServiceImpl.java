@@ -3,10 +3,13 @@ package hl.quizonline.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.ExamQuestion;
+import hl.quizonline.entity.Examination;
 import hl.quizonline.repository.ExamQuestionRepository;
 import hl.quizonline.service.ExamQuestionService;
 
@@ -48,6 +51,20 @@ public class ExamQuestionServiceImpl implements ExamQuestionService {
 	@Override
 	public void delete(ExamQuestion examQuestion) {
 		examQuestionRepository.delete(examQuestion);
+	}
+
+	@Override
+	public List<ExamQuestion> getList(Examination exam) {
+		return examQuestionRepository.findByExamination(exam);
+	}
+
+	@Override
+	@Transactional
+	public void delete(Examination exam) {
+		List<ExamQuestion> examQuestionList = examQuestionRepository.findByExamination(exam);
+		for(int i=0;i<examQuestionList.size();i++ ) {
+			examQuestionRepository.delete(examQuestionList.get(i));
+		}
 	}
 
 }

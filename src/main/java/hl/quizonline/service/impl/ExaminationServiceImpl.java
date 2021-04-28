@@ -23,8 +23,8 @@ public class ExaminationServiceImpl implements ExaminationService {
 	
 	@Override
 	public List<Examination> getAll(int exampackageID) {
-		return examinationRepository.findByExaminationID(exampackageID);
-
+		ExamPackage ep = examPackageRepository.findById(exampackageID).get();
+		return examinationRepository.findByExamPackage(ep);
 	}
 
 	@Override

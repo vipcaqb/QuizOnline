@@ -1,6 +1,9 @@
 package hl.quizonline.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +43,19 @@ public class AccountController {
 	
 	@GetMapping("/profile")
 	public String showProfile(Model model){
-		return "manage/profile";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			
+		    String currentUserName = authentication.getName();
+		    Account account = accountService.getAccountByUsername(currentUserName).get();
+		    
+		    model.addAttribute("account", account);
+		    return "manage/profile";
+		}
+		
+		
+		
+		return "redirect:/login";
 	}
 	
 	@GetMapping("/history")

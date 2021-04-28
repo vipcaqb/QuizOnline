@@ -63,11 +63,11 @@
 						<ul class="list-group pb-3">	
 							<th:block th:each="qp : ${questionPackageList}">
 								<li class="list-group-item" th:if="${qp.questionPackageID} != ${questionPackageID}">
-									<a th:href="@{'/manage/question/'+${qp.questionPackageID}}" th:utext="${qp.name}">Gói câu hỏi về toán học</a>
+									<a style="color: #fff;" th:href="@{'/manage/question/'+${qp.questionPackageID}}" th:utext="${qp.name}">Gói câu hỏi về toán học</a>
 								</li>
 								
 								<li class="list-group-item active" th:if="${qp.questionPackageID} == ${questionPackageID}">
-									<a th:href="@{'/manage/question/'+${qp.questionPackageID}}" th:utext="${qp.name}">Gói câu hỏi về toán học</a>
+									<a style="color: #fff;" th:href="@{'/manage/question/'+${qp.questionPackageID}}" th:utext="${qp.name}">Gói câu hỏi về toán học</a>
 								</li>
 							</th:block>
 						</ul>
@@ -135,7 +135,11 @@
 	<!-- Javascript -->
 	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
 	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
-
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#qlch').addClass('active');
+		})
+	</script>
 </body>
 
 </html>

@@ -17,9 +17,11 @@ public interface ExamPackageRepository extends CrudRepository<ExamPackage, Integ
 	
 	List<ExamPackage> findByIsExerciseExam(boolean isExercise);
 	
-	@Query("SELECT ep from ExamPackage ep WHERE ep.isExerciseExam = false AND ep.startDatetime < ?1")
+	@Query("SELECT ep from ExamPackage ep WHERE ep.isExerciseExam = false AND ep.startDatetime < ?1 AND ep.endDatetime > ?1")
 	List<ExamPackage> findByIsExamAndPresent(Date currentDateTime);
-	@Query("SELECT ep from ExamPackage ep WHERE ep.isExerciseExam = true AND ep.startDatetime > ?1")
+	@Query("SELECT ep from ExamPackage ep WHERE ep.isExerciseExam = false AND ep.startDatetime > ?1")
 	List<ExamPackage> findByIsExamAndCommingSoon(Date currentDateTime);
+	@Query("SELECT ep FROM ExamPackage ep WHERE ep.isExerciseExam = false AND ep.endDatetime < ?1")
+	List<ExamPackage> findExamExpired(Date currentDateTime);
 	
 }

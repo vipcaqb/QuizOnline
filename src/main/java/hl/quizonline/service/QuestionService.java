@@ -2,6 +2,8 @@ package hl.quizonline.service;
 
 import java.util.List;
 
+import hl.quizonline.entity.ExamPackage;
+import hl.quizonline.entity.Examination;
 import hl.quizonline.entity.Question;
 import hl.quizonline.entity.QuestionPackage;
 
@@ -55,4 +57,19 @@ public interface QuestionService {
 	 */
 	void delete(Question question);
 	
+	/**
+	 * Shuffle list question.
+	 *
+	 * @param examination the examination
+	 * @return the question list
+	 */
+	List<Question> getQuestionList(Examination examination);
+	
+	/**
+	 * Check question'user is correct.
+	 *
+	 * @param question the question
+	 * @return true, if the question is correct
+	 */
+	boolean checkQuestionIsCorrect(Question question);
 }

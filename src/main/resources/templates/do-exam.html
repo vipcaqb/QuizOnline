@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>admin</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<!-- VENDOR CSS -->
+	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+	<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+	<link rel="stylesheet" th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+	<link rel="stylesheet" th:href="@{/css/danhsachde.css}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+	<link rel="stylesheet" href="/css/exam-detail.css">
+	<link rel="stylesheet" href="/css/do-exam.css">
+
+	<!-- MAIN CSS -->
+	<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+	<!-- GOOGLE FONTS -->
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+	<!-- ICONS -->
+	<link rel="apple-touch-icon" sizes="76x76" th:href="@{/assets/img/apple-icon.png}">
+	<link rel="icon" type="image/png" sizes="96x96" th:href="@{/assets/img/favicon.png}">
+	
+	<link rel="stylesheet" th:href="@{/css/mystyle.css}">
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:insert="/shared/navbar::navbar">
+			
+		</div>
+		<!-- END NAVBAR -->
+		<!-- CONTENT -->
+		
+		<div class="container-fluid" id="content">
+			<div class="row">
+				<div class="col-md-9" id="main-content">
+					
+					<div class="title">
+						<h3 th:utext="${examPackage.examPackageTitle}"> Thi trắc nghiệm toán</h3>
+						<p class="small" th:utext="${examPackage.account.fullname}">Nguyễn Viết Hùng</p>
+					</div>
+					<div class="card" style="width: 100%;" id="question-list">
+						<h3 class="part-title">Phần 1: gồm 1 phương án đúng</h3>
+						
+						<div class="question" th:each="question,itor : ${questionList}">
+							<h4 th:data-questionid="${question.questionID}" th:id="@{'q'+${itor.index}}" th:utext="@{'Câu: '+${itor.index+1}}">Câu hỏi số 1</h4>
+							<div>
+								<img alt="" src="">
+							</div>
+							<p th:utext="${question.questionContent}">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+							</p>
+							<div class="answer">
+							<th:block th:each="answer,index: ${question.answers}">
+								<label th:data-answerid="${answer.answerID}" th:if="${question.numberOfCorrect()}==1" ><input class="answerradio" th:data-answerid="${answer.answerID}" type='radio' th:name="@{'q}+ ${itor.index+1}"> <span th:text="${answer.answerContent}"></span> </label> 
+								<label th:data-answerid="${answer.answerID}" th:unless="${question.numberOfCorrect()}==1" ><input class="answercb" th:data-answerid="${answer.answerID}" type='checkbox' th:name="@{'q}+ ${itor.index+1}"> <span th:text="${answer.answerContent}"></span> </label>
+							</th:block>
+							</div>
+							<hr>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+				<p>
+				<!-- TIMELINE -->
+					<div class="panel panel-scrolling" id="question-menu">
+						<div class="panel-heading">
+							<h3 class="panel-title">Thời gian còn lại: 20 phút</h3>
+							<p class="pt-1"> Đã trả lời: <span id="answered">30</span>/<span id="total">40</span> </p>
+						</div>
+						<div class="panel-body">
+							<div id="question-menu-list">
+								
+								<th:block th:each="question,itor : ${questionList}">
+									<a th:href="@{'#q'+${itor.index}}" th:utext="${itor.index+1}" class="question-menu btn btn-outline-primary">1</a>
+								</th:block>
+							</div>
+							<button type="button" id="finish" class="btn btn-primary btn-bottom center-block mt-1">Nộp bài</button>
+						</div>
+					</div>
+				<!-- END TIMELINE -->
+				</p>
+				</div>
+			</div>
+		</div>
+		
+		<!-- END CONTENT -->
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+		<footer>
+			<div class="container-fluid">
+				<p class="copyright">&copy; 2017 <a href="https://www.themeineed.com" target="_blank">Theme I Need</a>. All Rights Reserved.</p>
+			</div>
+		</footer>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script src="/assets/vendor/jquery/jquery.min.js"></script>
+	<script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#finish').click(function(){
+				event.preventDefault();
+				//kiem tra xem nguoi dung da dien het dap an chua
+				var readyToPost = checkFinish();
+				if(readyToPost ==false){
+					alert('Bạn phải trả lời hết tất cả câu hỏi');
+					return;
+				}
+				var questionList = [];
+				$('.question').each(function(i,e){
+					
+					
+					var singleQuestion = {};
+					singleQuestion["questionID"]=$(e).find('h4').attr('data-questionid');
+					
+					var answerList= [];
+					$(e).find("input[type='checkbox']").each((i,e)=>{
+						var single = {};
+		                single["answerID"] = e.getAttribute('data-answerid');
+		                single["idCorrect"] = e.checked;
+		                answerList.push(single);
+					})
+					$(e).find("input[type='radio']").each((i,e)=>{
+						var single = {};
+		                single["answerID"] = e.getAttribute('data-answerid');
+		                single["idCorrect"] = e.checked;
+		                answerList.push(single);
+					})
+					singleQuestion["answers"] = answerList;
+					questionList.push(singleQuestion);
+				})
+				console.log(questionList);
+				
+				var urlTarget = /*[[@{'/doexam/'+${examPackage.examPackageID}}]]*/"";
+	            
+		           var myJson = JSON.stringify(questionList);
+		            $.ajax({
+		            	type: 'POST',
+		            	contentType: "application/json",
+		                url: urlTarget,
+		                data: myJson,
+		                dataType: 'json',
+		                cache: false,
+		        		timeout: 600000,
+		        		success: function(data){
+		        			console.log(data);
+		        			$('#question-list').empty();
+		        			var totalQuestions = "<p>Tổng số câu hỏi: "+data.totalOfQuestion+"</p>"
+		        			var correctQuestions = "<p>Số câu trả lời đúng: "+data.correctQuestion+"</p>"
+		        			var score = "<p>Điểm số: "+data.score+"</p>"
+		        			$('#question-list').append('<h2>Kết quả</h2>');
+		        			$('#question-list').append(totalQuestions);
+		        			$('#question-list').append(correctQuestions);
+		        			$('#question-list').append(score);
+		        			
+		        			//lấy danh sách đáp án đã trả lời
+		        			//tao table element bang jquery
+		        			var table = $("<table></table>").text("");
+		        			table.addClass('table');
+		        			table.addClass('table-bordered');
+		        			//tao hang tieu de trong table
+		        			var thead = $("<thead></thead>");
+		        			var th = $("<tr></tr>");
+		        			var tr1 =  $("<th></th>").text("Nội dung câu hỏi");
+		        			var tr2 =  $("<th></th>").text("Phương án bạn trả lời");
+		        			var tr3 =  $("<th></th>").text("Kết quả");
+		        			var tr4 =  $("<th></th>").text("Đáp án đúng");
+		        			th.append(tr1);
+		        			th.append(tr2);
+		        			th.append(tr3);
+		        			th.append(tr4);
+		        			thead.append(th);
+		        			table.append(thead);
+		        			
+		        			var tbody = $("<tbody></tbody>");
+		        			//duyet danh sach dap an da tra loi
+		        			var questionModelList = data.questionModelList;
+		        			for(let i=0;i<questionModelList.length;i++){
+		        				//tao tr element jquery
+		        				var tr = $("<tr></tr>");
+		        				var td1 = $("<td></td>").text(questionModelList[i].questionContent);
+		        				// phương án bạn trả lời
+		        				var userAnswer = "";
+		        				for(let j=0;j<questionModelList[i].userAnswerList.length;j++){
+		        					userAnswer += questionModelList[i].userAnswerList[j];
+		        					userAnswer+="\n";
+		        				}
+		        				var td2 = $("<td></td>").text(userAnswer);
+		        				
+		        				var td3 = $("<td></td>");
+		        				if(questionModelList[i].correct){
+		        					td3.text("Đúng");
+		        				}
+		        				else {
+		        					td3.text("Sai");
+		        				}
+		        				
+		        				var correctAnswer = "";
+		        				for(let j=0;j<questionModelList[i].correctAnswerList.length;j++){
+		        					correctAnswer += questionModelList[i].correctAnswerList[j];
+		        					correctAnswer+="\n";
+		        				}
+		        				var td4 = $("<td></td>").text(correctAnswer);
+		        				
+		        				tr.append(td1);
+		        				tr.append(td2);
+		        				tr.append(td3);
+		        				tr.append(td4);
+		        				tbody.append(tr);
+		        			}
+		        			
+		        			table.append(tbody);
+		        			$('#question-list').append(table);
+		        		},
+		        		error: function(e) {
+			    			alert('Có lỗi xảy ra')
+			    		}
+		            })
+			})
+		})
+		
+		
+	function checkFinish(){
+			var checked = false;
+			$('.question').each(function(i,e){
+				
+				$(e).find("input[type='checkbox']").each((i,e)=>{
+					if(e.checked){
+						checked = true;
+					}
+				})
+				
+				$(e).find("input[type='radio']").each((i,e)=>{
+					if(e.checked){
+						checked = true;
+					}
+				})
+			})
+			return checked;
+		}
+	</script>
+</body>
+
+</html>

@@ -25,15 +25,13 @@ public class ExamPackageImpl implements ExamPackageService {
 	AccountRepository accountRepository;
 
 	@Override
-	public List<ExamPackage> getList(String username) throws NotFoundException{
+	public List<ExamPackage> getList(String username){
 		Optional<Account> acc = accountRepository.findByUsername(username);
 		if(acc.isPresent()) {
 			List<ExamPackage> list = examPackageRepository.findByAccount(acc.get());
 			return list;
 		}
-		else {
-			throw new NotFoundException("Khong tim thay tai khoan");
-		}
+		else return null;
 	}
 
 	@Override
@@ -48,11 +46,22 @@ public class ExamPackageImpl implements ExamPackageService {
 
 	@Override
 	public void delete(Integer examPackageID) {
+		//delete join exam
+		
+		//delete examQuestion
+		
+		//delete examination
+		
+		//delete examPackageCategory
+		
+		//delete examPackage
+		
 		examPackageRepository.deleteById(examPackageID);
 	}
 
 	@Override
 	public void update(ExamPackage examPackage) {
+		
 		Optional<ExamPackage> eOptional = examPackageRepository.findById(examPackage.getExamPackageID());
 		if(eOptional.isPresent()) {
 			examPackageRepository.save(examPackage);
@@ -85,8 +94,26 @@ public class ExamPackageImpl implements ExamPackageService {
 	}
 
 	@Override
-	public List<ExamPackage> getListIncoming() {
+	public List<ExamPackage> getListIsComing() {
 		Date now = new Date(System.currentTimeMillis());
 		return examPackageRepository.findByIsExamAndCommingSoon(now);
+	}
+
+	@Override
+	public List<ExamPackage> getListExpired() {
+		Date now = new Date(System.currentTimeMillis());
+		return examPackageRepository.findExamExpired(now);
+	}
+
+	@Override
+	public boolean isPresent(ExamPackage examPackage) {
+		Date now = new Date(System.currentTimeMillis());
+		if(examPackage.isExerciseExam()|| examPackage.getStartDatetime()==null || examPackage.getEndDatetime()==null) {
+			return true;
+		}
+		if(now.compareTo(examPackage.getStartDatetime()) <0|| now.compareTo(examPackage.getEndDatetime())>0) {
+			return false;
+		}
+		else return true;
 	}
 }

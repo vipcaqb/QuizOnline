@@ -54,16 +54,16 @@
 							<a class="btn btn-primary" th:href="@{'/manage/exam/editpackage/'+${examPackageID}}">Sửa</a>
 							<button class= "btn btn-danger">Xóa</button>
 						</div>
-						<div th:if="${examPackageList.size()== 0}" class="alert alert-warning">Bạn chưa có bộ đề thi nào, bấm 'Thêm' để tạo</div>
-						<ul th:unless="${examPackageList.size()== 0}" class="list-group pb-3 pt-1">
+						<div th:if="${examPackageList==null}" class="alert alert-warning">Bạn chưa có bộ đề thi nào, bấm 'Thêm' để tạo</div>
+						<ul th:unless="${examPackageList==null}" class="list-group pb-3 pt-1">
 						
 							<th:block th:each="exam : ${examPackageList}">
 								<li  th:if="${exam.examPackageID}!=${examPackageID}" class="list-group-item">
-									<a th:href="@{'/manage/exam/' + ${exam.examPackageID}}" th:utext="${exam.examPackageTitle}"></a>
+									<a style="color: #fff;" th:href="@{'/manage/exam/' + ${exam.examPackageID}}" th:utext="${exam.examPackageTitle}"></a>
 								</li>
 								
 								<li  th:if="${exam.examPackageID}==${examPackageID}" class="list-group-item active">
-									<a th:href="@{'/manage/exam/' + ${exam.examPackageID}}" th:utext="${exam.examPackageTitle}"></a>
+									<a style="color: #fff;" th:href="@{'/manage/exam/' + ${exam.examPackageID}}" th:utext="${exam.examPackageTitle}"></a>
 								</li>
 							</th:block>
 						</ul>
@@ -72,7 +72,7 @@
 				<div class="col-md-9">
 					<div class="panel" style="min-height: 100vh;">
 						<div class="panel-heading">
-							<div class="panel-title" th:utext="${currentPackage.examPackageTitle}">Các đề trong "Đề thi toán học lớp 12 khối không chuyên"</div>
+							<div class="panel-title" th:if="${currentPackage!=null}" th:utext="${currentPackage.examPackageTitle}">Các đề trong "Đề thi toán học lớp 12 khối không chuyên"</div>
 						</div>
 						<div class="ml-1">
 							<a th:href="@{'/manage/exam/addexam/'+${examPackageID}}" class= "btn btn-success">Thêm</a>
@@ -114,7 +114,11 @@
 	<!-- Javascript -->
 	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
 	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
-
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#qlde').addClass('active');
+		})
+	</script>
 </body>
 
 </html>

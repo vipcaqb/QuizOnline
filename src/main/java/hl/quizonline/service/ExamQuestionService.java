@@ -3,6 +3,7 @@ package hl.quizonline.service;
 import java.util.List;
 
 import hl.quizonline.entity.ExamQuestion;
+import hl.quizonline.entity.Examination;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -24,6 +25,14 @@ public interface ExamQuestionService {
 	 * @return the list
 	 */
 	List<ExamQuestion> getList();
+	
+	/**
+	 * Gets the list examination.
+	 *
+	 * @param exam the exam
+	 * @return the list
+	 */
+	List<ExamQuestion> getList(Examination exam);
 	
 	/**
 	 * Creates the.
@@ -53,4 +62,10 @@ public interface ExamQuestionService {
 	 */
 	void delete(ExamQuestion examQuestion);
 	
+	/**
+	 * Delete all examQuestion have Exam
+	 *
+	 * @param exam the exam
+	 */
+	void delete(Examination exam);
 }
