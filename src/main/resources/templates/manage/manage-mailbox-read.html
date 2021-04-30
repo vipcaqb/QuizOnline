@@ -60,8 +60,8 @@
 									<hr>
 									<div>
 										<ul class="nav nav-pills nav-stacked">
-											<li class="active"><a href="/manage/mailbox"><i class="fa fa-inbox"></i> Thư nhận (14)</a></li>
-											<li><a href="/manage/mailbox/sent"><i class="fa fa-send"></i> Thư đã gửi</a></li>
+											<li><a href="/manage/mailbox"><i class="fa fa-inbox"></i> Thư nhận (14)</a></li>
+											<li class="active"><a href="/manage/mailbox/sent"><i class="fa fa-send"></i> Thư đã gửi</a></li>
 										</ul>
 									</div>
 								</div>
@@ -70,52 +70,25 @@
 								<!-- BEGIN INBOX CONTENT -->
 								<div class="col-md-9">
 									<div class="row">
-										<div class="col-sm-6">
-											<label style="margin-right: 8px;" class="">
-												<div class="icheckbox_square-blue" style="position: relative;"><input type="checkbox" id="check-all" class="icheck" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
-											</label>
-											<div class="btn-group">
-												<button type="button" class="btn btn-danger">
-													Xóa
-												</button>
-											</div>
-										</div>
 			
 										<div class="col-md-6 search-form mt-1">
-											<form action="#" class="text-right">
-												<div class="input-group">
-													<input type="text" class="form-control input-sm" placeholder="Search">
-													<span class="input-group-btn">
-			                                            <button type="submit" name="search" class="btn_ btn-primary btn-sm search"><i class="fa fa-search"></i></button></span>
-												</div>			 
-											</form>
+											<div>
+												Tiêu đề: <span th:utext="${mailBox.title}">abc</span>
+											</div>
+											<div>
+												Người gửi: <span th:utext="${mailBox.account.username}">sender</span>
+											</div>
+											<div>
+												Người nhận: <span th:utext="${receiver}">receiver</span>
+											</div>
+											<div>
+												Nội dung: abcc	
+											</div>
 										</div>
 									</div>
 									
 									<div class="padding"></div>
-									
-									<div class="table-responsive">
-										<table class="table">
-											<tbody>
-											<th:block th:each="mail: ${mailToList}">
-												<tr>
-													<td class="action"><input type="checkbox" /></td>
-													<td class="name"><a href="#" th:utext="${mail.account.fullname}">Larry Gardner</a></td>
-													<td class="subject"><a href="#" th:utext="${mail.mailBox.title}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed </a></td>
-													<td class="time" th:utext="${mail.mailBox.sendDate}">08:30 PM</td>
-												</tr>
-											</th:block>
-										</tbody></table>
-									</div>
-			
-									<ul class="pagination">
-										
-										<th:block th:each="i : ${#numbers.sequence(1, page.totalPages)}">
-											<li th:if="${i==page.number+1}" class="active"><a href="#" th:utext="${i}">2</a></li>
-											<li th:if="${i!=page.number+1}"><a href="#" th:utext="${i}">2</a></li>
-										</th:block>
-										
-									</ul>						
+														
 								</div>
 								<!-- END INBOX CONTENT -->
 								

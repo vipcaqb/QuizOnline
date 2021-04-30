@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -74,6 +77,13 @@ public class AccountServiceImpl implements AccountService{
 	@Override
 	public Optional<Account> getAccountByUsername(String username) {
 		return accRepository.findByUsername(username);
+	}
+
+
+	@Override
+	public Page<Account> getAllAccount(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		return accRepository.findAll(pageable);
 	}
 
 }

@@ -20,11 +20,11 @@ public class MailTo implements Serializable {
 	private int mailToID;
 	
 	@ManyToOne
-	@JoinColumn(name = "accountid",updatable = false,insertable = false)
+	@JoinColumn(name = "accountid")
 	private Account account;
 	
 	@ManyToOne
-	@JoinColumn(name = "mail_boxid",updatable = false,insertable = false)
+	@JoinColumn(name = "mail_boxid")
 	private MailBox mailBox;
 	
 	@Column

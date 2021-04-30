@@ -1,4 +1,4 @@
-package hl.quizonline.entity;
+	package hl.quizonline.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;

@@ -16,6 +16,7 @@
 <link rel="stylesheet"
 	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
 <link rel="stylesheet" th:href="@{/css/manage-exam.css}">
+<link rel="stylesheet" th:href="@{/assets/css/mystyle.css}">
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" th:href="@{/assets/css/main.css}">
@@ -44,7 +45,7 @@
 		<div class="main">
 			<!-- MAIN CONTENT -->
 			<div class="">
-				<div class="panel" style="padding: 0 40px;">
+				<div class="panel" style="padding: 0 40px; height: 90vh;">
 					<div class="panel-heading">
 						<div class="panel-title" th:utext="@{'Thêm câu hỏi cho gói câu hỏi: ' + ${questionPackage.name}}"></div>
 					</div>
@@ -86,7 +87,7 @@
 								<a class="btn btn-secondary">Reset</a>
 							</div>
 						</form>
-						<div class="col-md-6">
+						<div class="col-md-6 mt-1" >
 							<div>Danh sách câu hỏi</div>
 							<div class="d-flex">
 								<a class="btn btn-outline-primary" th:href="@{'/manage/question/addquestion/' + ${questionPackage.questionPackageID}}">+</a>

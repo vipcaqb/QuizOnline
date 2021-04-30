@@ -46,8 +46,6 @@
 						<p class="small" th:utext="${examPackage.account.fullname}">Nguyễn Viết Hùng</p>
 					</div>
 					<div class="card" style="width: 100%;" id="question-list">
-						<h3 class="part-title">Phần 1: gồm 1 phương án đúng</h3>
-						
 						<div class="question" th:each="question,itor : ${questionList}">
 							<h4 th:data-questionid="${question.questionID}" th:id="@{'q'+${itor.index}}" th:utext="@{'Câu: '+${itor.index+1}}">Câu hỏi số 1</h4>
 							<div>
@@ -186,6 +184,16 @@
 		        			for(let i=0;i<questionModelList.length;i++){
 		        				//tao tr element jquery
 		        				var tr = $("<tr></tr>");
+		        				tr.addClass('alert');
+		        				//Tô màu đỏ nếu sai, màu xanh nếu đúng
+		        				
+		        				if(questionModelList[i].correct){
+		        					tr.addClass('alert-success');
+		        				}
+		        				else{
+		        					tr.addClass('alert-danger');
+		        				}
+		        			
 		        				var td1 = $("<td></td>").text(questionModelList[i].questionContent);
 		        				// phương án bạn trả lời
 		        				var userAnswer = "";
@@ -229,20 +237,25 @@
 		
 		
 	function checkFinish(){
-			var checked = false;
+			var checked = true;
 			$('.question').each(function(i,e){
-				
+				var miniChecked = false;
 				$(e).find("input[type='checkbox']").each((i,e)=>{
 					if(e.checked){
-						checked = true;
+						miniChecked = true;
 					}
 				})
 				
 				$(e).find("input[type='radio']").each((i,e)=>{
 					if(e.checked){
-						checked = true;
+						miniChecked = true;
 					}
 				})
+				
+				if(!miniChecked) {
+					checked = false;
+					return false;
+				}
 			})
 			return checked;
 		}

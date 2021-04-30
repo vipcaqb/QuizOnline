@@ -115,8 +115,9 @@ public class ExamPackageController {
 			
 			
 			model.addAttribute("examPackageID", packageid);
+			return "manage/manage-exam";
 		}
-		return "manage/manage-exam";
+		return "redirect:/login";
 	}
 	
 	/**
@@ -520,4 +521,5 @@ public class ExamPackageController {
 		
 		return "redirect:/manage/exam";
 	}
+	
 }

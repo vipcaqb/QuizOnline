@@ -42,28 +42,40 @@
 		
 		<div class="container-fluid" id="content">
 			<div class="row">
-				<div class="col-md-9" id="main-content">
-					<ul class="nav nav-tabs">
-					  <li class="nav-item">
-					    <a class="nav-link active" th:href="@{'/examdetail/'+ ${examPackage.examPackageID}}">Thông tin bài thi</a>
-					  </li>
-					  <li class="nav-item">
-					    <a class="nav-link" th:href="@{'/examleaderboard/'+ ${examPackage.examPackageID}}">Bảng xếp hạng</a>
-					  </li>
-					</ul>
-					<div id="exam-detail-info" class="card" style="width: 100%;text-align: center">
-					<h3 th:utext="${examPackage.examPackageTitle}">Thi trắc nghiệm toán THPT Chu Văn An</h3>
-					<p th:utext="@{'Người tạo: '+${examPackage.account.fullname}}">Người tạo: Lê Viết Hùng</p>
-					<p th:utext="@{'Mô tả: '+${examPackage.description}}" th:if="${examPackage.description}!=null">Mô tả: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. Quis hendrerit dolor magna eget est lorem ipsum dolor sit. Volutpat odio facilisis mauris sit amet massa. Commodo odio aenean sed adipiscing diam donec adipiscing tristique. </p>
-					<p th:utext="@{'Số câu hỏi: ' + ${examPackage.numberOfQuestion}}">Số câu hỏi: 50 </p>
-					<p>Thời gian còn lại: 1h 20p 38s</p>
-					<p th:if="${examPackage.showResults}">Cho phép xem lại đáp án: Có </p>
-					<p th:unless="${examPackage.showResults}">Cho phép xem lại đáp án: Không </p>
-					<p>Tổng số lượt làm bài: 0 </p>
-					
-					<a class="btn btn-success" 
-					th:href="@{'/doexam/'+${examPackage.examPackageID}}" 
-					th:data-packageid="${examPackage.examPackageID}">Bắt đầu lần thi thứ 1</a>
+				<div class="col-md-9">
+					<div class="row">
+						<div class="col-md-6 main-content">
+							<ul class="nav nav-tabs">
+							  <li class="nav-item">
+							    <a class="nav-link active" th:href="@{'/examdetail/'+ ${examPackage.examPackageID}}">Thông tin bài thi</a>
+							  </li>
+							  <li class="nav-item">
+							    <a class="nav-link" th:href="@{'/examleaderboard/'+ ${examPackage.examPackageID}}">Bảng xếp hạng</a>
+							  </li>
+							</ul>
+							<div class="card exam-detail-info" style="width: 100%;text-align: center;height: 75vh;">
+								<h3 th:utext="${examPackage.examPackageTitle}">Thi trắc nghiệm toán THPT Chu Văn An</h3>
+								<p th:utext="@{'Người tạo: '+${examPackage.account.fullname}}">Người tạo: Lê Viết Hùng</p>
+								<p th:utext="@{'Mô tả: '+${examPackage.description}}" th:if="${examPackage.description}!=null">Mô tả: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. Quis hendrerit dolor magna eget est lorem ipsum dolor sit. Volutpat odio facilisis mauris sit amet massa. Commodo odio aenean sed adipiscing diam donec adipiscing tristique. </p>
+								<p th:utext="@{'Số câu hỏi: ' + ${examPackage.numberOfQuestion}}">Số câu hỏi: 50 </p>
+								<p>Thời gian còn lại: 1h 20p 38s</p>
+								<p th:if="${examPackage.showResults}">Cho phép xem lại đáp án: Có </p>
+								<p th:unless="${examPackage.showResults}">Cho phép xem lại đáp án: Không </p>
+								<p>Tổng số lượt làm bài: 0 </p>
+							</div>
+						</div>
+						<div class="col-md-6 main-content">
+							<div class="card exam-detail-info" style="width: 100%;text-align: center;margin-top: 58px;">
+								
+								<img th:src="@{/images/examdetail.png}">
+								
+								<label>Lượt làm bài: 3</label>
+								<br>
+								<a class="btn btn-success" 
+								th:href="@{'/doexam/'+${examPackage.examPackageID}}" 
+								th:data-packageid="${examPackage.examPackageID}">Bắt đầu lần thi thứ 1</a>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="col-md-3">

@@ -3,6 +3,7 @@ package hl.quizonline.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import hl.quizonline.entity.Account;
@@ -48,4 +49,13 @@ public interface AccountService extends UserDetailsService  {
 	 * @return the account by username
 	 */
 	Optional<Account> getAccountByUsername(String username);
+	
+	/**
+	 * Gets the all account.
+	 *
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @return the all account
+	 */
+	Page<Account> getAllAccount(int pageNo, int pageSize);
 }

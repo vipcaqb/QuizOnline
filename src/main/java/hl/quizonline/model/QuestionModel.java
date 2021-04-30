@@ -31,6 +31,10 @@ public class QuestionModel {
 	public void setCorrectAnswerList(List<String> correctAnswerList) {
 		this.correctAnswerList = correctAnswerList;
 	}
-	
+	@Override
+	public String toString() {
+		return "QuestionModel [questionContent=" + questionContent + ", userAnswerList=" + userAnswerList
+				+ ", isCorrect=" + isCorrect + ", correctAnswerList=" + correctAnswerList + "]";
+	}
 	
 }

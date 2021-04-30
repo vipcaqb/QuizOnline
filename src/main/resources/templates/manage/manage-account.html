@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Quản lý tài khoản người dùng</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- VENDOR CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<link rel="stylesheet" th:href="@{/css/manage-exam.css}">
+<link rel="stylesheet" th:href="@{/assets/css/mystyle.css}">
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<!-- GOOGLE FONTS -->
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
+	rel="stylesheet">
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/assets/img/apple-icon.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/assets/img/favicon.png}">
+<link rel = "stylesheet" th:href="@{/css/mystyle.css}">
+<link rel="stylesheet" th:href="@{/css/mailbox.css}"> 
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:insert="/admin/shared/navbar::navbar"></div>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<div th:insert="/admin/shared/sidebar::sidebar"></div>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="container">
+			<div class="row">
+				<!-- BEGIN INBOX -->
+				<div class="col-md-12" style="min-height: 100vh;">
+					<div class="grid email" style="min-height: 90vh;">
+						<div class="grid-body">
+							<h2>Quản lý tài khoản</h2>
+							<div class="search-box mb-1">
+								<form action="">
+									<input type="text" placeholder="Tên tài khoản cần tìm">
+									<input class="btn btn-success" type="submit" value = "Tìm kiếm" style="margin-bottom: 5px;">
+								</form>
+							</div>
+							<table class="table table-bordered">
+								<thead>
+									<tr> 
+										<th>Tên tài khoản</th>
+										<th>Họ và tên</th>
+										<th>Giới tính</th>
+										<th>Ngày sinh</th>
+										<th>Hành động</th>
+									</tr>
+								</thead>
+								<tbody>
+									<th:block th:each="account: ${accountList}">
+										<tr>
+											<td th:utext="${account.username}">vipcaqb</td>
+											<td th:utext="${account.fullname}">Lê Văn Vũ</td>
+											
+											<td th:utext="${account.gender.displayValue}">Nam</td>
+											
+											<td th:utext="${account.dateOfBirth}">22/5/2000</td>
+											<td>
+												<a href="#" class="btn btn-danger">Khóa</a>
+												<a href="#" class="btn btn-info">Đề thi</a>
+												<a href="#" class="btn btn-info">Câu hỏi</a>
+											</td>
+									</tr>
+									</th:block>
+								</tbody>
+							</table>
+							
+							<nav aria-label="Page navigation example">
+							  <ul class="pagination justify-content-center">
+							  
+							    <li class="page-item">
+							      <a class="page-link">Previous</a>
+							    </li>
+							    
+							    <th:block>
+							    
+							    	<li class="page-item">
+							    		<a class="page-link">1</a>
+							    	</li>
+							    	<li class="page-item active">
+							    		<a class="page-link">1</a>
+							    	</li>
+							    
+							    </th:block>
+							    
+							    
+							    <li class="page-item disabled">
+							      <a class="page-link">Next</a>
+							    </li>
+							  </ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+				<!-- END INBOX -->
+			</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#tk').addClass('active');
+		})
+	</script>
+</body>
+
+</html>

@@ -7,7 +7,7 @@
 <body>
 	<nav th:fragment="navbar" class="navbar navbar-default navbar-fixed-top">
 			<div class="brand">
-				<a href="/"><img th:src="@{/assets/img/logo-dark.png}" alt="Klorofil Logo" class="img-responsive logo"></a>
+				<a href="/examlist" class="homebtn">HOME</a>
 			</div>
 			<div class="container-fluid">
 				<div id="navbar-menu">
@@ -39,9 +39,8 @@
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img th:src="@{/assets/img/user.png}" class="img-circle" alt="Avatar"> <span>Samuel</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
 							<ul class="dropdown-menu">
 								<li><a href="/profile"><i class="lnr lnr-user"></i> <span>My Profile</span></a></li>
-								<li><a href="#"><i class="lnr lnr-envelope"></i> <span>Message</span></a></li>
-								<li><a href="#"><i class="lnr lnr-cog"></i> <span>Settings</span></a></li>
-								<li><a href="#"><i class="lnr lnr-exit"></i> <span>Đăng xuất</span></a></li>
+								<li><a href="/manage/mailbox"><i class="lnr lnr-envelope"></i> <span>Hộp thư</span></a></li>
+								<li><a href="/logout"><i class="lnr lnr-exit"></i> <span>Đăng xuất</span></a></li>
 							</ul>
 						</li>
 					</ul>

@@ -3,6 +3,9 @@ package hl.quizonline.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.Account;
@@ -53,6 +56,13 @@ public class JoinExamServiceImpl implements JoinExamService {
 			examTimes = joinExamList.size();
 		}
 		return examTimes;
+	}
+
+
+	@Override
+	public Page<JoinExamination> getListByAccount(Account account, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		return joinExamRepository.findByAccount(pageable, account);
 	}
 
 

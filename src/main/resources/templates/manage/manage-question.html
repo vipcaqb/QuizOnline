@@ -16,6 +16,7 @@
 <link rel="stylesheet"
 	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
 <link rel="stylesheet" th:href="@{/css/manage-exam.css}">
+<link rel="stylesheet" th:href="@{/assets/css/mystyle.css}">
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" th:href="@{/assets/css/main.css}">
@@ -50,7 +51,6 @@
 							<div class="panel-title">Các gói câu hỏi</div>
 						</div>
 						<div class="ml-1 mb-1">
-							<button class= "btn btn-success">Thêm</button>
 							<button class="btn btn-primary">Sửa</button>
 							<button class= "btn btn-danger">Xóa</button>
 						</div>
@@ -71,6 +71,25 @@
 								</li>
 							</th:block>
 						</ul>
+						<nav aria-label="Page navigation example" style="position: absolute; bottom: 30px;left: 80px;">
+						  <ul class="pagination">
+						    <li class="page-item">
+						      <a class="page-link" href="#" aria-label="Previous">
+						        <span aria-hidden="true">&laquo;</span>
+						        <span class="sr-only">Previous</span>
+						      </a>
+						    </li>
+						    <li class="page-item"><a class="page-link" href="#">1</a></li>
+						    <li class="page-item"><a class="page-link" href="#">2</a></li>
+						    <li class="page-item"><a class="page-link" href="#">3</a></li>
+						    <li class="page-item">
+						      <a class="page-link" href="#" aria-label="Next">
+						        <span aria-hidden="true">&raquo;</span>
+						        <span class="sr-only">Next</span>
+						      </a>
+						    </li>
+						  </ul>
+						</nav>
 					</div>
 				</div>
 				<div class="col-md-9">
@@ -82,6 +101,12 @@
 							<div class="alert alert-info" th:if="${questionPackageID} == null">Vui lòng tạo trước gói câu hỏi</div>
 							<a th:if="${questionPackageID}!=null" class= "btn btn-success" th:href="@{'/manage/question/addquestion/' + ${questionPackageID}}">Thêm</a>
 							<button class= "btn btn-info">Thêm bằng file excel</button>
+						</div>
+						<div class="search-box ml-2 mt-1">
+							<form action="">
+								<input type="text" placeholder="Tiêu đề cần tìm">
+								<input class="btn btn-success" type="submit" value = "Tìm kiếm">
+							</form>
 						</div>
 						<div class="panel-body">
 							<div class="alert alert-info" th:if="${questionList}==null">
@@ -120,6 +145,25 @@
 									</tr>
 								</tbody>
 							</table>
+							<nav aria-label="Page navigation example">
+							  <ul class="pagination">
+							    <li class="page-item">
+							      <a class="page-link" href="#" aria-label="Previous">
+							        <span aria-hidden="true">&laquo;</span>
+							        <span class="sr-only">Previous</span>
+							      </a>
+							    </li>
+							    <li class="page-item"><a class="page-link" href="#">1</a></li>
+							    <li class="page-item"><a class="page-link" href="#">2</a></li>
+							    <li class="page-item"><a class="page-link" href="#">3</a></li>
+							    <li class="page-item">
+							      <a class="page-link" href="#" aria-label="Next">
+							        <span aria-hidden="true">&raquo;</span>
+							        <span class="sr-only">Next</span>
+							      </a>
+							    </li>
+							  </ul>
+							</nav>
 						</div>
 						
 					</div>

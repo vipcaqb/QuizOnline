@@ -30,16 +30,23 @@
 	<div id="wrapper">
 		<!-- NAVBAR -->
 		<div th:insert="/shared/navbar::navbar">
-			
 		</div>
 		<!-- END NAVBAR -->
 		<!-- CONTENT -->
-		
 		<div class="container-fluid" id="content">
 			<div class="row">
-				<div class="col-md-9" id="main-content">
+				
+				<div class="col-md-9 main-content" >
+					<div class="most-popular">Phổ biến nhất</div>
+					<div class="search-box">
+						<form action="">
+							<input type="text" placeholder="Tiêu đề cần tìm">
+							<input class="btn btn-success" type="submit" value = "Tìm kiếm">
+						</form>
+					</div>
+					
 					<div style="width: 100%;background: #ffffff;padding: 15px;box-shadow: 0 2px 6px rgb(0 0 0 / 8%);font-size: 20px;">
-						Cuộc thi đang diễn ra
+						Cuộc thi đang diễn ra <a href="#" class="float-right">Xem tất cả</a>
 					</div>
 					
 					<th:block th:each="examPresent: ${examPackagePresentList}">
@@ -51,37 +58,17 @@
 							<div>
 								<i class="fas fa-clock" >Thời gian còn lại: 50 phút</i>
 								<br>
-								<i class="fas fa-question" th:utext="${examPresent.numberOfQuestion}">Số câu hỏi: 50</i>
+								<i class="fas fa-question" th:utext="@{'Số câu hỏi: '+${examPresent.numberOfQuestion}}">Số câu hỏi: 50</i>
 								<br>
-								<i class="fas fa-user" th:utext="${examPresent.account.fullname}">Người tạo: Tèo Văn</i>
+								<i class="fas fa-user" th:utext="@{'Người tạo: '+${examPresent.account.fullname}}">Người tạo: Tèo Văn</i>
 								<br>
 							</div>
-							<a th:href="@{'/examdetail/'+${examPresent.examPackageID}}" class="btn btn-outline-primary">Chi tiết</a>
+							<a th:href="@{'/examdetail/'+${examPresent.examPackageID}}" class="btn btn-outline-primary mt-1">Chi tiết</a>
 						</div>
 					</th:block>
-					<div style="margin-top: 10px;width: 100%;background: #ffffff;padding: 15px;box-shadow: 0 2px 6px rgb(0 0 0 / 8%);font-size: 20px;">
-						Cuộc thi sắp diễn ra
-					</div>
 					
-					<th:block th:each="examComming: ${examPackageIsCommingList}">
-						<div class="card shadow">
-							<h3 th:text="${examComming.examPackageTitle}">Đề thi 1</h3>
-							<p th:utext="${examComming.description}">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-							</p>
-							<div>
-								<i class="fas fa-clock" >Bắt đầu sau: 1h 50 phút</i>
-								<br>
-								<i class="fas fa-question" th:utext="${examComming.numberOfQuestion}">Số câu hỏi: 50</i>
-								<br>
-								<i class="fas fa-user" th:utext="${examComming.account.fullname}">Người tạo: Tèo Văn</i>
-								<br>
-							</div>
-							<a th:href="@{'/examdetail/'+${examComming.examPackageID}}" class="btn btn-outline-primary">Chi tiết</a>
-						</div>
-					</th:block>
 					<div style="margin-top: 10px;width: 100%;background: #ffffff;padding: 15px;box-shadow: 0 2px 6px rgb(0 0 0 / 8%);font-size: 20px;">
-						Cuộc thi đã kết thúc
+						Cuộc thi đã kết thúc <a href="#" class="float-right">Xem tất cả</a>
 					</div>
 					
 					<th:block th:each="examExpired: ${examPackageExpiredList}">
@@ -93,18 +80,18 @@
 							<div>
 								<i class="fas fa-clock" >Bắt đầu sau: 1h 50 phút</i>
 								<br>
-								<i class="fas fa-question" th:utext="${examExpired.numberOfQuestion}">Số câu hỏi: 50</i>
+								<i class="fas fa-question" th:utext="@{'Số câu hỏi: '+${examExpired.numberOfQuestion}}">Số câu hỏi: 50</i>
 								<br>
-								<i class="fas fa-user" th:utext="${examExpired.account.fullname}">Người tạo: Tèo Văn</i>
+								<i class="fas fa-user" th:utext="@{'Người tạo: '+${examExpired.account.fullname}}">Người tạo: Tèo Văn</i>
 								<br>
 							</div>
-							<a th:href="@{'/examdetail/'+${examExpired.examPackageID}}" class="btn btn-outline-primary">Chi tiết</a>
+							<a th:href="@{'/examdetail/'+${examExpired.examPackageID}}" class="btn btn-outline-primary mt-1">Chi tiết</a>
 						</div>
 					</th:block>
 					
 					<div style="margin-top: 10px;width: 100%;background: #ffffff;padding: 15px;box-shadow: 0 2px 6px rgb(0 0 0 / 8%);font-size: 20px;">
-						Đề ôn tập
-					</div>
+						Đề ôn tập <a href="#" class="float-right">Xem tất cả</a>
+					</div> 
 					
 					<th:block th:each="examExercise: ${examPackageExerciseList}">
 						<div class="card shadow">
@@ -113,12 +100,12 @@
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 							</p>
 							<div>
-								<i class="fas fa-question" th:utext="${examExercise.numberOfQuestion}">Số câu hỏi: 50</i>
+								<i class="fas fa-question" th:utext="@{'Số câu hỏi: '+${examExercise.numberOfQuestion}}">Số câu hỏi: 50</i>
 								<br>
-								<i class="fas fa-user" th:utext="${examExercise.account.fullname}">Người tạo: Tèo Văn</i>
+								<i class="fas fa-user" th:utext="@{'Người tạo: ' + ${examExercise.account.fullname}}">Người tạo: Tèo Văn</i>
 								<br>
 							</div>
-							<a th:href="@{'/examdetail/'+${examExercise.examPackageID}}" class="btn btn-outline-primary">Chi tiết</a>
+							<a th:href="@{'/examdetail/'+${examExercise.examPackageID}}" class="btn btn-outline-primary mt-1">Chi tiết</a>
 						</div>
 					</th:block>
 				</div>
@@ -128,6 +115,9 @@
 					<div class="panel panel-scrolling">
 						<div class="panel-heading">
 							<h3 class="panel-title">Cuộc thi sắp diễn ra</h3>
+						</div>
+						<div class="alert alert-danger" th:if="${examPackageIsCommingList==null || examPackageIsCommingList.size()==0}">
+							Chưa có cuộc thi nào sắp diễn ra
 						</div>
 						<div class="panel-body">
 							<ul class="list-unstyled activity-list">
@@ -145,7 +135,7 @@
 				<!-- LEADERBOARD -->
 					<div class="panel panel-scrolling">
 								<div class="panel-heading">
-									<h3 class="panel-title">Bảng xếp hạng</h3>
+									<h3 class="panel-title">Top đóng góp đề</h3>
 								</div>
 								<div class="panel-body">
 									<ul class="list-unstyled activity-list">
@@ -155,15 +145,27 @@
 											<img src="assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
 											</div>
 											
-											<p><a href="#">Văn Tèo</a></p>
+											<p><a href="#">Văn Tèo</a> <span class="float-right">20 đề</span> </p>
 										</li>
 										<li>
 											<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-											<p><a href="#">Quân Kun</a></p>
+											<p><a href="#">Quân Kun</a> <span class="float-right">18 đề</span> </p>
+										</li>
+										<li>
+											<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
+											<p><a href="#">Hoàng Lộc</a> <span class="float-right">12 đề</span> </p>
+										</li>
+										<li>
+											<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
+											<p><a href="#">Hoàng Lộc</a> <span class="float-right">12 đề</span> </p>
+										</li>
+										<li>
+											<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
+											<p><a href="#">Hoàng Lộc</a> <span class="float-right">12 đề</span> </p>
 										</li>
 									</ul>
 								</div>
-								<button type="button" class="btn btn-primary btn-bottom center-block">Hiển thị tất cả</button>
+								<button type="button" class="btn btn-primary btn-bottom center-block">Xem tất cả</button>
 							</div>
 				<!-- END LEADERBOARD -->
 				<!-- TIMELINE -->
@@ -176,11 +178,11 @@
 										<li>
 											<img src="assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
 											
-											<p><a href="#">Văn Tèo</a> đã tạo một đề thi<span class="timestamp">20 minutes ago</span></p>
+											<p><a href="#">Văn Tèo</a> đã mở một bài thi<span class="timestamp">20 minutes ago</span></p>
 										</li>
 										<li>
 											<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-											<p><a href="#">Quân Kun</a> đã tạo một đề thi <span class="timestamp">Yesterday</span></p>
+											<p><a href="#">Quân Kun</a> đã mở một đề ôn tập <span class="timestamp">Yesterday</span></p>
 										</li>
 									</ul>
 									<button type="button" class="btn btn-primary btn-bottom center-block">Load More</button>

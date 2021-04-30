@@ -170,7 +170,7 @@ public class HomeController {
 	public ResponseEntity<DoExamResultModel> finishExam(@PathVariable(name = "examPackageID") Integer examPackageID,
 			@RequestBody List<Question> questionList) {
 		DoExamResultModel result = new DoExamResultModel();
-		//check correct
+		//check correct đếm xem có bao nhiêu câu đúng
 		int correctCounter = 0;
 		for(int i =0;i<questionList.size();i++) {
 			if(questionService.checkQuestionIsCorrect(questionList.get(i))) {
@@ -200,9 +200,9 @@ public class HomeController {
 			for(int j=0;j<currentQuestion.getAnswers().size();j++) {
 				if(currentQuestion.getAnswers().get(j).getIdCorrect()==false) continue;
 				Answer answerInDB = answerService.getAnswer(currentQuestion.getAnswers().get(j).getAnswerID());
-				if(answerInDB.getIdCorrect()) {
-					userAnswerList.add(answerInDB.getAnswerContent());
-				}
+				
+				userAnswerList.add(answerInDB.getAnswerContent());
+				
 			}
 			questionModel.setUserAnswerList(userAnswerList);
 			

@@ -97,6 +97,13 @@ public class JoinExamination implements Serializable {
 	public void setExamTimes(int examTimes) {
 		this.examTimes = examTimes;
 	}
+
+	@Override
+	public String toString() {
+		return "JoinExamination [joinExamID=" + joinExamID + ", examPackage=" + examPackage + ", account=" + account
+				+ ", timeFinish=" + timeFinish + ", correctQuestionNumber=" + correctQuestionNumber + ", score=" + score
+				+ ", examTimes=" + examTimes + "]";
+	}
 	
 	
 

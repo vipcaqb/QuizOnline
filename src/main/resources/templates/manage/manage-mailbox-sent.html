@@ -60,8 +60,8 @@
 									<hr>
 									<div>
 										<ul class="nav nav-pills nav-stacked">
-											<li class="active"><a href="/manage/mailbox"><i class="fa fa-inbox"></i> Thư nhận (14)</a></li>
-											<li><a href="/manage/mailbox/sent"><i class="fa fa-send"></i> Thư đã gửi</a></li>
+											<li><a href="/manage/mailbox"><i class="fa fa-inbox"></i> Thư nhận (14)</a></li>
+											<li class="active"><a href="/manage/mailbox/sent"><i class="fa fa-send"></i> Thư đã gửi</a></li>
 										</ul>
 									</div>
 								</div>
@@ -75,7 +75,7 @@
 												<div class="icheckbox_square-blue" style="position: relative;"><input type="checkbox" id="check-all" class="icheck" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
 											</label>
 											<div class="btn-group">
-												<button type="button" class="btn btn-danger">
+												<button type="button" class="btn btn-danger" >
 													Xóa
 												</button>
 											</div>
@@ -97,12 +97,12 @@
 									<div class="table-responsive">
 										<table class="table">
 											<tbody>
-											<th:block th:each="mail: ${mailToList}">
+											<th:block th:each="mail: ${mailBoxList}">
 												<tr>
 													<td class="action"><input type="checkbox" /></td>
-													<td class="name"><a href="#" th:utext="${mail.account.fullname}">Larry Gardner</a></td>
-													<td class="subject"><a href="#" th:utext="${mail.mailBox.title}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed </a></td>
-													<td class="time" th:utext="${mail.mailBox.sendDate}">08:30 PM</td>
+													<td class="name"><a href="#">Larry Gardner</a></td>
+													<td class="subject"><a href="#" th:utext="${mail.title}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed </a></td>
+													<td class="time" th:utext="${mail.sendDate}">08:30 PM</td>
 												</tr>
 											</th:block>
 										</tbody></table>

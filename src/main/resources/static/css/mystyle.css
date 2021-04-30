@@ -181,11 +181,48 @@
 	display: none;
 }
 
+.font-weight-bold{
+	font-weight: bold;
+}
+
 .active{
 	background: #f9c74f;
 }
 
 .myborder{
 	border: solid #ebebeb 1px;
+}
+
+.float-right{
+	float: right;
+}
+
+.floaf-left{
+	float: left;
+}
+
+.homebtn{
+	font-weight: bold;
+	padding: 0;
+}
+
+.most-popular{
+	padding: 6px 12px;
+	background: #f22424;
+	color: white;
+	font-size: 20px;
+	border-radius: 30px;
+	margin-bottom: 15px;
+}
+
+.search-box form input[type='text'] {
+	font-size:16px;	
+	padding-left:15px;
+	width: 300px;
+	height:40px;
+	margin-right: 10px;
+	border-radius: 30px;
+	outline: none;
+	border: solid 1px #e8e9ec;
 }
 

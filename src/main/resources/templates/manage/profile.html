@@ -13,11 +13,12 @@
 <link rel="stylesheet"
 	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
 <link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
-<link rel="stylesheet"
-	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
-
+<link rel="stylesheet" th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<link rel="stylesheet" th:href="@{/assets/css/mystyle.css}">
 <!-- MAIN CSS -->
 <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+
+
 <!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
 <link rel="stylesheet" th:href="@{/assets/css/demo.css}">
 <!-- GOOGLE FONTS -->
@@ -60,7 +61,10 @@
 									<img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
 										class="avatar img-circle img-thumbnail" alt="avatar">
 									<h6>Chọn ảnh khác...</h6>
-									<input type="file" class="text-center center-block file-upload">
+									<form action="">
+										<input type="file" class="text-center center-block file-upload">
+										<input class="btn btn-success" type="submit" value="Lưu" style="margin-top: 10px;">
+									</form>
 								</div>
 								</hr>
 								<br>

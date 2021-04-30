@@ -33,7 +33,7 @@ public class MailBox implements Serializable {
 	@Nationalized
 	private String title;
 	
-	@Column
+	@Column(length = 1000)
 	@Nationalized
 	private String content;
 	
@@ -41,8 +41,11 @@ public class MailBox implements Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date sendDate;
 	
+	@Column
+	private boolean deleted;
+	
 	@ManyToOne
-	@JoinColumn(name = "accountid",updatable = false,insertable = false)
+	@JoinColumn(name = "accountid")
 	private Account account;
 	
 	@OneToMany(mappedBy = "mailBox")
@@ -86,6 +89,22 @@ public class MailBox implements Serializable {
 
 	public void setAccount(Account account) {
 		this.account = account;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public List<MailTo> getMailTos() {
+		return mailTos;
+	}
+
+	public void setMailTos(List<MailTo> mailTos) {
+		this.mailTos = mailTos;
 	}
 
 	public MailBox(int mailBoxID, String title, String content, Date sendDate, Account account) {

@@ -2,6 +2,8 @@ package hl.quizonline.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import hl.quizonline.entity.Account;
 import hl.quizonline.entity.Category;
 import hl.quizonline.entity.ExamPackage;
@@ -54,7 +56,20 @@ public interface JoinExamService {
 	 * Gets the exam times.
 	 *
 	 * @param account the account
+	 * @param examPackage the exam package
 	 * @return the exam times
 	 */
 	int getExamTimes(Account account,ExamPackage examPackage);
+	
+	/**
+	 * Gets the list by account.
+	 *
+	 * @param account the account
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @return the list by account
+	 */
+	Page<JoinExamination> getListByAccount(Account account, int pageNo, int pageSize);
+	
+	
 }

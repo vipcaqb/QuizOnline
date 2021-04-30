@@ -8,12 +8,16 @@
 	width: 100%;
 }
 
-#exam-detail-info p{
+.exam-detail-info p{
 	padding: 10px;
 }
 
-#exam-detail-info button{
+.exam-detail-info button{
 	margin-bottom: 30px;
+}
+
+.exam-detail-info img{
+	width: 100%;
 }
 
 .title{
@@ -25,3 +29,4 @@
 	font-size: 20px;
 	font-weight: bold;
 }
+
