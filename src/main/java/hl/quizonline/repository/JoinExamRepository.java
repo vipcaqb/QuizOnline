@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -19,4 +20,5 @@ public interface JoinExamRepository extends JpaRepository<JoinExamination,Long> 
 	List<JoinExamination> findByExamPackage(ExamPackage examPackage);
 	List<JoinExamination> findByAccountAndExamPackage(Account account, ExamPackage examPackage);
 	Page<JoinExamination> findByAccount(Pageable pageable,Account account);
+	Page<JoinExamination> findByExamPackage(ExamPackage examPackage, Pageable pageable);
 }

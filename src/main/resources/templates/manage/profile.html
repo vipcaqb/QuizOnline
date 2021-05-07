@@ -55,14 +55,19 @@
 						<div class="row">
 							<div class="col-sm-3">
 								<!--left col-->
-
-
+								
 								<div class="text-center">
-									<img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
+									<img th:if='${account.urlAvatar!=null&&!account.urlAvatar.equals("")}' 
+									th:src="@{'/getimage/'+${account.urlAvatar}}"
 										class="avatar img-circle img-thumbnail" alt="avatar">
+										
+									<img th:unless='${account.urlAvatar!=null&&!account.urlAvatar.equals("")}' 
+									th:src="@{'https://ui-avatars.com/api/?name='+${account.username}}"
+										class="avatar img-circle img-thumbnail" alt="avatar">
+										
 									<h6>Chọn ảnh khác...</h6>
-									<form action="">
-										<input type="file" class="text-center center-block file-upload">
+									<form action="/manage/uploadAvatar" method="post" enctype="multipart/form-data">
+										<input type="file" class="text-center center-block file-upload" name="image" accept="image/png, image/jpeg">
 										<input class="btn btn-success" type="submit" value="Lưu" style="margin-top: 10px;">
 									</form>
 								</div>
@@ -83,7 +88,7 @@
 								<div class="tab-content">
 									<div class="tab-pane active" id="info">
 										<hr>
-										<form class="form" action="##" method="post"
+										<form class="form" action="/profile/update" method="post"
 											id="registrationForm">
 											<div class="form-group">
 												<div class="col-xs-6">
@@ -105,7 +110,8 @@
 											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="email"><h4>Email</h4></label> <input
-														type="email" th:value="email" class="form-control" name="email" id="email"
+														type="email" 
+														th:value="${account.email}" class="form-control" name="email" id="email"
 														placeholder="you@email.com" title="enter your email.">
 												</div>
 											</div>
@@ -147,12 +153,12 @@
 										<h2></h2>
 
 										<hr>
-										<form class="form" action="##" method="post"
+										<form class="form" action="/manage/changepassword" method="post"
 											id="registrationForm">
 											<div class="form-group">
 												<div class="col-xs-10">
 													<label for="password"><h4>Mật khẩu cũ</h4></label> <input
-														type="password" class="form-control" name="oldpassword"
+														type="password" class="form-control" name="oldPass"
 														id="password" placeholder="Mật khẩu cũ"
 														title="enter your password.">
 												</div>
@@ -160,7 +166,7 @@
 											<div class="form-group">
 												<div class="col-xs-10">
 													<label for="password"><h4>Mật khẩu mới</h4></label> <input
-														type="password" class="form-control" name="newpassword"
+														type="password" class="form-control" name="newPass"
 														id="password" placeholder="Mật khẩu mới"
 														title="enter your password.">
 												</div>

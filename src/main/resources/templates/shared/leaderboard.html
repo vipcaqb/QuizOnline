@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<div class="panel panel-scrolling" th:fragment="leaderboard">
+	<div class="panel-heading">
+		<h3 class="panel-title">Top đóng góp đề</h3>
+	</div>
+	<div class="panel-body">
+		<ul class="list-unstyled activity-list">
+			<th:block th:each="acc : ${accountList}">
+				<li>
+					<div class="top-avatar">
+					<img th:if='${acc.urlAvatar!=null&&!acc.urlAvatar.equals("")}' th:src="@{'/getimage/'+${acc.urlAvatar}}" alt="Avatar" class="img-circle pull-left avatar">
+					<img th:unless='${acc.urlAvatar!=null&&!acc.urlAvatar.equals("")}' 
+					th:src="@{'https://ui-avatars.com/api/?name='+${acc.fullname}}" 
+					alt="Avatar" class="img-circle pull-left avatar">
+					</div>
+					<p><a href="#" th:utext="${acc.fullname}">Văn Tèo</a> 
+					<span class="float-right" th:utext="${acc.numberOfExam}">20 đề</span> </p>
+				</li>
+			</th:block>
+		</ul>
+	</div>
+</div>
+</body>
+</html>

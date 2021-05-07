@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import hl.quizonline.entity.Account;
+import hl.quizonline.model.ExamDonation;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -33,7 +34,7 @@ public interface AccountService extends UserDetailsService  {
 	/**
 	 * Edits the account.
 	 */
-	void editAccount();
+	void editAccount(Account account);
 	
 	/**
 	 * Gets the list.
@@ -58,4 +59,12 @@ public interface AccountService extends UserDetailsService  {
 	 * @return the all account
 	 */
 	Page<Account> getAllAccount(int pageNo, int pageSize);
+	
+	/**
+	 * Lấy danh sách những người tạo đề nhiều nhất
+	 *
+	 * @param topNumber the top number
+	 * @return the top
+	 */
+	Page<Account> getTop10();
 }

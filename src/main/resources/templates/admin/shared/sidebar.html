@@ -9,14 +9,17 @@
 			<div class="sidebar-scroll">
 				<nav>
 					<ul class="nav">
+						<li sec:authorize="hasRole('ADMIN')">
+							<a id="overview" href="/manage/overview"><i class="lnr lnr-user"></i> <span>Tổng quan</span></a>
+						</li>	
+						<li sec:authorize="hasRole('ADMIN')">
+							<a id="tk" href="/manage/account"><i class="lnr lnr-user"></i> <span>Quản lý tài khoản</span></a>
+						</li>
 						<li><a href="/manage/exam" id="qlde"><i class="lnr lnr-pencil"></i> <span>Quản lý đề thi</span></a></li>
 						<li><a href="/manage/question"  id="qlch"><i class="lnr lnr-question-circle"></i> <span>Quản lý câu hỏi</span></a></li>
 						<li><a href="/history" id="ls"><i class="lnr lnr-history"></i> <span>Lịch sử thi</span></a></li>
 						<li><a href="/manage/mailbox" id="mail"><i class="lnr lnr-envelope"></i> <span>Hộp thư</span></a></li>
 						<li><a href="/profile" id="profile"><i class="lnr lnr-envelope"></i> <span>Profile</span></a></li>
-						<li sec:authorize="hasRole('ADMIN')">
-						<a id="tk" href="/manage/account"><i class="lnr lnr-user"></i> <span>Quản lý tài khoản</span></a>
-						</li>
 					</ul>
 				</nav>
 			</div>

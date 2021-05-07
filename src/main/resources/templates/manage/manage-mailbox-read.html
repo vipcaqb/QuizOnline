@@ -70,18 +70,25 @@
 								<!-- BEGIN INBOX CONTENT -->
 								<div class="col-md-9">
 									<div class="row">
-			
-										<div class="col-md-6 search-form mt-1">
-											<div>
-												Tiêu đề: <span th:utext="${mailBox.title}">abc</span>
-											</div>
-											<div>
+										<div class="col-md-12 search-form mt-1">
+											<h2 >
+												<span th:utext="${mailBox.title}">abc</span>
+												<a class="btn btn-danger float-right" th:href="@{'/manage/mailbox/delete/'+${mailBox.mailBoxID}}">Xóa</a>
+											</h2>
+											<br>
+											<label>
 												Người gửi: <span th:utext="${mailBox.account.username}">sender</span>
-											</div>
-											<div>
+											</label>
+											<br>
+											<label>
 												Người nhận: <span th:utext="${receiver}">receiver</span>
-											</div>
-											<div>
+											</label>
+											<br>
+											<label th:utext="@{'Thời điểm nhận: '+ ${mailBox.sendDate}}">
+												Thời điểm nhận: 
+											</label>
+											<hr>
+											<div th:utext="${mailBox.content}">
 												Nội dung: abcc	
 											</div>
 										</div>

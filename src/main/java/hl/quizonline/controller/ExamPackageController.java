@@ -11,6 +11,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -28,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import hl.quizonline.config.MyConstances;
 import hl.quizonline.entity.Account;
 import hl.quizonline.entity.Category;
 import hl.quizonline.entity.ExamPackage;
@@ -87,17 +88,29 @@ public class ExamPackageController {
 	 * manage the exam.
 	 *
 	 * @param packageid the packageid
+	 * @param pageNo the page no
+	 * @param key the key
+	 * @param packPageNo the pack page no
 	 * @param model the model
 	 * @return the string
 	 */
 	@GetMapping(value = {"/{packageid}",""})
-	public String editExam(@PathVariable(name="packageid",required = false) Integer packageid,Model model) {
+	public String editExam(@PathVariable(name="packageid",required = false) Integer packageid,
+			@RequestParam(name = "page",required = false) Integer pageNo,
+			@RequestParam(name = "key",required = false) String key,
+			@RequestParam(name = "packPage",required = false) Integer packPageNo,
+			Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			
+			if(pageNo==null) pageNo=1;
+			if(key == null) key= "";
+			if(packPageNo == null) packPageNo = 1;
 		    String currentUserName = authentication.getName();
 		    List<ExamPackage> listExamPackage;
 			//get exam package list
-			listExamPackage = examPackageService.getList(currentUserName);
+		    Page<ExamPackage> pageExamPackage = examPackageService.getPageByUsername(currentUserName, packPageNo, MyConstances.PAGE_SIZE);
+			listExamPackage = pageExamPackage.getContent();
 			//get exam list selected
 			
 			model.addAttribute("examPackageList", listExamPackage);
@@ -107,14 +120,18 @@ public class ExamPackageController {
 				}
 			}
 			if(packageid!=null) {
+				//get page
+				Page<Examination> page = examinationService.getPageByExamPackage(packageid, pageNo, MyConstances.PAGE_SIZE);
 				List<Examination> examList = examinationService.getAll(packageid);
 				model.addAttribute("examList", examList);
 				ExamPackage currentPackage = examPackageService.getExamPackage(packageid);
 				model.addAttribute("currentPackage", currentPackage);
+				model.addAttribute("page", page);
 			}
 			
-			
+			model.addAttribute("packPage", pageExamPackage);
 			model.addAttribute("examPackageID", packageid);
+			model.addAttribute("key", key);
 			return "manage/manage-exam";
 		}
 		return "redirect:/login";
@@ -148,6 +165,8 @@ public class ExamPackageController {
 	 * @param categoryIDList the category ID list
 	 * @param showResult the show result
 	 * @param numberOfQuestion the number of question
+	 * @param endDatetime the end datetime
+	 * @param description the description
 	 * @return the string
 	 */
 	@PostMapping("/addpackage")
@@ -283,6 +302,8 @@ public class ExamPackageController {
 	 * @param usePassword the use password
 	 * @param password the password
 	 * @param numberOfQuestion the number of question
+	 * @param endDatetime the end datetime
+	 * @param description the description
 	 * @return the string
 	 */
 	@PostMapping("/editpackage/{examPackageID}")
@@ -522,4 +543,43 @@ public class ExamPackageController {
 		return "redirect:/manage/exam";
 	}
 	
+	/**
+	 * Delete exam package.
+	 *
+	 * @param examPackageID the exam package ID
+	 * @return the string
+	 */
+	@GetMapping("/deletePackage/{examPackageID}")
+	public String deleteExamPackage(@PathVariable("examPackageID") Integer examPackageID) {
+		examPackageService.delete(examPackageID);
+		return "redirect:/manage/exam";
+	}
+	
+	/**
+	 * Delete exam.
+	 *
+	 * @param examinationID the examination ID
+	 * @return the string
+	 */
+	@GetMapping("/deleteExam/{examinationID}")
+	public String deleteExam(@PathVariable("examinationID") Integer examinationID) {
+		examinationService.delete(examinationID);
+		return "redirect:/manage/exam";
+	}
+
+	@GetMapping("/public/{examPackageID}")
+	public String publicAExamPackage(@PathVariable("examPackageID") Integer examPackageID) {
+		ExamPackage examPackage = examPackageService.getExamPackage(examPackageID);
+		
+		if(examPackage.isPublic() == false) {
+			examPackage.setPublic(true);
+		}
+		else {
+			examPackage.setPublic(false);
+		}
+		
+		examPackageService.update(examPackage);
+		return "redirect:/manage/exam/"+examPackageID;
+	}
+
 }

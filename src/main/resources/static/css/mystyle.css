@@ -226,3 +226,8 @@
 	border: solid 1px #e8e9ec;
 }
 
+.question-active{
+	background: #2ca547;
+	color: #fff;
+}
+

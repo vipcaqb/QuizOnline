@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>admin</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- VENDOR CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<link rel="stylesheet" th:href="@{/css/manage-exam.css}">
+<link rel="stylesheet" th:href="@{/assets/css/mystyle.css}">
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<!-- GOOGLE FONTS -->
+<link
+	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
+	rel="stylesheet">
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/assets/img/apple-icon.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/assets/img/favicon.png}">
+<link rel = "stylesheet" th:href="@{/css/mystyle.css}">
+<link rel="stylesheet" th:href="@{/css/mailbox.css}"> 
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:insert="/admin/shared/navbar::navbar"></div>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<div th:insert="/admin/shared/sidebar::sidebar"></div>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="container">
+			<div class="row">
+				<!-- BEGIN INBOX -->
+				<div class="col-md-12" style="min-height: 100vh;">
+					<div class="grid email" style="min-height: 90vh;">
+						<div class="grid-body">
+							<h2>Lịch sử thi</h2>
+							<table class="table table-bordered">
+								<thead>
+									<tr> 
+										<th>Tên bài thi</th>
+										<th>Người tạo</th>
+										<th>Thời điểm làm bài</th>
+										<th>Lần thi thứ</th>
+										<th>Điểm số</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="joinExam : ${joinExaminationList}">
+										<td> <a th:href="@{'/examdetail/'+${joinExam.examPackage.examPackageID}}" th:utext="${joinExam.examPackage.examPackageTitle}">Thi trắc nghiệm môn toán lớp 12</a> </td>
+										<td> <a href="#" th:utext="${joinExam.account.fullname}">Lê Văn Vũ</a> </td>
+										<td th:utext="${joinExam.timeFinish}"> 25/6/2020 14:00:00 </td>
+										<td th:utext="${joinExam.examTimes}"> 1</td>
+										<td th:utext="${joinExam.score}"> 77 </td>
+									</tr>
+								</tbody>
+							</table>
+							
+							<nav aria-label="Page navigation example">
+							  <ul class="pagination justify-content-center">
+							  
+							    <li class="page-item" th:if="${page.hasPrevious()}">
+							      <a class="page-link"  th:href="@{'/history/'+${page.number}}">Previous</a>
+							    </li>
+							    <li class="page-item disabled" th:if="${!page.hasPrevious()}">
+							      <a class="page-link">Previous</a>
+							    </li>
+							    
+							    <th:block th:each="i : ${#numbers.sequence(1, page.totalPages)}">
+							    
+							    	<li class="page-item" th:if="${i!=page.number+1}">
+							    		<a class="page-link" th:href="@{'/history/'+${i}}" th:utext="${i}">1</a>
+							    	</li>
+							    	<li class="page-item active" th:if="${i==page.number+1}">
+							    		<a class="page-link" th:href="@{'/history/'+${i}}" th:utext="${i}">1</a>
+							    	</li>
+							    
+							    </th:block>
+							    
+							    <li class="page-item" th:if="${page.hasNext()}">
+							      <a class="page-link" th:href="@{'/history/'+${page.number+2}}">Next</a>
+							    </li>
+							    
+							    <li class="page-item disabled" th:if="${!page.hasNext()}">
+							      <a class="page-link">Next</a>
+							    </li>
+							  </ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+				<!-- END INBOX -->
+			</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#ls').addClass('active');
+		})
+	</script>
+</body>
+
+</html>

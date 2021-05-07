@@ -1,11 +1,23 @@
 package hl.quizonline.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +29,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import hl.quizonline.config.MyConstances;
 import hl.quizonline.entity.Account;
 import hl.quizonline.entity.Answer;
 import hl.quizonline.entity.ExamPackage;
@@ -27,6 +41,7 @@ import hl.quizonline.service.AccountService;
 import hl.quizonline.service.AnswerService;
 import hl.quizonline.service.QuestionPackageService;
 import hl.quizonline.service.QuestionService;
+import hl.quizonline.service.impl.MyHelper;
 
 
 // TODO: Auto-generated Javadoc
@@ -61,12 +76,21 @@ public class QuestionController {
 	 * @return the string
 	 */
 	@GetMapping(value = {"","/{questionPackageID}"})
-	public String listExam(@PathVariable(name ="questionPackageID",required = false ) Integer questionPackageID, Model model) {
+	public String listExam(@PathVariable(name ="questionPackageID",required = false ) Integer questionPackageID,
+			@RequestParam(name = "page",required = false) Integer pageNo,
+			@RequestParam(name="key",required = false) String key,
+			@RequestParam(name="packPage",required = false) Integer packPageNo, Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 		    String currentUserName = authentication.getName();
-		    List<QuestionPackage> questionPackageList = questionPackageService.getList(currentUserName);
-		    model.addAttribute("questionPackageList", questionPackageList);
+		    if(pageNo==null) pageNo=1;
+		    if(key==null) key = "";
+		    if(packPageNo==null) packPageNo=1;
+		    
+		    Page<QuestionPackage> packPage  = questionPackageService.getList(currentUserName, packPageNo, MyConstances.PAGE_SIZE);
+		    List<QuestionPackage> questionPackageList = packPage.getContent();
+		   
+		    
 		    if(questionPackageID == null) {
 		    	if(questionPackageList.size()>0) {
 		    		questionPackageID = questionPackageList.get(0).getQuestionPackageID();
@@ -74,12 +98,21 @@ public class QuestionController {
 		    }
 		    
 		    if(questionPackageID!= null) {
-		    	List<Question> questionList = questionService.getAll(questionPackageID);
+		    	Page<Question> page = 
+		    			questionService.searchQuestionByContent(key,questionPackageID, pageNo, MyConstances.PAGE_SIZE);
+//		    	List<Question> questionList = questionService.getAll(questionPackageID);
+		    	List<Question> questionList = page.getContent();
 		    	model.addAttribute("questionList", questionList);
+		    	model.addAttribute("page", page);
 		    }
+		    
+		    model.addAttribute("packPage", packPage);
+		    model.addAttribute("key", key);
+		    model.addAttribute("questionPackageList", questionPackageList);
+		    model.addAttribute("questionPackageID", questionPackageID);
+			return "manage/manage-question";
 		}
-		model.addAttribute("questionPackageID", questionPackageID);
-		return "manage/manage-question";
+		return "redirect:/login";
 	}
 	
 	/**
@@ -178,4 +211,147 @@ public class QuestionController {
 		model.addAttribute("questionList", questionList);
 		return "manage/manage-question-edit";
 	}
+	
+	@GetMapping("addexcel/{examPackageID}")
+	public String addWithExcelForm(@PathVariable("examPackageID") Integer examPackageID, Model model) {
+		
+		model.addAttribute("examPackageID", examPackageID);
+		return "manage/manage-question-addexcel";
+	}
+	
+	@PostMapping("addexcel/{examPackageID}")
+	public String addWithExcel(@PathVariable("examPackageID") Integer examPackageID,@RequestParam("excelfile") MultipartFile file, Model model) throws IOException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			//Tải file cần xử lý lên
+			String currentUserName = authentication.getName();
+			InputStream in = file.getInputStream();
+		    
+		    //đọc file excel
+			System.out.println("da tai len file"+MyHelper.getTag(file.getOriginalFilename()));
+		    Workbook wb = null;
+		    if(MyHelper.getTag(file.getOriginalFilename()).equals(".xls")) {
+		    	wb = new HSSFWorkbook(in);
+		    }
+		    else if (MyHelper.getTag(file.getOriginalFilename()).equals(".xlsx")) {
+		    	wb = new XSSFWorkbook(in);
+		    }
+		    else {
+		    	model.addAttribute("msgerr", "Sai định dạng file");
+		    	return "manage/manage-question-addexcel";
+		    }
+		    System.out.println("da doc dc file");
+		    //Lấy sheet đầu tiên
+		    Sheet sheet = wb.getSheetAt(0);
+		    List<Question> questionList = new ArrayList<Question>();
+		    //Lấy tất cả row
+		    Iterator<Row> iterator = sheet.iterator();
+		    while(iterator.hasNext()) {
+		    	Row nextRow = iterator.next();
+		    	if (nextRow.getRowNum() == 0) {
+	                // Bỏ qua tiêu đề
+	                continue;
+	            }
+		    	// Lấy tất cả cell
+	            Iterator<Cell> cellIterator = nextRow.cellIterator();
+	            Question question = new Question();
+	            List<Answer> answerList = new ArrayList<Answer>();
+	            //Duyệt ô
+	            while(cellIterator.hasNext()) {
+	            	Answer answer = new Answer();
+	            	Cell cell = cellIterator.next();
+	            	//Kiểm tra nếu ô trống thì bỏ qua row
+	            	Object cellValue = getCellValue(cell);
+	                if (cellValue == null || cellValue.toString().isEmpty()) {
+	                    break;
+	                }
+	            	
+	            	if(cell.getColumnIndex()==0) {
+	            		//Lấy tiêu đề
+	            		question.setQuestionContent(cell.getStringCellValue());
+	            	}
+	            	else {
+	            		
+	            		//Kiểm tra xem ô tiếp theo có tồn tại không, nếu có mới thực hiện
+	            		if(cellIterator.hasNext()) {
+	            			Cell cell2 = cellIterator.next();
+	            			//Nếu ô không có gì thì bỏ qua row
+	            			Object cellValue2 = getCellValue(cell2);
+	                        if (cellValue == null || cellValue.toString().isEmpty()) {
+	                            break;
+	                        }
+	            			answer.setAnswerContent(cell.getStringCellValue());
+	            			boolean isCorrect;
+	            			if((Double)cellValue2 == 0 ) {
+	            				isCorrect=false;
+	            			}
+	            			else {
+	            				isCorrect = true;
+	            			}
+	            			answer.setIdCorrect(isCorrect);
+	            			answerList.add(answer);
+	            		}
+	            	}
+	            }
+	            if(question.getQuestionContent()!=null) {
+	            	question.setAnswers(answerList);
+	            	questionList.add(question);
+	            }
+		    }
+		    //Kết quả có được là questionList danh sách các câu hỏi
+		    //Thêm vào db
+		    questionService.addListQuestionToQuestionPackage(examPackageID, questionList);
+		    
+		    wb.close();
+			return "manage/manage-question-addexcel";
+		}
+		
+		return "redirect:/test";
+		
+	}
+
+	// Get cell value
+    private static Object getCellValue(Cell cell) {
+        CellType cellType = cell.getCellTypeEnum();
+        Object cellValue = null;
+        switch (cellType) {
+        case BOOLEAN:
+            cellValue = cell.getBooleanCellValue();
+            break;
+        case FORMULA:
+            Workbook workbook = cell.getSheet().getWorkbook();
+            FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+            cellValue = evaluator.evaluate(cell).getNumberValue();
+            break;
+        case NUMERIC:
+            cellValue = cell.getNumericCellValue();
+            break;
+        case STRING:
+            cellValue = cell.getStringCellValue();
+            break;
+        case _NONE:
+        case BLANK:
+        case ERROR:
+            break;
+        default:
+            break;
+        }
+ 
+        return cellValue;
+    }
+
+    @GetMapping("/deletePackage/{questionPackageID}")
+    public String deleteQuestionPackage(@PathVariable("questionPackageID") Integer questionPackageID) {
+    	questionPackageService.delete(questionPackageID);
+    	
+    	return "redirect:/manage/question";
+    }
+
+    @GetMapping("/deleteQuestion/{questionID}")
+    public String deleteQuestion(@PathVariable("questionID") Integer questionID) {
+    	
+    	questionService.delete(questionID);
+    	
+    	return "redirect:/manage/question";
+    }
 }

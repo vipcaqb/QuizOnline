@@ -60,4 +60,10 @@ public interface MailboxService {
 	 */
 	MailBox readMail(int mailBoxID);
 	
+	/**
+	 * Xóa mail
+	 *
+	 * @param mailBoxID the mail box ID
+	 */
+	void deleteMailToAndAllMailBox(int mailBoxID);
 }

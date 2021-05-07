@@ -223,4 +223,11 @@ public class Question implements Serializable {
 		}
 		return correctAnswerList;
 	}
+
+	@Override
+	public String toString() {
+		return "Question [questionID=" + questionID + ", questionContent=" + questionContent + ", answers=" + answers
+				+ "]";
+	}
+
 }

@@ -13,6 +13,7 @@
 	<link rel="stylesheet" th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
 	<link rel="stylesheet" th:href="@{/css/danhsachde.css}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+	<link rel="stylesheet" href="/css/howto.css">
 
 	<!-- MAIN CSS -->
 	<link rel="stylesheet" th:href="@{/assets/css/main.css}">
@@ -35,12 +36,11 @@
 		<!-- CONTENT -->
 		<div class="container-fluid" id="content">
 			<div class="row">
-				
 				<div class="col-md-9 main-content" >
 					<div class="most-popular">Phổ biến nhất</div>
 					<div class="search-box">
-						<form action="">
-							<input type="text" placeholder="Tiêu đề cần tìm">
+						<form action="/examlist/search">
+							<input type="text" placeholder="Tiêu đề cần tìm" name ="key">
 							<input class="btn btn-success" type="submit" value = "Tìm kiếm">
 						</form>
 					</div>
@@ -56,7 +56,10 @@
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 							</p>
 							<div>
-								<i class="fas fa-clock" >Thời gian còn lại: 50 phút</i>
+								<span class="fas fa-clock" style="color: red;"> Kết thúc sau: <span class=" timer"
+								th:utext="${(examPresent.endDatetime.getTime()-currentMiliSecond)/1000}" >
+								Thời gian còn lại: 50 phút</span>
+								</span>
 								<br>
 								<i class="fas fa-question" th:utext="@{'Số câu hỏi: '+${examPresent.numberOfQuestion}}">Số câu hỏi: 50</i>
 								<br>
@@ -78,7 +81,10 @@
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 							</p>
 							<div>
-								<i class="fas fa-clock" >Bắt đầu sau: 1h 50 phút</i>
+								<span class="fas fa-clock" style="color: red;"> Bắt đầu sau: <span class="timer"
+								th:utext="${(currentMiliSecond-examExpired.endDatetime.getTime())/1000}" >
+								Thời gian còn lại: 50 phút</span>
+								</span>
 								<br>
 								<i class="fas fa-question" th:utext="@{'Số câu hỏi: '+${examExpired.numberOfQuestion}}">Số câu hỏi: 50</i>
 								<br>
@@ -133,40 +139,9 @@
 					</div>
 				<!-- END TIMELINE -->
 				<!-- LEADERBOARD -->
-					<div class="panel panel-scrolling">
-								<div class="panel-heading">
-									<h3 class="panel-title">Top đóng góp đề</h3>
-								</div>
-								<div class="panel-body">
-									<ul class="list-unstyled activity-list">
-										<li>
-											<div class="top-avatar">
-											
-											<img src="assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
-											</div>
-											
-											<p><a href="#">Văn Tèo</a> <span class="float-right">20 đề</span> </p>
-										</li>
-										<li>
-											<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-											<p><a href="#">Quân Kun</a> <span class="float-right">18 đề</span> </p>
-										</li>
-										<li>
-											<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-											<p><a href="#">Hoàng Lộc</a> <span class="float-right">12 đề</span> </p>
-										</li>
-										<li>
-											<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-											<p><a href="#">Hoàng Lộc</a> <span class="float-right">12 đề</span> </p>
-										</li>
-										<li>
-											<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-											<p><a href="#">Hoàng Lộc</a> <span class="float-right">12 đề</span> </p>
-										</li>
-									</ul>
-								</div>
-								<button type="button" class="btn btn-primary btn-bottom center-block">Xem tất cả</button>
-							</div>
+					<div th:insert="shared/leaderboard::leaderboard">
+					
+					</div>
 				<!-- END LEADERBOARD -->
 				<!-- TIMELINE -->
 					<div class="panel panel-scrolling">
@@ -207,6 +182,38 @@
 	<!-- Javascript -->
 	<script src="/assets/vendor/jquery/jquery.min.js"></script>
 	<script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/js/howto.js"></script>
+	<script type="text/javascript">
+		function startTimer(duration, display) {
+		    var timer = duration, hour, minutes, seconds;
+		    hour = parseInt(timer / 3600, 10);
+		    minutes = parseInt((timer / 60)%60, 10);
+		       seconds = parseInt(timer % 60, 10);
+		       display.textContent =hour+":"+ minutes + ":" + seconds;
+		    setInterval(function () {
+		    	hour = parseInt(timer / 3600, 10);
+		        minutes = parseInt((timer / 60)%60, 10);
+		        seconds = parseInt(timer % 60, 10);
+				
+		        hour = hour < 10 ? "0" + hour : hour;
+		        minutes = minutes < 10 ? "0" + minutes : minutes;
+		        seconds = seconds < 10 ? "0" + seconds : seconds;
+		
+		        display.textContent =hour+":"+ minutes + ":" + seconds;
+		
+		        if (--timer < 0) {
+		            timer = duration;
+		        }
+		    }, 1000);
+		}
+		
+		window.onload = function () {
+			$('.timer').each(function(k,v){
+				var time = v.textContent;
+				startTimer(time, v);
+			});
+		};
+	</script>
 </body>
 
 </html>

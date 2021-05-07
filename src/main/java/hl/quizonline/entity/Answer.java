@@ -73,6 +73,11 @@ public class Answer implements Serializable {
 		this.idCorrect = idCorrect;
 		this.question = question;
 	}
+
+	@Override
+	public String toString() {
+		return "Answer [answerID=" + answerID + ", answerContent=" + answerContent + ", idCorrect=" + idCorrect + "]";
+	}
 	
 	
 

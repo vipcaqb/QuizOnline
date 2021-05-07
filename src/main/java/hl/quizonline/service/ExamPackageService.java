@@ -3,6 +3,10 @@ package hl.quizonline.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import hl.quizonline.entity.ExamPackage;
 import javassist.NotFoundException;
 
@@ -26,6 +30,17 @@ public interface ExamPackageService {
 	 * @return the list
 	 */
 	List<ExamPackage> getList();
+	
+	/**
+	 * Gets the page by username.
+	 *
+	 * @param username the username
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @param sort the sort
+	 * @return the page by username
+	 */
+	Page<ExamPackage> getPageByUsername(String username, int pageNo, int pageSize, Sort sort);
 	
 	/**
 	 * Gets the list present.
@@ -95,7 +110,80 @@ public interface ExamPackageService {
 	/**
 	 * Checks if this exam package is present.
 	 *
+	 * @param examPackage the exam package
 	 * @return true, if is present
 	 */
 	boolean isPresent(ExamPackage examPackage);
+	
+	/**
+	 * Search list by title.
+	 *
+	 * @param examPackageTitlte the exam package titlte
+	 * @param categoryID the category ID
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @param sort the sort
+	 * @return the page
+	 */
+	Page<ExamPackage> searchListByTitle(String examPackageTitlte,int categoryID, int pageNo, int pageSize,Sort sort);
+	
+	/**
+	 * Search list by fullname author, if categoryID <0 then ignore compare categoryID.
+	 *
+	 * @param fullname the fullname
+	 * @param categoryID the category ID
+	 * @param pageNo the page no
+	 * @param pageSiz the page siz
+	 * @param sort the sort
+	 * @return the page
+	 */
+	Page<ExamPackage> searchListByFullnameAuthor(String fullname, int categoryID, int pageNo, int pageSiz,Sort sort);
+	
+	/**
+	 * Search list by username author, if categoryID <0 then ignore compare categoryID.
+	 *
+	 * @param username the username
+	 * @param categoryID the category ID
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @param sort the sort
+	 * @return the page
+	 */
+	Page<ExamPackage> searchListByUsernameAuthor(String username, int categoryID, int pageNo, int pageSize,Sort sort);
+
+	/**
+	 * Search list.
+	 *
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @return the page
+	 */
+	Page<ExamPackage> searchList(int pageNo, int pageSize);
+
+	/**
+	 * Search list have sort.
+	 *
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @param sort the sort
+	 * @return the page
+	 */
+	Page<ExamPackage> searchList(int pageNo, int pageSize, Sort sort);
+
+	/**
+	 * Gets the page by username.
+	 *
+	 * @param username the username
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @return the page by username
+	 */
+	Page<ExamPackage> getPageByUsername(String username, int pageNo, int pageSize);
+	
+	/**
+	 * Tăng số lượt thi
+	 *
+	 * @param doExamTimes the do exam times
+	 */
+	void inscreaseDoExamTimes(int examPackageID,int doExamTimes);
 }

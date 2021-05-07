@@ -53,14 +53,14 @@
 						<div class="ml-1 mb-1">
 							<a class= "btn btn-success" href="/manage/exam/addpackage">Thêm</a>
 							<a class="btn btn-primary" th:href="@{'/manage/exam/editpackage/'+${examPackageID}}">Sửa</a>
-							<button class= "btn btn-danger">Xóa</button>
+							<a class= "btn btn-danger btn-delete" th:href="@{'/manage/exam/deletePackage/'+${examPackageID}}">Xóa</a>
 						</div>
 						<div th:if="${examPackageList==null}" class="alert alert-warning">Bạn chưa có bộ đề thi nào, bấm 'Thêm' để tạo</div>
 						<ul th:unless="${examPackageList==null}" class="list-group pb-3 pt-1">
 						
 							<th:block th:each="exam : ${examPackageList}">
 								<li  th:if="${exam.examPackageID}!=${examPackageID}" class="list-group-item">
-									<a style="color: #fff;" th:href="@{'/manage/exam/' + ${exam.examPackageID}}" th:utext="${exam.examPackageTitle}"></a>
+									<a th:href="@{'/manage/exam/' + ${exam.examPackageID}}" th:utext="${exam.examPackageTitle}"></a>
 								</li>
 								
 								<li  th:if="${exam.examPackageID}==${examPackageID}" class="list-group-item active">
@@ -69,33 +69,72 @@
 							</th:block>
 						</ul>
 					</div>
-					<nav aria-label="Page navigation example" style="position: absolute; bottom: 30px;left: 80px;">
-						  <ul class="pagination">
-						    <li class="page-item">
-						      <a class="page-link" href="#" aria-label="Previous">
-						        <span aria-hidden="true">&laquo;</span>
-						        <span class="sr-only">Previous</span>
-						      </a>
-						    </li>
-						    <li class="page-item"><a class="page-link" href="#">1</a></li>
-						    <li class="page-item"><a class="page-link" href="#">2</a></li>
-						    <li class="page-item"><a class="page-link" href="#">3</a></li>
-						    <li class="page-item">
-						      <a class="page-link" href="#" aria-label="Next">
-						        <span aria-hidden="true">&raquo;</span>
-						        <span class="sr-only">Next</span>
-						      </a>
-						    </li>
-						  </ul>
-						</nav>
+					<!-- PAGINATION -->
+					<nav aria-label="Page navigation example" th:if="${packPage.numberOfElements!=0&&packPage!=null}"  style="position: absolute; bottom: 30px;left: 80px;">
+					  <ul class="pagination justify-content-center">
+					    <li class="page-item" th:if="${packPage.hasPrevious()}">
+					      <a class="page-link"  
+					      th:href="@{'/manage/exam/'+${examPackageID}+'?packPage='+${packPage.number}}">
+					      Previous
+					      </a>
+					    </li>
+					    <li class="page-item disabled" th:if="${!packPage.hasPrevious()}">
+					      <a class="page-link">Previous</a>
+					    </li>
+					    <th:block th:each="i : ${#numbers.sequence(1, packPage.totalPages)}">
+					    	<li class="page-item" th:if="${i!=packPage.number+1}">
+					    		<a class="page-link" 
+					    		th:href="@{'/manage/exam/'+${examPackageID}+'?packPage='+${i}}" 
+					    		th:utext="${i}">1</a>
+					    	</li>
+					    	<li class="page-item active" th:if="${i==packPage.number+1}">
+					    		<a class="page-link" 
+					    		th:href="@{'/manage/exam/'+${examPackageID}+'?packPage='+${i}}" 
+					    		th:utext="${i}">1</a>
+					    	</li>
+					    </th:block>
+					    <li class="page-item" th:if="${packPage.hasNext()}">
+					      <a class="page-link" 
+					      th:href="@{'/manage/exam/'+${examPackageID}+'?packPage='+${packPage.number+2}}">
+					      Next
+					      </a>
+					    </li>
+					    <li class="page-item disabled" th:if="${!packPage.hasNext()}">
+					      <a class="page-link">Next</a>
+					    </li>
+					  </ul>
+					</nav>
+					
+					<!--END PAGINATION -->
 				</div>
 				<div class="col-md-9">
 					<div class="panel" style="min-height: 100vh;">
-						<div class="panel-heading">
-							<div class="panel-title" th:if="${currentPackage!=null}" th:utext="${currentPackage.examPackageTitle}">Các đề trong "Đề thi toán học lớp 12 khối không chuyên"</div>
-						</div>
-						<div class="ml-1">
-							<a th:href="@{'/manage/exam/addexam/'+${examPackageID}}" class= "btn btn-success">Thêm</a>
+						<h3 class="ml-1 mt-1" style="font-weight: bold;"
+						th:if="${currentPackage!=null}" 
+						th:utext="${currentPackage.examPackageTitle}">
+						Các đề trong "Đề thi toán học lớp 12 khối không chuyên"
+						</h3>
+						
+						<a th:if="${currentPackage.isPublic==false}" 
+						class='btn btn-primary ml-2' 
+						th:href="@{'/manage/exam/public/'+${currentPackage.examPackageID}}">Bắt đầu công khai</a>
+						
+						<a th:if="${currentPackage.isPublic==true}" 
+						class='btn btn-warning ml-2' 
+						th:href="@{'/manage/exam/public/'+${currentPackage.examPackageID}}">Hủy công khai</a>
+						<div class="search-box ml-2 mt-1">
+							<h4 style="font-weight: bold;">Danh sách đề</h4>
+							<form th:if="${page!=null}" th:action="@{'/manage/exam/'+${examPackageID}+'?page='+${page.number+1}}" method= "get">
+								<input type="text" name="key" placeholder="Nội dung cần tìm">
+								<input class="btn btn-success" type="submit" value = "Tìm kiếm">
+							</form>
+							<div class="ml-1 mt-1">
+								<a th:href="@{'/manage/exam/addexam/'+${examPackageID}}" class= "btn btn-success">Thêm đề</a>
+							</div>
+							<form th:if="${page==null}" th:action="@{'/manage/exam/'+${examPackageID}+'?page=1'}" method= "get">
+								<input type="text" name="key" placeholder="Nội dung cần tìm">
+								<input class="btn btn-success" type="submit" value = "Tìm kiếm">
+							</form>
 						</div>
 						<div class="panel-body">
 							<div></div>
@@ -115,12 +154,48 @@
 											<td th:utext="${exam.examinationTitle}">aaa</td>
 											<td>
 											<a class="btn btn-primary" th:href="@{'/manage/exam/editexam/'+${exam.examinationID}}">Sửa</a>
-											<a class= "btn btn-danger">Xóa</a>
+											<a class="btn btn-danger btn-delete" th:href="@{'/manage/exam/deleteExam/'+${exam.examinationID}}">Xóa</a>
 											</td>
 										</tr>
 									</th:block>
 								</tbody>
 							</table>
+							<!-- PAGINATION -->
+							<nav aria-label="Page navigation example" th:if="${page!=null && page.numberOfElements!=0}">
+							  <ul class="pagination justify-content-center">
+							    <li class="page-item" th:if="${page.hasPrevious()}">
+							      <a class="page-link"  
+							      th:href="@{'/manage/exam/'+${examPackageID}+'?page='+${page.number}+'&key='+${key}+'&packPage='+${packPage.number+1}}">
+							      Previous
+							      </a>
+							    </li>
+							    <li class="page-item disabled" th:if="${!page.hasPrevious()}">
+							      <a class="page-link">Previous</a>
+							    </li>
+							    <th:block th:each="i : ${#numbers.sequence(1, page.totalPages)}">
+							    	<li class="page-item" th:if="${i!=page.number+1}">
+							    		<a class="page-link" 
+							    		th:href="@{'/manage/exam/'+${examPackageID}+'?page='+${i}+'&key='+${key}+'&packPage='+${packPage.number+1}}" 
+							    		th:utext="${i}">1</a>
+							    	</li>
+							    	<li class="page-item active" th:if="${i==page.number+1}">
+							    		<a class="page-link" 
+							    		th:href="@{'/manage/exam/'+${examPackageID}+'?page='+${i}+'&key='+${key}+'&packPage='+${packPage.number+1}}" 
+							    		th:utext="${i}">1</a>
+							    	</li>
+							    </th:block>
+							    <li class="page-item" th:if="${page.hasNext()}">
+							      <a class="page-link" 
+							      th:href="@{'/manage/exam/'+${examPackageID}+'?page='+${page.number+2}+'&key='+${key}+'&packPage='+${packPage.number+1}}">
+							      Next
+							      </a>
+							    </li>
+							    <li class="page-item disabled" th:if="${!page.hasNext()}">
+							      <a class="page-link">Next</a>
+							    </li>
+							  </ul>
+							</nav>
+							<!-- END PAGINATION -->
 						</div>
 					</div>
 				</div>
@@ -137,6 +212,12 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#qlde').addClass('active');
+			$('.btn-delete').click(function(){
+				var r = confirm("Bạn chắc chắn muốn xóa chứ");
+				if (r == false) {
+				  event.preventDefault();
+				} 
+			})
 		})
 	</script>
 </body>

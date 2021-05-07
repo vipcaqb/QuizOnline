@@ -52,7 +52,7 @@
 						</div>
 						<div class="ml-1 mb-1">
 							<button class="btn btn-primary">Sửa</button>
-							<button class= "btn btn-danger">Xóa</button>
+							<a th:href="@{'/manage/question/deletePackage/'+${questionPackageID}}" class= "btn btn-danger btn-delete">Xóa</a>
 						</div>
 						<div id="add-exampackage border" style="padding-left: 10px;margin-bottom: 10px;	">
 							<form action="/manage/question/addpackage" method="post">
@@ -63,7 +63,7 @@
 						<ul class="list-group pb-3">	
 							<th:block th:each="qp : ${questionPackageList}">
 								<li class="list-group-item" th:if="${qp.questionPackageID} != ${questionPackageID}">
-									<a style="color: #fff;" th:href="@{'/manage/question/'+${qp.questionPackageID}}" th:utext="${qp.name}">Gói câu hỏi về toán học</a>
+									<a th:href="@{'/manage/question/'+${qp.questionPackageID}}" th:utext="${qp.name}">Gói câu hỏi về toán học</a>
 								</li>
 								
 								<li class="list-group-item active" th:if="${qp.questionPackageID} == ${questionPackageID}">
@@ -71,25 +71,41 @@
 								</li>
 							</th:block>
 						</ul>
-						<nav aria-label="Page navigation example" style="position: absolute; bottom: 30px;left: 80px;">
-						  <ul class="pagination">
-						    <li class="page-item">
-						      <a class="page-link" href="#" aria-label="Previous">
-						        <span aria-hidden="true">&laquo;</span>
-						        <span class="sr-only">Previous</span>
+						<nav aria-label="Page navigation example" th:if="${packPage.numberOfElements!=0}" style="position: absolute; bottom: 30px;left: 80px;">
+						  <ul class="pagination justify-content-center">
+						    <li class="page-item" th:if="${packPage.hasPrevious()}">
+						      <a class="page-link"  
+						      th:href="@{'/manage/question/'+${questionPackageID}+'?packPage='+${packPage.number}}">
+						      Previous
 						      </a>
 						    </li>
-						    <li class="page-item"><a class="page-link" href="#">1</a></li>
-						    <li class="page-item"><a class="page-link" href="#">2</a></li>
-						    <li class="page-item"><a class="page-link" href="#">3</a></li>
-						    <li class="page-item">
-						      <a class="page-link" href="#" aria-label="Next">
-						        <span aria-hidden="true">&raquo;</span>
-						        <span class="sr-only">Next</span>
+						    <li class="page-item disabled" th:if="${!packPage.hasPrevious()}">
+						      <a class="page-link">Previous</a>
+						    </li>
+						    <th:block th:each="i : ${#numbers.sequence(1, packPage.totalPages)}">
+						    	<li class="page-item" th:if="${i!=packPage.number+1}">
+						    		<a class="page-link" 
+						    		th:href="@{'/manage/question/'+${questionPackageID}+'?packPage='+${i}}" 
+						    		th:utext="${i}">1</a>
+						    	</li>
+						    	<li class="page-item active" th:if="${i==packPage.number+1}">
+						    		<a class="page-link" 
+						    		th:href="@{'/manage/question/'+${questionPackageID}+'?packPage='+${i}}" 
+						    		th:utext="${i}">1</a>
+						    	</li>
+						    </th:block>
+						    <li class="page-item" th:if="${packPage.hasNext()}">
+						      <a class="page-link" 
+						      th:href="@{'/manage/question/'+${questionPackageID}+'?packPage='+${packPage.number+2}}">
+						      Next
 						      </a>
+						    </li>
+						    <li class="page-item disabled" th:if="${!packPage.hasNext()}">
+						      <a class="page-link">Next</a>
 						    </li>
 						  </ul>
 						</nav>
+						
 					</div>
 				</div>
 				<div class="col-md-9">
@@ -99,12 +115,16 @@
 						</div>
 						<div class="ml-1">
 							<div class="alert alert-info" th:if="${questionPackageID} == null">Vui lòng tạo trước gói câu hỏi</div>
-							<a th:if="${questionPackageID}!=null" class= "btn btn-success" th:href="@{'/manage/question/addquestion/' + ${questionPackageID}}">Thêm</a>
-							<button class= "btn btn-info">Thêm bằng file excel</button>
+							<a th:if="${questionPackageID}!=null" class= "btn btn-success" th:href="@{'/manage/question/addquestion/' + ${questionPackageID}}">Thêm câu hỏi</a>
 						</div>
 						<div class="search-box ml-2 mt-1">
-							<form action="">
-								<input type="text" placeholder="Tiêu đề cần tìm">
+							<form th:if="${page!=null}" th:action="@{'/manage/question/'+${questionPackageID}+'?page='+${page.number+1}}" method= "get">
+								<input type="text" name="key" placeholder="Nội dung cần tìm">
+								<input class="btn btn-success" type="submit" value = "Tìm kiếm">
+							</form>
+							
+							<form th:if="${page==null}" th:action="@{'/manage/question/'+${questionPackageID}+'?page=1'}" method= "get">
+								<input type="text" name="key" placeholder="Nội dung cần tìm">
 								<input class="btn btn-success" type="submit" value = "Tìm kiếm">
 							</form>
 						</div>
@@ -115,10 +135,10 @@
 							<table class="table" th:if="${questionList}!=null">
 								<thead>
 									<tr>
-										<th>Mã câu hỏi</th>
-										<th>Câu hỏi </th>
-										<th>Phương án </th>
-										<th> </th>
+										<th width="10%">Mã câu hỏi</th>
+										<th width="40%">Câu hỏi </th>
+										<th width="30%">Phương án </th>
+										<th width="10%"> </th>
 									</tr>
 								</thead>
 								<tbody>
@@ -140,30 +160,47 @@
 										<td>
 										<a th:href="@{'/manage/question/editquestion/' + ${questionPackageID}+'/'+${question.questionID}}" 
 										class="btn btn-primary">Sửa</a>
-										<a class= "btn btn-danger">Xóa</a>
+										<a class= "btn btn-danger btn-delete" th:href="@{'/manage/question/deleteQuestion/'+${question.questionID}}">Xóa</a>
 										</td>
 									</tr>
 								</tbody>
 							</table>
-							<nav aria-label="Page navigation example">
-							  <ul class="pagination">
-							    <li class="page-item">
-							      <a class="page-link" href="#" aria-label="Previous">
-							        <span aria-hidden="true">&laquo;</span>
-							        <span class="sr-only">Previous</span>
+							
+							<nav aria-label="Page navigation example" th:if="${page!=null}">
+							  <ul class="pagination justify-content-center">
+							    <li class="page-item" th:if="${page.hasPrevious()}">
+							      <a class="page-link"  
+							      th:href="@{'/manage/question/'+${questionPackageID}+'?page='+${page.number}+'&key='+${key}+'&packPage='+${packPage.number+1}}">
+							      Previous
 							      </a>
 							    </li>
-							    <li class="page-item"><a class="page-link" href="#">1</a></li>
-							    <li class="page-item"><a class="page-link" href="#">2</a></li>
-							    <li class="page-item"><a class="page-link" href="#">3</a></li>
-							    <li class="page-item">
-							      <a class="page-link" href="#" aria-label="Next">
-							        <span aria-hidden="true">&raquo;</span>
-							        <span class="sr-only">Next</span>
+							    <li class="page-item disabled" th:if="${!page.hasPrevious()}">
+							      <a class="page-link">Previous</a>
+							    </li>
+							    <th:block th:each="i : ${#numbers.sequence(1, page.totalPages)}">
+							    	<li class="page-item" th:if="${i!=page.number+1}">
+							    		<a class="page-link" 
+							    		th:href="@{'/manage/question/'+${questionPackageID}+'?page='+${i}+'&key='+${key}+'&packPage='+${packPage.number+1}}" 
+							    		th:utext="${i}">1</a>
+							    	</li>
+							    	<li class="page-item active" th:if="${i==page.number+1}">
+							    		<a class="page-link" 
+							    		th:href="@{'/manage/question/'+${questionPackageID}+'?page='+${i}+'&key='+${key}+'&packPage='+${packPage.number+1}}" 
+							    		th:utext="${i}">1</a>
+							    	</li>
+							    </th:block>
+							    <li class="page-item" th:if="${page.hasNext()}">
+							      <a class="page-link" 
+							      th:href="@{'/manage/question/'+${questionPackageID}+'?page='+${page.number+2}+'&key='+${key}+'&packPage='+${packPage.number+1}}">
+							      Next
 							      </a>
+							    </li>
+							    <li class="page-item disabled" th:if="${!page.hasNext()}">
+							      <a class="page-link">Next</a>
 							    </li>
 							  </ul>
 							</nav>
+							
 						</div>
 						
 					</div>
@@ -182,6 +219,12 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#qlch').addClass('active');
+			$('.btn-delete').click(function(){
+				var r = confirm("Bạn chắc chắn muốn xóa chứ");
+				if (r == false) {
+				  event.preventDefault();
+				} 
+			})
 		})
 	</script>
 </body>

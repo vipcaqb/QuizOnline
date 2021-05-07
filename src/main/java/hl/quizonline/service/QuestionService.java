@@ -2,6 +2,8 @@ package hl.quizonline.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import hl.quizonline.entity.ExamPackage;
 import hl.quizonline.entity.Examination;
 import hl.quizonline.entity.Question;
@@ -72,4 +74,33 @@ public interface QuestionService {
 	 * @return true, if the question is correct
 	 */
 	boolean checkQuestionIsCorrect(Question question);
+	
+	/**
+	 * Search question in question package by content.
+	 *
+	 * @param questionContent the question content
+	 * @param qpID the qp ID
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @return the page
+	 */
+	Page<Question> searchQuestionByContent(String questionContent, int qpID, int pageNo, int pageSize);
+	
+	/**
+	 * Gets the all.
+	 *
+	 * @param qpID the qp ID
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @return the all
+	 */
+	Page<Question> getAll(int qpID, int pageNo, int pageSize);
+	
+	/**
+	 * Thêm danh sách câu hỏi questionList vào bộ đề có ID là questionPackageID
+	 *
+	 * @param questionPackageID the question package ID
+	 * @param questionList the question list
+	 */
+	void addListQuestionToQuestionPackage(int questionPackageID, List<Question> questionList);
 }

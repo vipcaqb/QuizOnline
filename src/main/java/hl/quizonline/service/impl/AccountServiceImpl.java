@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.Account;
 import hl.quizonline.model.CustomUserDetails;
+import hl.quizonline.model.ExamDonation;
 import hl.quizonline.repository.AccountRepository;
 import hl.quizonline.service.AccountService;
 
@@ -37,15 +38,16 @@ public class AccountServiceImpl implements AccountService{
 
 
 	@Override
-	public void editAccount() {
-		// TODO Auto-generated method stub
-		
+	public void editAccount(Account account) {
+		Optional<Account> oa = accRepository.findByUsername(account.getUsername());
+		if(oa.isPresent()) {
+			accRepository.save(account);
+		}
 	}
 
 	@Override
 	public List<Account> getList() {
-		// TODO Auto-generated method stub
-		return null;
+		return accRepository.findAll();
 	}
 	
 
@@ -83,6 +85,13 @@ public class AccountServiceImpl implements AccountService{
 	@Override
 	public Page<Account> getAllAccount(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		return accRepository.findAll(pageable);
+	}
+
+
+	@Override
+	public Page<Account> getTop10() {
+		Pageable pageable = PageRequest.of(0, 9);
 		return accRepository.findAll(pageable);
 	}
 

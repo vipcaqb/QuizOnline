@@ -33,7 +33,7 @@
 				<h3>Không tìm thấy trang yêu cầu</h3>
 				<h1><span>4</span><span>0</span><span>4</span></h1>
 			</div>
-			<h2>Các hạ chưa nạp lần đầu</h2>
+			<h2 th:if="${errmsg!=null}" th:utext="${errmsg}">Các hạ chưa nạp lần đầu</h2>
 		</div>
 	</div>
 

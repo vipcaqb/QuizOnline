@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
 	<link rel="stylesheet" href="/css/exam-detail.css">
 	<link rel="stylesheet" href="/css/do-exam.css">
+	<link rel="stylesheet" href="/css/howto.css">
 
 	<!-- MAIN CSS -->
 	<link rel="stylesheet" th:href="@{/assets/css/main.css}">
@@ -56,8 +57,8 @@
 							</p>
 							<div class="answer">
 							<th:block th:each="answer,index: ${question.answers}">
-								<label th:data-answerid="${answer.answerID}" th:if="${question.numberOfCorrect()}==1" ><input class="answerradio" th:data-answerid="${answer.answerID}" type='radio' th:name="@{'q}+ ${itor.index+1}"> <span th:text="${answer.answerContent}"></span> </label> 
-								<label th:data-answerid="${answer.answerID}" th:unless="${question.numberOfCorrect()}==1" ><input class="answercb" th:data-answerid="${answer.answerID}" type='checkbox' th:name="@{'q}+ ${itor.index+1}"> <span th:text="${answer.answerContent}"></span> </label>
+								<label th:data-answerid="${answer.answerID}" th:if="${question.numberOfCorrect()}==1"><input class="answerradio cb-answer" th:data-question-index="${itor.index+1}" th:data-answerid="${answer.answerID}" type='radio' th:name="@{'q}+ ${itor.index+1}"> <span th:text="${answer.answerContent}"></span> </label> 
+								<label th:data-answerid="${answer.answerID}" th:unless="${question.numberOfCorrect()}==1" ><input class="answercb cb-answer" th:data-question-index="${itor.index+1}" th:data-answerid="${answer.answerID}" type='checkbox' th:name="@{'q}+ ${itor.index+1}"> <span th:text="${answer.answerContent}"></span> </label>
 							</th:block>
 							</div>
 							<hr>
@@ -69,14 +70,15 @@
 				<!-- TIMELINE -->
 					<div class="panel panel-scrolling" id="question-menu">
 						<div class="panel-heading">
-							<h3 class="panel-title">Thời gian còn lại: 20 phút</h3>
-							<p class="pt-1"> Đã trả lời: <span id="answered">30</span>/<span id="total">40</span> </p>
+							<div class="btn btn-primary" id="showGuide">Hướng dẫn</div>
+							<h3 class="timeCountDown" id="time" style="color: red;font-weight:bold;" th:if="${timeSec!=null}" th:utext="${timeSec}">30:50</h3>
+							<p class="pt-1"> Tổng số câu hỏi: <span id="answered" th:utext="${questionList.size()}">30</span> </p>
 						</div>
 						<div class="panel-body">
 							<div id="question-menu-list">
 								
 								<th:block th:each="question,itor : ${questionList}">
-									<a th:href="@{'#q'+${itor.index}}" th:utext="${itor.index+1}" class="question-menu btn btn-outline-primary">1</a>
+									<a th:href="@{'#q'+${itor.index}}" th:utext="${itor.index+1}" th:id="@{'qb'+${itor.index+1}}" class="question-menu btn-question btn btn-outline-primary">1</a>
 								</th:block>
 							</div>
 							<button type="button" id="finish" class="btn btn-primary btn-bottom center-block mt-1">Nộp bài</button>
@@ -85,6 +87,37 @@
 				<!-- END TIMELINE -->
 				</p>
 				</div>
+			</div>
+		</div>
+		
+		<div id="background">
+			<div id="howto">
+				<h3>Hướng dẫn thi</h3>
+				<hr>
+				<ul>
+					<li>
+					<img src="/images/howto/selectAnswer.jpg"> <label>Click vào đáp án tương ứng để trả lời.</label>
+					</li>
+					<li>
+						<label>Những câu hỏi chỉ có 1 phương án đúng, phương án trả lời sẽ hiển thị ở dạng radio box <img src="/images/howto/radio.jpg"></label>
+					</li>
+					<li>
+						<label>Đối với những câu hỏi có hơn 1 phương án đúng, các phương án sẽ hiển thị ở dạng checkbox : <img src="/images/howto/checkbox.jpg"></label>
+					</li>
+					<li>
+					<img src="/images/howto/questionlist.jpg"><label>Các phương án đã trả lời sẽ hiển thị sang màu xanh</label>
+					</li>
+					<li>
+					<label>Sau khi trả lời hết tất cả câu hỏi, có thể chọn <img src="/images/howto/submit.jpg"> để nộp bài.</label>
+					</li>
+					<li>
+					<label>Thời gian <img src="/images/howto/timer.jpg"> là thời gian còn lại để làm bài thi, thời gian hết sẽ tự động nộp bài.</label>
+					</li>
+					
+				</ul>
+				<hr>
+				<div class='btn btn-success' id='submit-off-guide'>Xác nhận</div>
+				<label id="check-show-guide"><input type="checkbox" id='check-off'>  Tôi đã hiểu, đừng hiện lại nữa!</label>
 			</div>
 		</div>
 		
@@ -101,9 +134,11 @@
 	<!-- Javascript -->
 	<script src="/assets/vendor/jquery/jquery.min.js"></script>
 	<script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/js/howto.js"></script>
 	
-	<script type="text/javascript">
+	<script type="text/javascript" th:inline="javascript">
 		$(document).ready(function(){
+			//Nộp bài
 			$('#finish').click(function(){
 				event.preventDefault();
 				//kiem tra xem nguoi dung da dien het dap an chua
@@ -227,11 +262,42 @@
 		        			
 		        			table.append(tbody);
 		        			$('#question-list').append(table);
+		        			//Thêm vào nút chuyển đến bxh
+		        			var href= /*[[@{'/examleaderboard/'+${examPackageID}}]]*/"";
+		        			var btnLeaderboard = $("<a href='"+href+"' class='btn btn-success'>Xem bảng xếp hạng</a>");
+		        			$('#question-list').append(btnLeaderboard);
 		        		},
 		        		error: function(e) {
 			    			alert('Có lỗi xảy ra')
 			    		}
 		            })
+			})
+			
+			//Hiển thị xanh khi chọn đáp án
+			$('.cb-answer').change(function(){
+				var clicked = $(this)[0];
+				if(clicked.checked==false){
+					var answerList = $('input[data-question-index = '+clicked.getAttribute('data-question-index')+']');
+					var result = false;
+					for(let i =0 ; i<answerList.length;i++){
+						if(answerList[i].checked==true){
+							result = true;
+							break;
+						}
+					}
+					var questionIndex = clicked.getAttribute('data-question-index');
+					var questionBtnId = 'qb'+questionIndex;
+					var target = $('#'+questionBtnId).first();
+					if(result==false){
+						target.removeClass('question-active')
+						return ;
+					}
+				}
+				var questionIndex = clicked.getAttribute('data-question-index');
+				var questionBtnId = 'qb'+questionIndex;
+				var target = $('#'+questionBtnId).first();
+				console.log(target);
+				target.addClass('question-active')
 			})
 		})
 		
@@ -259,6 +325,35 @@
 			})
 			return checked;
 		}
+		
+		function startTimer(duration, display) {
+		    var timer = duration, hour, minutes, seconds;
+		    hour = parseInt(timer / 3600, 10);
+		    minutes = parseInt((timer / 60)%60, 10);
+	        seconds = parseInt(timer % 60, 10);
+	        display.textContent =hour+":"+ minutes + ":" + seconds;
+		    setInterval(function () {
+		    	hour = parseInt(timer / 3600, 10);
+		        minutes = parseInt((timer / 60)%60, 10);
+		        seconds = parseInt(timer % 60, 10);
+				
+		        hour = hour < 10 ? "0" + hour : hour;
+		        minutes = minutes < 10 ? "0" + minutes : minutes;
+		        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+		        display.textContent =hour+":"+ minutes + ":" + seconds;
+
+		        if (--timer < 0) {
+		            timer = duration;
+		        }
+		    }, 1000);
+		}
+
+		window.onload = function () {
+		    var fiveMinutes = $('#time').text(),
+		        display = document.querySelector('#time');
+		    startTimer(fiveMinutes, display);
+		};
 	</script>
 </body>
 

@@ -100,22 +100,41 @@
 											<th:block th:each="mail: ${mailBoxList}">
 												<tr>
 													<td class="action"><input type="checkbox" /></td>
-													<td class="name"><a href="#">Larry Gardner</a></td>
+													<td class="name">
+														<th:block th:each="mailTo,itor : ${mail.mailTos}">
+															<a href="#" th:utext="${mailTo.account.username}">Larry Gardner</a>
+														</th:block>
+													</td>
 													<td class="subject"><a href="#" th:utext="${mail.title}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed </a></td>
 													<td class="time" th:utext="${mail.sendDate}">08:30 PM</td>
 												</tr>
 											</th:block>
 										</tbody></table>
 									</div>
-			
-									<ul class="pagination">
-										
-										<th:block th:each="i : ${#numbers.sequence(1, page.totalPages)}">
-											<li th:if="${i==page.number+1}" class="active"><a href="#" th:utext="${i}">2</a></li>
-											<li th:if="${i!=page.number+1}"><a href="#" th:utext="${i}">2</a></li>
-										</th:block>
-										
-									</ul>						
+									<nav aria-label="Page navigation example">
+									  <ul class="pagination justify-content-center">
+									    <li class="page-item" th:if="${page.hasPrevious()}">
+									      <a class="page-link"  th:href="@{'/manage/mailbox/sent/'+${page.number}}">Previous</a>
+									    </li>
+									    <li class="page-item disabled" th:if="${!page.hasPrevious()}">
+									      <a class="page-link">Previous</a>
+									    </li>
+									    <th:block th:each="i : ${#numbers.sequence(1, page.totalPages)}">
+									    	<li class="page-item" th:if="${i!=page.number+1}">
+									    		<a class="page-link" th:href="@{'/manage/mailbox/sent/'+${i}}" th:utext="${i}">1</a>
+									    	</li>
+									    	<li class="page-item active" th:if="${i==page.number+1}">
+									    		<a class="page-link" th:href="@{'/manage/mailbox/sent/'+${i}}" th:utext="${i}">1</a>
+									    	</li>
+									    </th:block>
+									    <li class="page-item" th:if="${page.hasNext()}">
+									      <a class="page-link" th:href="@{'/manage/mailbox/sent/'+${page.number+2}}">Next</a>
+									    </li>
+									    <li class="page-item disabled" th:if="${!page.hasNext()}">
+									      <a class="page-link">Next</a>
+									    </li>
+									  </ul>
+									</nav>					
 								</div>
 								<!-- END INBOX CONTENT -->
 								

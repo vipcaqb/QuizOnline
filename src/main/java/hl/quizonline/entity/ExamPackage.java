@@ -232,6 +232,16 @@ public class ExamPackage implements Serializable {
 	public void setShowResults(boolean showResults) {
 		this.showResults = showResults;
 	}
+	
+	
+
+	public List<JoinExamination> getJoinExaminations() {
+		return joinExaminations;
+	}
+
+	public void setJoinExaminations(List<JoinExamination> joinExaminations) {
+		this.joinExaminations = joinExaminations;
+	}
 
 	public ExamPackage(int examPackageID) {
 		super();

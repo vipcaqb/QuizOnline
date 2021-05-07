@@ -11,7 +11,7 @@
 }
 
 #question-menu-list{
-	height: 50vh;
+	height: 40vh;
 	min-width: 320px;
 	border: black solid 1px;
 	overflow: scroll;

@@ -2,6 +2,7 @@ package hl.quizonline.service.impl;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.Account;
@@ -90,6 +92,18 @@ public class MailboxServiceImpl implements MailboxService {
 	@Override
 	public MailBox readMail(int mailBoxID) {
 		return mailboxRepository.findById(mailBoxID).get();
+	}
+
+	@Override
+	@Transactional
+	public void deleteMailToAndAllMailBox(int mailBoxID) {
+		//lấy mail box
+		Optional<MailBox> opMailBox = mailboxRepository.findById(mailBoxID);
+		if(opMailBox.isPresent()) {
+			MailBox mailBox = opMailBox.get();
+			mailBox.setDeleted(true);
+			mailboxRepository.save(mailBox);
+		}
 	}
 
 }

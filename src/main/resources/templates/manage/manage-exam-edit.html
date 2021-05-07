@@ -63,13 +63,17 @@
 								</option>
 							</th:block>
 						</select>
-						<div class="myborder p-1 mb-2">
+						<div class="myborder p-1 mb-2" style="max-height: 50vh;overflow: scroll;">
 							<label>Chọn gói câu hỏi muốn thêm</label> 
 							<div th:if="${examPackageModelList.size()>0}">	
 								<th:block th:each="questionPackageModel : ${examPackageModelList}">
 									<hr>
 									<div> 
-										<input type="checkbox" th:value="${questionPackageModel.questionPackageID}" name="questionPackageID" th:checked="${questionPackageModel.checked}"> 
+										<input type="checkbox" 
+										th:value="${questionPackageModel.questionPackageID}" 
+										name="questionPackageID" 
+										th:data-number-of-question="${questionPackageModel.questionSize}"
+										th:checked="${questionPackageModel.checked}"> 
 										<span th:utext="@{${questionPackageModel.questionPackageName} + '('+${questionPackageModel.questionSize}+' câu hỏi)'}">Gói toán</span> 
 									</div>
 								</th:block>

@@ -4,16 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.Answer;
 import hl.quizonline.entity.ExamPackage;
 import hl.quizonline.entity.ExamQuestion;
 import hl.quizonline.entity.Examination;
+import hl.quizonline.entity.Image;
 import hl.quizonline.entity.Question;
 import hl.quizonline.entity.QuestionPackage;
 import hl.quizonline.repository.AnswerRepository;
+import hl.quizonline.repository.ImageRepository;
 import hl.quizonline.repository.QuestionPackageRepository;
 import hl.quizonline.repository.QuestionRepository;
 import hl.quizonline.service.ExamQuestionService;
@@ -30,6 +37,8 @@ public class QuestionServiceImpl implements QuestionService {
 	ExamQuestionService examQuestionService;
 	@Autowired
 	AnswerRepository answerRepository;
+	@Autowired
+	ImageRepository imageRepository;
 
 	@Override
 public List<Question> getAll(int questionPackageID) {
@@ -51,13 +60,32 @@ public List<Question> getAll(int questionPackageID) {
 	}
 
 	@Override
+	@Transactional
 	public void delete(int questionID) {
-		questionRepository.deleteById(questionID);
+		Optional<Question> opQuestion = questionRepository.findById(questionID);
+		if(opQuestion.isEmpty()) return;
+		Question question = opQuestion.get();
+		
+		if(question.getImages()!=null) {
+			for(int i =0;i <question.getImages().size();i++) {
+				Image image = question.getImages().get(i);
+				
+				imageRepository.delete(image);
+			}
+		}
+		if(question.getAnswers()!=null) {
+			for(int i =0;i<question.getAnswers().size();i++) {
+				Answer answer = question.getAnswers().get(i);
+				
+				answerRepository.delete(answer);
+			}
+		}
+		questionRepository.delete(question);
 	}
 
 	@Override
 	public void delete(Question question) {
-		questionRepository.delete(question);
+		this.delete(question.getQuestionID());
 	}
 
 	@Override
@@ -98,5 +126,41 @@ public List<Question> getAll(int questionPackageID) {
 			}
 		}
 		return isCorrect;
+	}
+
+	@Override
+	public Page<Question> searchQuestionByContent(String questionContent, int qpID, int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		QuestionPackage qp = questionPackageRepository.findById(qpID).get();
+		Page<Question> page = questionRepository.findByQuestionPackageAndQuestionContentContains(qp, questionContent, pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Question> getAll(int qpID, int pageNo, int pageSize) {
+		QuestionPackage qp = new QuestionPackage();
+		qp.setQuestionPackageID(qpID);
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		return questionRepository.findByQuestionPackage(qp, pageable);
+	}
+
+	@Override
+	@Transactional
+	public void addListQuestionToQuestionPackage(int questionPackageID, List<Question> questionList) {
+		//Lây questionPackage
+		QuestionPackage questionPackage = questionPackageRepository.findById(questionPackageID).get();
+		
+		for(int i=0;i<questionList.size();i++) {
+			Question question = questionList.get(i);
+			
+			question.setQuestionPackage(questionPackage);
+			questionRepository.save(question);
+			for(int j = 0; j <question.getAnswers().size();j++) {
+				Answer answer = question.getAnswers().get(j);
+				answer.setQuestion(question);
+				answerRepository.save(answer);
+			}
+		}
+		System.out.println("Đưa dữ liệu lên thành công");
 	}
 }

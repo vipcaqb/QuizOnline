@@ -61,7 +61,7 @@
 								<p>Thời gian còn lại: 1h 20p 38s</p>
 								<p th:if="${examPackage.showResults}">Cho phép xem lại đáp án: Có </p>
 								<p th:unless="${examPackage.showResults}">Cho phép xem lại đáp án: Không </p>
-								<p>Tổng số lượt làm bài: 0 </p>
+								<p>Tổng số lượt làm bài: <span th:utext="${examPackage.doExamTime}"></span> </p>
 							</div>
 						</div>
 						<div class="col-md-6 main-content">
@@ -69,7 +69,7 @@
 								
 								<img th:src="@{/images/examdetail.png}">
 								
-								<label>Lượt làm bài: 3</label>
+								<label>Lượt làm bài: <span></span> </label>
 								<br>
 								<a class="btn btn-success" 
 								th:href="@{'/doexam/'+${examPackage.examPackageID}}" 
@@ -85,48 +85,26 @@
 						<div class="panel-heading">
 							<h3 class="panel-title">Cuộc thi sắp diễn ra</h3>
 						</div>
+						<div class="alert alert-danger" th:if="${examPackageIsCommingList==null || examPackageIsCommingList.size()==0}">
+							Chưa có cuộc thi nào sắp diễn ra
+						</div>
 						<div class="panel-body">
 							<ul class="list-unstyled activity-list">
-								<li>
-									<img src="/assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Thi tiếng anh B1</a> trong khoảng 3 tiếng nữa <span class="timestamp">Văn Tèo</span></p>
-								</li>
-								<li>
-									<img src="/assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Thi sinh học lớp 12</a> Trong khoảng 6 tiếng nữa<span class="timestamp">Quân Kun</span></p>
-								</li>
-								<li>
-									<img src="/assets/img/user3.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Quân kun</a> created a new heatmap view <a href="#">Landing Page</a> <span class="timestamp">2 days ago</span></p>
-								</li>
+								<th:block th:each="examComming: ${examPackageIsCommingList}">
+									<li>
+										<img src="assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
+										<p th:utext="${examComming.examPackageTitle}"><a th:href="@{'/examdetail/' + ${examComming.examPackageID}}">Thi tiếng anh B1</a> trong khoảng 3 tiếng nữa <span class="timestamp">Văn Tèo</span></p>
+									</li>
+								</th:block>
 							</ul>
 							<button type="button" class="btn btn-primary btn-bottom center-block">Hiển thị tất cả</button>
 						</div>
 					</div>
 				<!-- END TIMELINE -->
 				<!-- LEADERBOARD -->
-					<div class="panel panel-scrolling">
-								<div class="panel-heading">
-									<h3 class="panel-title">Bảng xếp hạng</h3>
-								</div>
-								<div class="panel-body">
-									<ul class="list-unstyled activity-list">
-										<li>
-											<div class="top-avatar">
-											
-											<img src="/assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
-											</div>
-											
-											<p><a href="#">Văn Tèo</a></p>
-										</li>
-										<li>
-											<img src="/assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-											<p><a href="#">Quân Kun</a></p>
-										</li>
-									</ul>
-								</div>
-								<button type="button" class="btn btn-primary btn-bottom center-block">Hiển thị tất cả</button>
-							</div>
+					<div th:insert="/shared/leaderboard::leaderboard">
+					
+					</div>
 				<!-- END LEADERBOARD -->
 				<!-- TIMELINE -->
 					<div class="panel panel-scrolling">

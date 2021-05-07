@@ -3,6 +3,7 @@ package hl.quizonline.service;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 import hl.quizonline.entity.Account;
 import hl.quizonline.entity.Category;
@@ -30,6 +31,16 @@ public interface JoinExamService {
 	 * @return the by examination
 	 */
 	List<JoinExamination> getByExamPackage(ExamPackage examPackage);
+	
+	/**
+	 * Gets the by exam package.
+	 *
+	 * @param examPackage the exam package
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @return the by exam package
+	 */
+	Page<JoinExamination> getByExamPackage(ExamPackage examPackage, int pageNo, int pageSize, Sort sort);
 	
 	/**
 	 * Creates the.

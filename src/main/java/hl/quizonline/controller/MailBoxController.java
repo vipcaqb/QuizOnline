@@ -65,13 +65,10 @@ public class MailBoxController {
 			
 			Page<MailBox> page = mailboxService.getSendList(account, pageNo, MyConstances.PAGE_SIZE);
 			List<MailBox> mailBoxList = page.getContent();
-			
 			model.addAttribute("mailBoxList", mailBoxList);
 			model.addAttribute("page", page);
 			return "manage/manage-mailbox-sent";
-					
 		}
-		
 		return "redirect:/login";
 	}
 	
@@ -80,8 +77,9 @@ public class MailBoxController {
 		MailBox mailBox = mailboxService.readMail(mailBoxID);
 		String receiver = "";
 		for(int i =0;i<mailBox.getMailTos().size();i++) {
-			receiver+=","+ mailBox.getMailTos().get(i).getAccount().getUsername();
-			System.out.println(mailBox.getMailTos().size());
+			if(i>0)
+				receiver+=","+ mailBox.getMailTos().get(i).getAccount().getUsername();
+			else receiver+=mailBox.getMailTos().get(i).getAccount().getUsername();
 		}
 		
 		model.addAttribute("mailBox", mailBox);

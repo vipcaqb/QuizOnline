@@ -50,7 +50,7 @@
 						<div class="panel-title" th:utext="@{'Thêm câu hỏi cho gói câu hỏi: ' + ${questionPackage.name}}"></div>
 					</div>
 					<div class="row">
-						<a class="btn btn-info">Thêm bằng file excel</a>
+						<a th:href="@{'/manage/question/addexcel/'+${questionPackage.questionPackageID}}" class="btn btn-info">Thêm bằng file excel</a>
 						<form class="col-md-6" th:action="@{'/manage/question/addquestion/'+${questionPackage.questionPackageID}}" method="post">
 							<div class="form-group">
 								<label for="exampleFormControlInput1">Nội dung câu hỏi</label>
