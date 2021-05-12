@@ -123,7 +123,7 @@
 								<i class="fas fa-user" th:utext = "@{'Người tạo: '+${exam.account.fullname}}">Người tạo: Tèo Văn</i>
 								<br>
 							</div>
-							<a class="btn btn-outline-primary mt-1">Chi tiết</a>
+							<a class="btn btn-outline-primary mt-1" th:href="@{'/examdetail/'+${exam.examPackageID}}">Chi tiết</a>
 						</div>
 					</th:block>
 					<!-- PAGINATION -->
@@ -201,12 +201,12 @@
 						<div class="panel-body">
 							<ul class="list-unstyled activity-list">
 								<li>
-									<img src="assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
+									<img src="/assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
 									
 									<p><a href="#">Văn Tèo</a> đã mở một bài thi<span class="timestamp">20 minutes ago</span></p>
 								</li>
 								<li>
-									<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
+									<img src="/assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
 									<p><a href="#">Quân Kun</a> đã mở một đề ôn tập <span class="timestamp">Yesterday</span></p>
 								</li>
 							</ul>

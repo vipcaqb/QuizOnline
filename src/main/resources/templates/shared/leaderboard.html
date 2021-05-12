@@ -14,7 +14,7 @@
 			<th:block th:each="acc : ${accountList}">
 				<li>
 					<div class="top-avatar">
-					<img th:if='${acc.urlAvatar!=null&&!acc.urlAvatar.equals("")}' th:src="@{'/getimage/'+${acc.urlAvatar}}" alt="Avatar" class="img-circle pull-left avatar">
+					<img th:if='${acc.urlAvatar!=null&&!acc.urlAvatar.equals("")}' th:src="@{'/getimage/'+${acc.urlAvatar}}" style="height: 40px;" alt="Avatar" class="img-circle pull-left avatar">
 					<img th:unless='${acc.urlAvatar!=null&&!acc.urlAvatar.equals("")}' 
 					th:src="@{'https://ui-avatars.com/api/?name='+${acc.fullname}}" 
 					alt="Avatar" class="img-circle pull-left avatar">

@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import hl.quizonline.entity.Account;
+import hl.quizonline.entity.ExamPackage;
 import hl.quizonline.entity.MailBox;
 import hl.quizonline.entity.MailTo;
+import hl.quizonline.entity.QuestionPackage;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -61,9 +63,25 @@ public interface MailboxService {
 	MailBox readMail(int mailBoxID);
 	
 	/**
-	 * Xóa mail
+	 * Xóa mail.
 	 *
 	 * @param mailBoxID the mail box ID
 	 */
 	void deleteMailToAndAllMailBox(int mailBoxID);
+
+	/**
+	 * Gửi thông báo đến mail của người dùng khi admin xóa examPackage
+	 *
+	 * @param to the to
+	 * @param examDeleted the exam deleted
+	 */
+	void noticeUserWhenAdminDeleteExamPackage(Account to, ExamPackage examDeleted, String reason);
+	
+	/**
+	 * Gửi thông báo đến mail của người dùng khi admin xóa questionPackage
+	 *
+	 * @param to the to
+	 * @param questionDeleted the question deleted
+	 */
+	void noticeUserWhenAdminDeleteQuestionPackage(Account to, QuestionPackage questionDeleted, String reason);
 }

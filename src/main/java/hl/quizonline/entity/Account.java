@@ -90,6 +90,16 @@ public class Account implements Serializable {
 		this.examPackages = examPackages;
 		this.joinExaminations = joinExaminations;
 	}
+	
+	
+
+	public List<QuestionPackage> getQuestionPackages() {
+		return questionPackages;
+	}
+
+	public void setQuestionPackages(List<QuestionPackage> questionPackages) {
+		this.questionPackages = questionPackages;
+	}
 
 	public Gender getGender() {
 		return gender;

@@ -1,5 +1,6 @@
 package hl.quizonline.controller;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,5 +43,23 @@ public class FileUploadController {
 		System.out.println("da lay xong anh");
 		return ResponseEntity.badRequest().build();
 	}
-
+	@RequestMapping(value = "getJson/{fileName}",method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<ByteArrayResource> getJson(@PathVariable("fileName") String fileName){
+		
+		if(!fileName.equals("")||fileName!=null) {
+			Path fullFileName = Paths.get("src//main//resources//static//json",fileName);
+			byte[] buffer;
+			try {
+				buffer = Files.readAllBytes(fullFileName);
+				ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+				return ResponseEntity.ok().contentLength(buffer.length)
+						.contentType(MediaType.APPLICATION_JSON_UTF8).body(byteArrayResource);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return ResponseEntity.badRequest().build();
+	}
 }

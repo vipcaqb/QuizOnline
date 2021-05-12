@@ -59,7 +59,7 @@ public class AccountController {
 	@PostMapping("/register")
 	public String register(@ModelAttribute Account acc,Model model) {
 		System.out.println("post register");
-		acc.setRole("ROLE_STUDENT");
+		acc.setRole("ROLE_USER");
 		acc.setEnable(true);
 		accountService.registerAccount(acc);
 		

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -44,6 +45,7 @@ import hl.quizonline.service.CategoryService;
 import hl.quizonline.service.ExamPackageService;
 import hl.quizonline.service.ExamQuestionService;
 import hl.quizonline.service.ExaminationService;
+import hl.quizonline.service.MailboxService;
 import hl.quizonline.service.QuestionPackageService;
 import hl.quizonline.service.QuestionService;
 import javassist.NotFoundException;
@@ -83,6 +85,9 @@ public class ExamPackageController {
 	/** The exam question service. */
 	@Autowired
 	ExamQuestionService examQuestionService;
+	
+	@Autowired
+	MailboxService mailBoxService;
 	
 	/**
 	 * manage the exam.
@@ -550,9 +555,48 @@ public class ExamPackageController {
 	 * @return the string
 	 */
 	@GetMapping("/deletePackage/{examPackageID}")
-	public String deleteExamPackage(@PathVariable("examPackageID") Integer examPackageID) {
-		examPackageService.delete(examPackageID);
-		return "redirect:/manage/exam";
+	@Transactional
+	public String deleteExamPackage(@PathVariable("examPackageID") Integer examPackageID,
+			@RequestParam(name = "reasonID",required =  false) Integer reasonID,
+			@RequestParam(name = "reason", required = false) String reason
+			) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String currentUserName = authentication.getName();
+			Optional<Account> opAccount = accountService.getAccountByUsername(currentUserName);
+			Account currentAccount = opAccount.get();
+			ExamPackage examPackage = examPackageService.getExamPackage(examPackageID);
+			//Kiểm tra xem người dùng hiện tại có đủ quyền xóa hay không
+			if(!currentUserName.equals(examPackage.getAccount().getUsername())) {
+				if(!currentAccount.getRole().equals("ROLE_ADMIN")) {
+					return "redirect:/login";
+				}
+			}
+			//xóa exampackage
+			examPackageService.delete(examPackageID);
+			//Sau khi xóa, kiểm tra xem người xóa là ai, nếu người xóa là admin và không phải
+			//chủ sở hữu thì tiến hành gửi thư thông báo rằng ExamPackage đã bị admin xóa
+			
+			if(!currentUserName.equals(examPackage.getAccount().getUsername())) {
+				String reasonMessage = "";
+				if(reasonID!=null) {
+					if(reasonID==0) {
+						reasonMessage = "Spam";
+					}
+					else if (reasonID==1){
+						reasonMessage = "Nội dung không phù hợp";
+					}
+					else if (reasonID == 2) {
+						reasonMessage = reason;
+					}
+				}
+				//Tiến hành gửi thông báo
+				mailBoxService.noticeUserWhenAdminDeleteExamPackage(examPackage.getAccount(), examPackage, reasonMessage);
+				return "redirect:/manage/account";
+			}
+			return "redirect:/manage/exam";
+		}
+		return "redirect:/login";
 	}
 	
 	/**
@@ -567,6 +611,12 @@ public class ExamPackageController {
 		return "redirect:/manage/exam";
 	}
 
+	/**
+	 * Tiến hành công khai một bài thi, sau khi công khai mọi người mới có thể tìm thấy bài thi.
+	 *
+	 * @param examPackageID the exam package ID
+	 * @return the string
+	 */
 	@GetMapping("/public/{examPackageID}")
 	public String publicAExamPackage(@PathVariable("examPackageID") Integer examPackageID) {
 		ExamPackage examPackage = examPackageService.getExamPackage(examPackageID);

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -17,5 +18,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 	
 	Optional<Account> findByUsername(String username);
 	Optional<Account> findByUsernameAndPassword(String username, String password);
+	
+	Page<Account> findByUsernameContainsOrFullnameContains(String usernameKey, String fullnameKey, Pageable pageable);
 	
 }

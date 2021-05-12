@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.Account;
@@ -62,7 +63,7 @@ public class JoinExamServiceImpl implements JoinExamService {
 
 	@Override
 	public Page<JoinExamination> getListByAccount(Account account, int pageNo, int pageSize) {
-		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Direction.DESC,"timeFinish"));
 		return joinExamRepository.findByAccount(pageable, account);
 	}
 

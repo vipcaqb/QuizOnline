@@ -21,4 +21,5 @@ public interface JoinExamRepository extends JpaRepository<JoinExamination,Long> 
 	List<JoinExamination> findByAccountAndExamPackage(Account account, ExamPackage examPackage);
 	Page<JoinExamination> findByAccount(Pageable pageable,Account account);
 	Page<JoinExamination> findByExamPackage(ExamPackage examPackage, Pageable pageable);
+	
 }

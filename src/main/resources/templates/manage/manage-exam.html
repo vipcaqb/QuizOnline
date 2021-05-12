@@ -108,7 +108,7 @@
 					<!--END PAGINATION -->
 				</div>
 				<div class="col-md-9">
-					<div class="panel" style="min-height: 100vh;">
+					<div th:if="${currentPackage!=null}" class="panel" style="min-height: 100vh;">
 						<h3 class="ml-1 mt-1" style="font-weight: bold;"
 						th:if="${currentPackage!=null}" 
 						th:utext="${currentPackage.examPackageTitle}">
@@ -197,6 +197,9 @@
 							</nav>
 							<!-- END PAGINATION -->
 						</div>
+					</div>
+					<div th:if="${currentPackage==null}" class="panel" style="height: 100vh;"> 
+						<div class="alert alert-info mt-2">Bạn chưa có đề thi nào, bấm 'Thêm' để tạo đề thi đàu tiên nào!</div>
 					</div>
 				</div>
 			</div>

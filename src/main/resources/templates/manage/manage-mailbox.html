@@ -96,11 +96,23 @@
 									
 									<div class="table-responsive">
 										<table class="table">
+											<thead>
+												<tr>
+													<th>
+													</th>
+													<th>Người gửi
+													</th>
+													<th>Tiêu đề
+													</th>
+													<th>Thời điểm gửi
+													</th>
+												</tr>
+											</thead>
 											<tbody>
 											<th:block th:each="mail: ${mailToList}">
 												<tr>
 													<td class="action"><input type="checkbox" /></td>
-													<td class="name"><a th:href="@{'/profile/'+${mail.account.username}}" th:utext="${mail.account.username}">Larry Gardner</a></td>
+													<td class="name"><a th:href="@{'/profile/'+${mail.mailBox.account.username}}" th:utext="${mail.mailBox.account.username}">Larry Gardner</a></td>
 													<td class="subject"><a th:href="@{'/manage/mailbox/read/'+${mail.mailBox.mailBoxID}}" th:utext="${mail.mailBox.title}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed </a></td>
 													<td class="time" th:utext="${mail.mailBox.sendDate}">08:30 PM</td>
 												</tr>

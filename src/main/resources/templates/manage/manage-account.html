@@ -17,13 +17,15 @@
 	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
 <link rel="stylesheet" th:href="@{/css/manage-exam.css}">
 <link rel="stylesheet" th:href="@{/assets/css/mystyle.css}">
+<link rel="stylesheet" th:href="@{/css/manage-account.css}">
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<link rel="stylesheet" th:href="@{/css/howto.css}">
 <!-- GOOGLE FONTS -->
-<link
-	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
-	rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+<link href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
+
 <!-- ICONS -->
 <link rel="apple-touch-icon" sizes="76x76"
 	th:href="@{/assets/img/apple-icon.png}">
@@ -53,83 +55,391 @@
 						<div class="grid-body">
 							<h2>Quản lý tài khoản</h2>
 							<div class="search-box mb-1">
-								<form action="">
-									<input type="text" placeholder="Tên tài khoản cần tìm">
+								<form action="/manage/account" method="get">
+									<input type="text" placeholder="Tên tài khoản cần tìm" name="key">
 									<input class="btn btn-success" type="submit" value = "Tìm kiếm" style="margin-bottom: 5px;">
 								</form>
 							</div>
-							<table class="table table-bordered">
+							<div class="mb-1">
+								<a href="#" class="btn btn-info" id="btn-exam" data-toggle="modal" data-target="#examTable">Bộ đề</a>
+								<a href="#" class="btn btn-info" id="btn-question" data-toggle="modal" data-target="#questionTable">Gói câu hỏi</a>
+								<a href="#" class="btn btn-warning" id="btn-lock">Khóa/mở khóa</a>
+							</div>
+							<table class="table table-bordered"
+								data-toggle="table"
+							 	data-single-select="true"
+								data-click-to-select="true"
+							>
 								<thead>
 									<tr> 
+										<th data-field="state" data-checkbox="true"></th>
 										<th>Tên tài khoản</th>
 										<th>Họ và tên</th>
 										<th>Giới tính</th>
 										<th>Ngày sinh</th>
-										<th>Hành động</th>
+										<th>Số bộ đề</th>
+										<th>Số gói câu hỏi</th>
+										<th>Trạng thái</th>
 									</tr>
 								</thead>
 								<tbody>
 									<th:block th:each="account: ${accountList}">
 										<tr>
+											<td> </td>
 											<td th:utext="${account.username}">vipcaqb</td>
 											<td th:utext="${account.fullname}">Lê Văn Vũ</td>
 											
 											<td th:utext="${account.gender.displayValue}">Nam</td>
 											
 											<td th:utext="${account.dateOfBirth}">22/5/2000</td>
-											<td>
-												<a href="#" class="btn btn-danger">Khóa</a>
-												<a href="#" class="btn btn-info">Đề thi</a>
-												<a href="#" class="btn btn-info">Câu hỏi</a>
-											</td>
+											<td th:utext="${account.examPackages.size()}"> 1</td>
+											<td th:if="${account.questionPackages!=null}" th:utext="${account.questionPackages.size()}"> 1</td>
+											<td th:if="${account.questionPackages==null}"> 0</td>
+											<td class="alert alert-success" th:if="${account.enable}">Chưa khóa</td>
+											<td class="alert alert-danger" th:unless="${account.enable}">Đã khóa</td>
 									</tr>
 									</th:block>
 								</tbody>
+								
 							</table>
 							
 							<nav aria-label="Page navigation example">
 							  <ul class="pagination justify-content-center">
-							  
-							    <li class="page-item">
+							    <li class="page-item" th:if="${page.hasPrevious()}">
+							      <a class="page-link"  th:href="@{'/manage/account/'+${page.number}}">Previous</a>
+							    </li>
+							    <li class="page-item disabled" th:if="${!page.hasPrevious()}">
 							      <a class="page-link">Previous</a>
 							    </li>
 							    
-							    <th:block>
+							    <th:block th:each="i : ${#numbers.sequence(1, page.totalPages)}">
 							    
-							    	<li class="page-item">
-							    		<a class="page-link">1</a>
+							    	<li class="page-item" th:if="${i!=page.number+1}">
+							    		<a class="page-link" th:href="@{'/manage/account/'+${i}}" th:utext="${i}">1</a>
 							    	</li>
-							    	<li class="page-item active">
-							    		<a class="page-link">1</a>
+							    	<li class="page-item active" th:if="${i==page.number+1}">
+							    		<a class="page-link" th:href="@{'/manage/account/'+${i}}" th:utext="${i}">1</a>
 							    	</li>
 							    
 							    </th:block>
 							    
+							    <li class="page-item" th:if="${page.hasNext()}">
+							      <a class="page-link" th:href="@{'/manage/account/'+${page.number+2}}">Next</a>
+							    </li>
 							    
-							    <li class="page-item disabled">
+							    <li class="page-item disabled" th:if="${!page.hasNext()}">
 							      <a class="page-link">Next</a>
 							    </li>
 							  </ul>
-							</nav>
+							</nav>	
 						</div>
 					</div>
 				</div>
 				<!-- END INBOX -->
 			</div>
+			<div id="examTable" class="fade modal" tabindex="-1" role="dialog">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content" style="width: 800px;">
+			      <div class="modal-header">
+			        <h5 class="modal-title">Danh sách bộ đề của tài khoản: </h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body" style="overflow-y: scroll;max-height: 520px;">
+			        <table id="table"
+			          data-height="400"
+			          class="table table-bordered"
+			          >
+			          <thead>
+			            <tr>
+			              <th data-field="id">ID</th>
+			              <th data-field="title">Tiêu đề</th>
+			              <th data-field="size">Số đề thi</th>
+			              <th data-field="times">Số lượt thi</th>
+			              <th data-field="status">Trạng thái</th>
+			              <th> </th>
+			            </tr>
+			          </thead>
+			          <tbody id="examBody">
+			          
+			          </tbody>
+			        </table>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" id="btn-cancel-exam" data-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			  </div>
 			</div>
+			
+			<div id="questionTable" class="modal fade" tabindex="-1" role="dialog">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content" style="width: 800px;">
+			      <div class="modal-header">
+			        <h5 class="modal-title">Danh sách gói câu hỏi của tài khoản: </h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body" style="overflow-y: scroll;max-height: 520px;">
+			        <table id="table2"
+			          data-height="400"
+			          class="table table-bordered"
+			          >
+			          <thead>
+			            <tr>
+			              <th data-field="id">ID</th>
+			              <th data-field="title">Tiêu đề</th>
+			              <th data-field="size">Số câu hỏi</th>
+			              <th data-field="times">Số lần đã dùng</th>
+			              <th data-field="status"></th>
+			              <th> </th>
+			            </tr>
+			          </thead>
+			          <tbody id="questionBody">
+			          </tbody>
+			        </table>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" id="btn-cancel-question" data-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			</div>
+			
+			
+			
 			<!-- END MAIN CONTENT -->
 		</div>
 		<!-- END MAIN -->
+		<div id="background" class="hide">
+				<div class="deleteAccept">
+					<div class="deleteAcceptHeader">
+						Chọn lý do:
+					</div>
+					<form action="" method = "get" class="deleteAcceptForm">
+						<select class="form-control mb-1 mt-1" name = "reasonID">
+							<option value = "0">
+								Spam
+							</option>
+							<option value = "1">
+								Nội dung không phù hợp
+							</option>
+							<option value = "2">
+								Khác
+							</option>
+						</select>
+						
+						<input class="form-control mb-1" type="text" autocomplete="name" name="reason" placeholder="Lý do khác">
+						<input class="btn btn-danger ml-1" type="submit" value = "Xóa"> 
+						<div class="btn btn-light" id="cancelAccept">Cancel</div>
+					</form>
+				</div>	
+			</div>
 		<div class="clearfix"></div>
 	</div>
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
 	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
 	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+	<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
 	<script type="text/javascript">
+	function showExamPanel(id){
+		document.getElementById("btn-cancel-exam").click();
+		$('#background').removeClass('hide');
+		$('.deleteAcceptForm').attr('action','/manage/exam/deletePackage/'+id);
+	}
+	
+	function showQuestionPanel(id){
+		document.getElementById("btn-cancel-question").click();
+		$('#background').removeClass('hide');
+		$('.deleteAcceptForm').attr('action','/manage/question/deletePackage/'+id);
+	}
 		$(document).ready(function(){
 			$('#tk').addClass('active');
+			
+			
+			$('#btn-lock').click(function(){
+				
+				var listSelected = $('input[name=btSelectItem]').filter(function(){
+					return this["checked"]==true;
+				});
+				if(listSelected.length == 0){
+					console.log('Chưa chọn tài khoản nào.');
+					return ;
+				}
+				var username = getUsername(listSelected);
+				
+				//tạo form và submit
+				$form = $("<form></form>");
+				$form.attr('action','/manage/account/lockaccount/'+username);
+				$form.attr('method','GET');
+				$('body').append($form);
+				$form.submit();
+				console.log('Đã yêu cầu khóa tài khoản: '+username);
+			})
+			
+			//Hiển bị bảng xác nhận xóa bộ đề
+			
+			$('.btn-delete-exam').click(function(){
+				console.log('abc');
+				//hiển thị bảng
+				//Đưa dữ liệu cần thiết vào form
+			})
+			
+			
+			
+			$('#cancelAccept').click(function(){
+				$('#background').addClass('hide');
+			})
 		})
+		
+		function getUsername(listSelected){
+			var target = listSelected.first();
+			var row = target.parent().parent().parent();
+			var tdList = row.find('td');
+			var username = tdList[1].textContent;
+			return username;
+		}
+		
+		$('#btn-exam').click(function(){
+			console.log('getting data')
+			var listSelected = $('input[name=btSelectItem]').filter(function(){
+				return this["checked"]==true;
+			});
+			if(listSelected.length == 0){
+				console.log('chưa chọn tài khoản')
+				event.preventDefault();
+			}
+			else{
+				// gui du lieu len
+				var username = getUsername(listSelected);
+				var myJson = "{}";
+				var urlTarget = "/manage/account/getExamList/"+username+"?pageNo=1";
+				console.log(username);
+				$.ajax({
+	            	type: 'GET',
+	            	contentType: "application/json",
+	                url: urlTarget,
+	                dataType: 'json',
+	                cache: false,
+	        		timeout: 600000,
+	        		success: function(data){
+	        			var body = $('#examBody');
+	        			body.text('');
+	        			for(let i = 0;i<data.length;i++){
+	        				var row = $('<tr></tr>');
+	        				var cell1 = $('<td></td>');
+	        				cell1.text(data[i].id)
+	        				var cell2 = $('<td></td>');
+	        				cell2.text(data[i].title)
+	        				var cell3 = $('<td></td>');
+	        				cell3.text(data[i].size)
+	        				var cell4 = $('<td></td>');
+	        				cell4.text(data[i].times)
+	        				var cell5 = $('<td></td>');
+	        				if(data[i].status == true){
+	        					cell5.text("Đã công khai");
+	        					cell5.addClass('alert alert-success')
+	        				}
+	        				else {
+	        					cell5.text('Chưa công khai');
+	        					cell5.addClass('alert alert-warning');
+	        				}
+	        				var cell6 = $('<td></td>');
+	        				var btn1 = $('<div></div>');
+	        				btn1.text('Xóa');
+	        				btn1.addClass('btn btn-danger btn-delete-exam');
+	        				btn1.attr('onclick','showExamPanel('+data[i].id+')');
+	        				
+	        				var btn2 = $('<a></a>');
+	        				btn2.text('Chi tiết');
+	        				btn2.addClass('btn btn-info');
+	        				
+	        				cell6.append(btn1);
+	        				cell6.append(btn2);
+	        				
+	        				row.append(cell1);
+	        				row.append(cell2);
+	        				row.append(cell3);
+	        				row.append(cell4);
+	        				row.append(cell5);
+	        				row.append(cell6);
+	        				body.append(row);
+	        			}
+	        		},
+	        		error: function(e){
+	        			console.log(e)
+	        		}
+				})
+				
+			}
+		});
+		
+		$('#btn-question').click(function(){
+			var listSelected = $('input[name=btSelectItem]').filter(function(){
+				return this["checked"]==true;
+			});
+			if(listSelected.length == 0){
+				console.log('chưa chọn tài khoản')
+				event.preventDefault();
+			}
+			else {
+				var username = getUsername(listSelected);
+				var urlTarget = "/manage/account/getQuestionPackageList/"+ username;
+				$.ajax({
+		            	type: 'GET',
+		            	contentType: "application/json",
+		                url: urlTarget,
+		                dataType: 'json',
+		                cache: false,
+		        		timeout: 600000,
+		        		success: function(data){
+		        			var body = $('#questionBody');
+		        			body.text('');
+		        			for(let i = 0;i<data.length;i++){
+		        				var row = $('<tr></tr>');
+		        				var cell1 = $('<td></td>');
+		        				cell1.text(data[i].id)
+		        				var cell2 = $('<td></td>');
+		        				cell2.text(data[i].title)
+		        				var cell3 = $('<td></td>');
+		        				cell3.text(data[i].size)
+		        				var cell4 = $('<td></td>');
+		        				cell4.text(data[i].times)
+		        				var cell5 = $('<td></td>');
+		        				var btn1 = $('<div></div>');
+		        				btn1.text('Xóa');
+		        				btn1.addClass('btn btn-danger btn-delete-question');
+		        				btn1.attr('onclick','showQuestionPanel('+data[i].id+')');
+		        				
+		        				var btn2 = $('<a></a>');
+		        				btn2.text('Chi tiết');
+		        				btn2.addClass('btn btn-info');
+		        				
+		        				cell5.append(btn1);
+		        				cell5.append(btn2);
+		        				
+		        				row.append(cell1);
+		        				row.append(cell2);
+		        				row.append(cell3);
+		        				row.append(cell4);
+		        				row.append(cell5);
+		        				
+		        				body.append(row);
+		        			}
+		        		},
+		        		error: function(e){
+		        			console.log(e)
+		        		}
+				})
+			}
+			
+			
+		})
+		
 	</script>
 </body>
 

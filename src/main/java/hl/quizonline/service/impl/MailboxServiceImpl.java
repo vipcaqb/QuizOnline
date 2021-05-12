@@ -15,11 +15,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.Account;
+import hl.quizonline.entity.ExamPackage;
 import hl.quizonline.entity.MailBox;
 import hl.quizonline.entity.MailTo;
+import hl.quizonline.entity.QuestionPackage;
 import hl.quizonline.repository.AccountRepository;
 import hl.quizonline.repository.MailBoxRepository;
 import hl.quizonline.repository.MailtoRepository;
+import hl.quizonline.service.AccountService;
+import hl.quizonline.service.MailToService;
 import hl.quizonline.service.MailboxService;
 
 @Service
@@ -33,6 +37,15 @@ public class MailboxServiceImpl implements MailboxService {
 	
 	@Autowired
 	MailtoRepository mailtoRepository;
+	
+	@Autowired
+	AccountService accountService;
+	
+	@Autowired
+	MailboxService mailboxService;
+	
+	@Autowired
+	MailToService mailToService;
 	
 	@Override
 	public Page<MailTo> getReceiveList(Account account, int pageNo, int pageSize) {
@@ -106,4 +119,59 @@ public class MailboxServiceImpl implements MailboxService {
 		}
 	}
 
+	@Override
+	@Transactional
+	public void noticeUserWhenAdminDeleteExamPackage(Account to, ExamPackage examDeleted, String reason) {
+		String title = "[Thông báo] Đề thi của bạn đã bị xóa!";
+		String content = "Chúng tôi rất tiếc khi phải thông báo với bạn rằng"
+				+ " đề thi ["+examDeleted.getExamPackageTitle()+"] đã bị xóa với lý do : "+ reason;
+		//Lấy thông tin tài khoản admin
+		Account adminAccount = accountService.getAccountByUsername("admin").get();
+		
+		//Điền thông tin vào mail box (Người gửi)
+		MailBox mailBox = new MailBox();
+		mailBox.setAccount(adminAccount);
+		mailBox.setTitle(title);
+		mailBox.setContent(content);
+		mailBox.setDeleted(false);
+		mailBox.setSendDate(new Date(System.currentTimeMillis()));
+		mailBox = mailboxRepository.save(mailBox);
+		//Điền thông tin người nhận vào mailto (Người nhận)
+		MailTo mailTo = new MailTo();
+		mailTo.setAccount(to);
+		mailTo.setDeleted(false);
+		mailTo.setSeen(false);
+		mailTo.setMailBox(mailBox);
+		mailtoRepository.save(mailTo);
+		
+	}
+
+	@Override
+	public void noticeUserWhenAdminDeleteQuestionPackage(Account to, QuestionPackage questionDeleted, String reason) {
+		String title = "[Thông báo] Gói câu hỏi của bạn đã bị xóa!";
+		String content = "Chúng tôi rất tiếc khi phải thông báo với bạn rằng"
+				+ " gói câu hỏi ["+questionDeleted.getName()+"] đã bị xóa với lý do : "+ reason;
+		//Lấy thông tin tài khoản admin
+		Account adminAccount = accountService.getAccountByUsername("admin").get();
+		
+		//Điền thông tin vào mail box (Người gửi)
+		MailBox mailBox = new MailBox();
+		mailBox.setAccount(adminAccount);
+		mailBox.setTitle(title);
+		mailBox.setContent(content);
+		mailBox.setDeleted(false);
+		mailBox.setSendDate(new Date(System.currentTimeMillis()));
+		mailBox = mailboxRepository.save(mailBox);
+		//Điền thông tin người nhận vào mailto (Người nhận)
+		MailTo mailTo = new MailTo();
+		mailTo.setAccount(to);
+		mailTo.setDeleted(false);
+		mailTo.setSeen(false);
+		mailTo.setMailBox(mailBox);
+		mailtoRepository.save(mailTo);
+		
+	}
+
+	
+	
 }

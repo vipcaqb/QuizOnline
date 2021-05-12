@@ -33,6 +33,8 @@ public interface AccountService extends UserDetailsService  {
 	
 	/**
 	 * Edits the account.
+	 *
+	 * @param account the account
 	 */
 	void editAccount(Account account);
 	
@@ -61,10 +63,36 @@ public interface AccountService extends UserDetailsService  {
 	Page<Account> getAllAccount(int pageNo, int pageSize);
 	
 	/**
-	 * Lấy danh sách những người tạo đề nhiều nhất
+	 * Tìm kiếm các tài khoản theo username và fullname
 	 *
-	 * @param topNumber the top number
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @param key the key
+	 * @return the page
+	 */
+	Page<Account> searchAllAccount(int pageNo, int pageSize, String key);
+	
+	/**
+	 * Tìm kiếm các account theo username và fullname mà có chứa key.
+	 *
+	 * @param pageNo the page no
+	 * @param pageSize the page size
+	 * @param key the key
+	 * @return the page
+	 */
+	Page<Account> findAccount(int pageNo, int pageSize, String key);
+	
+	/**
+	 * Lấy danh sách những người tạo đề nhiều nhất.
+	 *
 	 * @return the top
 	 */
 	Page<Account> getTop10();
+	
+	/**
+	 * Khóa/ mở tài khoản, nếu tài khoản chưa bị khóa thì khóa, đã bị khóa thì mở khóa.
+	 *
+	 * @param account the account
+	 */
+	void lockAccount(Account account);
 }

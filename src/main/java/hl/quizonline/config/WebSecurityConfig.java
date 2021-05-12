@@ -38,10 +38,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         .csrf().disable()
 			.authorizeRequests()
 		    	.antMatchers("/", "/home","/js/**","/css/**","/webjars/**","/images/**","/fonts/**","/register","/test","/assets/**",
-		    			"/listexam","/avatar-upload/**","/excel/**")
+		    			"/examlist","/examdetail/**","/avatar-upload/**","/excel/**","/getimage/**")
 		    		.permitAll()
-		    	.antMatchers("/profile","/manage/**").hasAnyRole("STUDENT","CREATOR","ADMIN")	
-		    	.antMatchers("/admin/**").hasRole("ADMIN")
+		    	.antMatchers("/profile","/manage/**").hasAnyRole("USER","ADMIN")	
+		    	.antMatchers("/manage/account/**","/json/**").hasRole("ADMIN")
 		    	.antMatchers(HttpMethod.POST,"/register")
 					.permitAll()
 				.anyRequest().authenticated()

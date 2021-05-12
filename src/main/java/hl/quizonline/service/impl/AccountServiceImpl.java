@@ -88,11 +88,32 @@ public class AccountServiceImpl implements AccountService{
 		return accRepository.findAll(pageable);
 	}
 
-
 	@Override
 	public Page<Account> getTop10() {
 		Pageable pageable = PageRequest.of(0, 9);
 		return accRepository.findAll(pageable);
+	}
+
+
+	@Override
+	public void lockAccount(Account account) {
+		account.setEnable(!account.getEnable());
+		accRepository.save(account);
+	}
+
+
+	@Override
+	public Page<Account> findAccount(int pageNo, int pageSize, String key) {
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		return null;
+	}
+	
+
+
+	@Override
+	public Page<Account> searchAllAccount(int pageNo, int pageSize, String key) {
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		return accRepository.findByUsernameContainsOrFullnameContains(key, key, pageable);
 	}
 
 }

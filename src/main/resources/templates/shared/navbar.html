@@ -7,7 +7,7 @@
 <body>
 	<nav th:fragment="navbar" class="navbar navbar-default navbar-fixed-top">
 			<div class="brand">
-				<a href="/examlist" class="homebtn">HOME</a>
+				<a href="/examlist" class="homebtn" style="font-size: 26px;line-height: 100%;">HOME</a>
 				
 			</div>
 			
@@ -28,20 +28,31 @@
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="lnr lnr-question-circle"></i> <span>Help</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<i class="lnr lnr-question-circle"></i> 
+							<span>Giúp đỡ</span> 
+							<i class="icon-submenu lnr lnr-chevron-down">
+							</i>
+							</a>
 							<ul class="dropdown-menu">
-								<li><a href="#">Basic Use</a></li>
-								<li><a href="#">Working With Data</a></li>
-								<li><a href="#">Security</a></li>
-								<li><a href="#">Troubleshooting</a></li>
+								<li><a href="#">Làm thế nào để làm bài thi?</a></li>
+								<li><a href="#">Làm thế nào để tạo đề thi?</a></li>
+								<li><a href="#">Làm thế nào để tài lên bằng file excel?</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="/assets/img/user.png" class="img-circle" alt="Avatar"> <span>Samuel</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
-							<ul class="dropdown-menu">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="/assets/img/user.png" class="img-circle" alt="Avatar"> 
+							<span sec:authorize="isAuthenticated()" th:utext ="@{'Xin chào: '+${#authentication.getPrincipal().getFullname()}}"></span>
+							<span sec:authorize="!isAuthenticated()">Xin chào: Khách</span>
+							<i class="icon-submenu lnr lnr-chevron-down"></i></a>
+							<ul class="dropdown-menu" sec:authorize="isAuthenticated()">
 								<li><a href="/profile"><i class="lnr lnr-user"></i> <span>Profile</span></a></li>
+								<li><a href="/manage/exam"><i class="lnr lnr-exit"></i> <span>Đề thi của tôi</span></a></li>
 								<li><a href="/manage/mailbox"><i class="lnr lnr-envelope"></i> <span>Hộp thư</span></a></li>
 								<li><a href="/logout"><i class="lnr lnr-exit"></i> <span>Đăng xuất</span></a></li>
+							</ul>
+							<ul class="dropdown-menu" sec:authorize="!isAuthenticated()">
+								<li><a href="/login"><i class="lnr lnr-user"></i> <span>Đăng nhập</span></a></li>
 							</ul>
 						</li>
 					</ul>

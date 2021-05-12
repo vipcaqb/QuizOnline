@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -39,6 +40,7 @@ import hl.quizonline.entity.Question;
 import hl.quizonline.entity.QuestionPackage;
 import hl.quizonline.service.AccountService;
 import hl.quizonline.service.AnswerService;
+import hl.quizonline.service.MailboxService;
 import hl.quizonline.service.QuestionPackageService;
 import hl.quizonline.service.QuestionService;
 import hl.quizonline.service.impl.MyHelper;
@@ -68,10 +70,16 @@ public class QuestionController {
 	@Autowired
 	AnswerService answerService;
 
+	
+	@Autowired
+	MailboxService mailboxService;
 	/**
 	 * List exam.
 	 *
 	 * @param questionPackageID the question package ID
+	 * @param pageNo the page no
+	 * @param key the key
+	 * @param packPageNo the pack page no
 	 * @param model the model
 	 * @return the string
 	 */
@@ -194,6 +202,14 @@ public class QuestionController {
 		return "redirect:/manage/question/addquestion/"+questionPackageID;
 	}
 	
+	/**
+	 * Edits the question form.
+	 *
+	 * @param questionPackageID the question package ID
+	 * @param questionID the question ID
+	 * @param model the model
+	 * @return the string
+	 */
 	@GetMapping("/editquestion/{questionPackageID}/{questionID}")
 	public String editQuestionForm(@PathVariable(name = "questionPackageID") Integer questionPackageID,
 			@PathVariable(name = "questionID") Integer questionID,
@@ -212,6 +228,13 @@ public class QuestionController {
 		return "manage/manage-question-edit";
 	}
 	
+	/**
+	 * Adds the with excel form.
+	 *
+	 * @param examPackageID the exam package ID
+	 * @param model the model
+	 * @return the string
+	 */
 	@GetMapping("addexcel/{examPackageID}")
 	public String addWithExcelForm(@PathVariable("examPackageID") Integer examPackageID, Model model) {
 		
@@ -219,6 +242,15 @@ public class QuestionController {
 		return "manage/manage-question-addexcel";
 	}
 	
+	/**
+	 * Adds the with excel.
+	 *
+	 * @param examPackageID the exam package ID
+	 * @param file the file
+	 * @param model the model
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@PostMapping("addexcel/{examPackageID}")
 	public String addWithExcel(@PathVariable("examPackageID") Integer examPackageID,@RequestParam("excelfile") MultipartFile file, Model model) throws IOException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -310,6 +342,12 @@ public class QuestionController {
 		
 	}
 
+	/**
+	 * Gets the cell value.
+	 *
+	 * @param cell the cell
+	 * @return the cell value
+	 */
 	// Get cell value
     private static Object getCellValue(Cell cell) {
         CellType cellType = cell.getCellTypeEnum();
@@ -340,13 +378,68 @@ public class QuestionController {
         return cellValue;
     }
 
+    /**
+     * Delete question package.
+     *
+     * @param questionPackageID the question package ID
+     * @return the string
+     */
     @GetMapping("/deletePackage/{questionPackageID}")
-    public String deleteQuestionPackage(@PathVariable("questionPackageID") Integer questionPackageID) {
-    	questionPackageService.delete(questionPackageID);
+    @Transactional
+    public String deleteQuestionPackage(@PathVariable("questionPackageID") Integer questionPackageID,
+    		@RequestParam(name = "reasonID",required =  false) Integer reasonID,
+			@RequestParam(name = "reason", required = false) String reason
+			) {
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String currentUserName = authentication.getName();
+			Optional<Account> opAccount = accountService.getAccountByUsername(currentUserName);
+			Account currentAccount = opAccount.get();
+			QuestionPackage questionPackage = questionPackageService.findByID(questionPackageID);
+			//Kiểm tra xem người dùng hiện tại có đủ quyền xóa hay không
+			if(!currentUserName.equals(questionPackage.getAccount().getUsername())) {
+				if(!currentAccount.getRole().equals("ROLE_ADMIN")) {
+					return "redirect:/login";
+				}
+			}
+			
+			//xóa questionPackage
+			questionPackageService.delete(questionPackageID);
+			
+			//Sau khi xóa, kiểm tra xem người xóa là ai, nếu người xóa là admin và không phải
+			//chủ sở hữu thì tiến hành gửi thư thông báo rằng ExamPackage đã bị admin xóa
+			if(!currentUserName.equals(questionPackage.getAccount().getUsername())) {
+				String reasonMessage = "";
+				if(reasonID!=null) {
+					if(reasonID==0) {
+						reasonMessage = "Spam";
+					}
+					else if (reasonID==1){
+						reasonMessage = "Nội dung không phù hợp";
+					}
+					else if (reasonID == 2) {
+						reasonMessage = reason;
+					}
+				}
+				//Tiến hành gửi thông báo
+				mailboxService.noticeUserWhenAdminDeleteQuestionPackage(questionPackage.getAccount(), questionPackage, reasonMessage);
+				return "redirect:/manage/account";
+			}
+			
+    	
     	
     	return "redirect:/manage/question";
+		}
+		
+		return "redirect:/login";
     }
 
+    /**
+     * Delete question.
+     *
+     * @param questionID the question ID
+     * @return the string
+     */
     @GetMapping("/deleteQuestion/{questionID}")
     public String deleteQuestion(@PathVariable("questionID") Integer questionID) {
     	
