@@ -70,18 +70,35 @@ public interface MailboxService {
 	void deleteMailToAndAllMailBox(int mailBoxID);
 
 	/**
-	 * Gửi thông báo đến mail của người dùng khi admin xóa examPackage
+	 * Gửi thông báo đến mail của người dùng khi admin xóa examPackage.
 	 *
 	 * @param to the to
 	 * @param examDeleted the exam deleted
+	 * @param reason the reason
 	 */
 	void noticeUserWhenAdminDeleteExamPackage(Account to, ExamPackage examDeleted, String reason);
 	
 	/**
-	 * Gửi thông báo đến mail của người dùng khi admin xóa questionPackage
+	 * Gửi thông báo đến mail của người dùng khi admin xóa questionPackage.
 	 *
 	 * @param to the to
 	 * @param questionDeleted the question deleted
+	 * @param reason the reason
 	 */
 	void noticeUserWhenAdminDeleteQuestionPackage(Account to, QuestionPackage questionDeleted, String reason);
+	
+	/**
+	 * Xóa mail đã nhận.
+	 *
+	 * @param mailBox the mail box
+	 * @param username username của người nhận
+	 */
+	void deleteReceive(int mailBoxID, String username);
+	
+	/**
+	 * Xóa thư đã gửi
+	 *
+	 * @param mailBox the mail box
+	 */
+	void deleteSent(int mailBoxID);
 }

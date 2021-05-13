@@ -75,9 +75,9 @@
 												<div class="icheckbox_square-blue" style="position: relative;"><input type="checkbox" id="check-all" class="icheck" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
 											</label>
 											<div class="btn-group">
-												<button type="button" class="btn btn-danger">
+												<div type="button" id="delete-mailReceive" class="btn btn-danger">
 													Xóa
-												</button>
+												</div>
 											</div>
 										</div>
 			
@@ -110,8 +110,15 @@
 											</thead>
 											<tbody>
 											<th:block th:each="mail: ${mailToList}">
-												<tr>
-													<td class="action"><input type="checkbox" /></td>
+												<tr th:if="${mail.seen}" class="read">
+													<td class="action"><input type="checkbox" th:data-mailBoxID = "${mail.mailBox.mailBoxID}" /></td>
+													<td class="name"><a th:href="@{'/profile/'+${mail.mailBox.account.username}}" th:utext="${mail.mailBox.account.username}">Larry Gardner</a></td>
+													<td class="subject"><a th:href="@{'/manage/mailbox/read/'+${mail.mailBox.mailBoxID}}" th:utext="${mail.mailBox.title}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed </a></td>
+													<td class="time" th:utext="${mail.mailBox.sendDate}">08:30 PM</td>
+												</tr>
+												
+												<tr th:unless="${mail.seen}">
+													<td class="action"><input type="checkbox" th:data-mailBoxID = "${mail.mailBox.mailBoxID}"/></td>
 													<td class="name"><a th:href="@{'/profile/'+${mail.mailBox.account.username}}" th:utext="${mail.mailBox.account.username}">Larry Gardner</a></td>
 													<td class="subject"><a th:href="@{'/manage/mailbox/read/'+${mail.mailBox.mailBoxID}}" th:utext="${mail.mailBox.title}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed </a></td>
 													<td class="time" th:utext="${mail.mailBox.sendDate}">08:30 PM</td>
@@ -202,6 +209,26 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#mail').addClass('active');
+			
+			//Xóa mail nhận
+			$('#delete-mailReceive').click(function(){
+				//Xác nhận
+				var f = confirm("Bạn chắc chứ?");
+				if(f){
+					//Lấy danh sách mailBox id
+					$('input[type=checkbox]').each(function(k,v){
+						if(v.checked){
+							var mailBoxID = v.getAttribute('data-mailBoxID');
+							var form = $('<form></form>');
+							form.attr('action','/manage/mailbox/deleteMailReceive/'+mailBoxID);
+							form.attr('method','get');
+							$('body').append(form);
+							form.submit();
+						}
+					})
+					
+				}
+			})
 		})
 	</script>
 </body>

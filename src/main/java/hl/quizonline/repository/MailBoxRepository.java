@@ -11,4 +11,5 @@ import hl.quizonline.entity.MailBox;
 @Repository
 public interface MailBoxRepository extends JpaRepository<MailBox, Integer> {
 	Page<MailBox> findByAccountAndDeleted(Account account, boolean deleted, Pageable pageable);
+	
 }

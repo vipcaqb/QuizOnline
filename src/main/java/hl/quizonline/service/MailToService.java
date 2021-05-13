@@ -22,4 +22,6 @@ public interface MailToService {
 	 */
 	void seen(MailTo mailTo);
 
+	
+	
 }

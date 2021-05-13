@@ -81,9 +81,7 @@
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 							</p>
 							<div>
-								<span class="fas fa-clock" style="color: red;"> Bắt đầu sau: <span class="timer"
-								th:utext="${(currentMiliSecond-examExpired.endDatetime.getTime())/1000}" >
-								Thời gian còn lại: 50 phút</span>
+								<span class="fas fa-clock" style="color: red;"> Đã kết thúc
 								</span>
 								<br>
 								<i class="fas fa-question" th:utext="@{'Số câu hỏi: '+${examExpired.numberOfQuestion}}">Số câu hỏi: 50</i>

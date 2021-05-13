@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.Account;
@@ -50,7 +51,7 @@ public class MailboxServiceImpl implements MailboxService {
 	@Override
 	public Page<MailTo> getReceiveList(Account account, int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-		return mailtoRepository.findByAccountAndDeleted(account, false, pageable);
+		return mailtoRepository.findByAccountAndDeletedAndSort(account, false, pageable);
 	}
 
 	@Override
@@ -104,7 +105,8 @@ public class MailboxServiceImpl implements MailboxService {
 
 	@Override
 	public MailBox readMail(int mailBoxID) {
-		return mailboxRepository.findById(mailBoxID).get();
+		MailBox mailBox = mailboxRepository.findById(mailBoxID).get();
+		return mailBox;
 	}
 
 	@Override
@@ -169,6 +171,32 @@ public class MailboxServiceImpl implements MailboxService {
 		mailTo.setSeen(false);
 		mailTo.setMailBox(mailBox);
 		mailtoRepository.save(mailTo);
+		
+	}
+
+	@Override
+	public void deleteReceive(int  mailBoxID, String username) {
+		Optional<Account> opAccount = accountRepository.findByUsername(username);
+		if(opAccount.isEmpty()) return;
+		Optional<MailBox> opMailBox = mailboxRepository.findById(mailBoxID);
+		if(opMailBox.isEmpty()) return;
+		List<MailTo> mailToList = mailtoRepository.findByAccountAndMailBox(opAccount.get(), opMailBox.get());
+		for(int i = 0 ; i<mailToList.size();i++) {
+			mailtoRepository.delete(mailToList.get(i));
+		}
+	}
+
+	@Override
+	public void deleteSent(int mailBoxID) {
+		Optional<MailBox> opMailBox = mailboxRepository.findById(mailBoxID);
+		if(opMailBox.isEmpty()) return;
+		MailBox mailBox = opMailBox.get();
+		if(mailBox.getMailTos().size()==0) {
+			mailboxRepository.delete(mailBox);
+		}else {
+			mailBox.setDeleted(true);
+			mailboxRepository.save(mailBox);
+		}
 		
 	}
 

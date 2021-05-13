@@ -74,17 +74,28 @@ public class MailBoxController {
 	
 	@GetMapping("read/{mailBoxID}")
 	public String readMailForm(@PathVariable("mailBoxID") Integer mailBoxID, Model model) {
-		MailBox mailBox = mailboxService.readMail(mailBoxID);
-		String receiver = "";
-		for(int i =0;i<mailBox.getMailTos().size();i++) {
-			if(i>0)
-				receiver+=","+ mailBox.getMailTos().get(i).getAccount().getUsername();
-			else receiver+=mailBox.getMailTos().get(i).getAccount().getUsername();
-		}
 		
-		model.addAttribute("mailBox", mailBox);
-		model.addAttribute("receiver", receiver);
-		return "manage/manage-mailbox-read";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			MailBox mailBox = mailboxService.readMail(mailBoxID);
+			String receiver = "";
+			for(int i =0;i<mailBox.getMailTos().size();i++) {
+				String currentUserName = authentication.getName();
+				if(mailBox.getMailTos().get(i).getAccount().getUsername().equals(currentUserName)) {
+					MailTo mailTo = mailBox.getMailTos().get(i);
+					mailToService.seen(mailTo);
+				}
+				//
+				if(i>0)
+					receiver+=","+ mailBox.getMailTos().get(i).getAccount().getUsername();
+				else receiver+=mailBox.getMailTos().get(i).getAccount().getUsername();
+			}
+			
+			model.addAttribute("mailBox", mailBox);
+			model.addAttribute("receiver", receiver);
+			return "manage/manage-mailbox-read";
+		}
+		return "redirect:/login";
 	}
 	
 	@PostMapping("/sendmail")
@@ -99,6 +110,34 @@ public class MailBoxController {
 			Account account = accountService.getAccountByUsername(currentUserName).get();
 			mailboxService.sendMail(to, subject, message, account);
 			return "redirect:/manage/mailbox";
+		}
+		return "redirect:/login";
+	}
+
+	@GetMapping("/deleteMailReceive/{mailBoxID}")
+	public String deleteMailReceive(@PathVariable("mailBoxID") Integer mailBoxID
+			) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String currentUserName = authentication.getName();
+			
+			mailboxService.deleteReceive(mailBoxID, currentUserName);
+			return "redirect:/manage/mailbox";
+		}
+		
+		return "redirect:/login";
+	}
+	
+	@GetMapping("/deleteMailSent/{mailBoxID}")
+	public String deleteMailSent(@PathVariable("mailBoxID") Integer mailBoxID) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String currentUserName = authentication.getName();
+			MailBox mailBox = mailboxService.readMail(mailBoxID);
+			if(mailBox.getAccount().getUsername().equals(currentUserName)) {
+				mailboxService.deleteSent(mailBoxID);
+			}
+			return "redirect:/manage/mailbox/sent";
 		}
 		return "redirect:/login";
 	}

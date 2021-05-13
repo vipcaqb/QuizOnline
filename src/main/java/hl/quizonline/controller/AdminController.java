@@ -113,4 +113,9 @@ public class AdminController {
 		
 		return ResponseEntity.ok().body(questionTableList);
 	}
+
+	@GetMapping("/overview")
+	public String showOverview() {
+		return "manage/overview";
+	}
 }

@@ -67,7 +67,10 @@ public class ExamPackage implements Serializable {
 	
 	@Column
 	private int doExamTime;
-
+	
+	@Column(columnDefinition = "integer default 0")
+	private int views;
+	
 	//bi-directional many-to-one association to Account
 	@ManyToOne
 	@JoinColumn(name="accountID")
@@ -183,6 +186,16 @@ public class ExamPackage implements Serializable {
 
 	public void setJoinAmount(int joinAmount) {
 		this.joinAmount = joinAmount;
+	}
+
+	
+	
+	public int getViews() {
+		return views;
+	}
+
+	public void setViews(int views) {
+		this.views = views;
 	}
 
 	public boolean isUsePassword() {

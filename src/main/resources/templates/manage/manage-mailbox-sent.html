@@ -75,9 +75,9 @@
 												<div class="icheckbox_square-blue" style="position: relative;"><input type="checkbox" id="check-all" class="icheck" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"><ins class="iCheck-helper" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>
 											</label>
 											<div class="btn-group">
-												<button type="button" class="btn btn-danger" >
+												<div id="delete-mail-sent" type="button" class="btn btn-danger" >
 													Xóa
-												</button>
+												</div>
 											</div>
 										</div>
 			
@@ -96,20 +96,31 @@
 									
 									<div class="table-responsive">
 										<table class="table">
-											<tbody>
-											<th:block th:each="mail: ${mailBoxList}">
+											<thead>
 												<tr>
-													<td class="action"><input type="checkbox" /></td>
-													<td class="name">
-														<th:block th:each="mailTo,itor : ${mail.mailTos}">
-															<a href="#" th:utext="${mailTo.account.username}">Larry Gardner</a>
-														</th:block>
-													</td>
-													<td class="subject"><a href="#" th:utext="${mail.title}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed </a></td>
-													<td class="time" th:utext="${mail.sendDate}">08:30 PM</td>
+													<th>
+													</th>
+													<th>Người nhận
+													</th>
+													<th>Tiêu đề </th>
+													<th>Thời điểm gửi </th>
 												</tr>
-											</th:block>
-										</tbody></table>
+											</thead>
+											<tbody>
+												<th:block th:each="mail: ${mailBoxList}">
+													<tr class="read">
+														<td class="action"><input type="checkbox" th:data-mailBoxID = "${mail.mailBoxID}" /></td>
+														<td class="name">
+															<th:block th:each="mailTo,itor : ${mail.mailTos}">
+																<a href="#" th:utext="${mailTo.account.username}">Larry Gardner</a>
+															</th:block>
+														</td>
+														<td class="subject"><a href="#" th:utext="${mail.title}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed </a></td>
+														<td class="time" th:utext="${mail.sendDate}">08:30 PM</td>
+													</tr>
+												</th:block>
+											</tbody>
+										</table>
 									</div>
 									<nav aria-label="Page navigation example">
 									  <ul class="pagination justify-content-center">
@@ -188,6 +199,26 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#mail').addClass('active');
+			
+			//Xóa mail đã gửi
+			$('#delete-mail-sent').click(function(){
+				//Xác nhận
+				var f = confirm("Bạn chắc chứ?");
+				if(f){
+					//Lấy danh sách mailBox id
+					$('input[type=checkbox]').each(function(k,v){
+						if(v.checked){
+							var mailBoxID = v.getAttribute('data-mailBoxID');
+							var form = $('<form></form>');
+							form.attr('action','/manage/mailbox/deleteMailSent/'+mailBoxID);
+							form.attr('method','get');
+							$('body').append(form);
+							form.submit();
+						}
+					})
+					
+				}
+			})
 		})
 	</script>
 </body>
