@@ -2,9 +2,12 @@ package hl.quizonline.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Nationalized;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import hl.quizonline.enumrable.Gender;
@@ -28,14 +31,16 @@ public class Account implements Serializable {
 
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@NotNull(message = "Vui lòng nhập ngày sinh")
 	private Date dateOfBirth;
 	
 	@Column
 	@Nationalized
-	@NotBlank()
+	@Length(min = 3,max = 30, message = "Họ và tên có độ dài từ 3 - 30 ký tự.")
 	private String fullname;
 
 	@Column
+	@Length(min = 6, message = "Mật khẩu quá ngắn")
 	private String password;
 
 	@Column
@@ -45,6 +50,7 @@ public class Account implements Serializable {
 	private String urlAvatar;
 
 	@Column(unique = true)
+	@NotBlank(message = "Username không được để trống")
 	private String username;
 	
 	@Column

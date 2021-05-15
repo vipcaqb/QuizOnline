@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Quản lý tài khoản người dùng</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- VENDOR CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<link rel="stylesheet" th:href="@{/css/manage-exam.css}">
+<link rel="stylesheet" th:href="@{/css/manage-account.css}">
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<link rel="stylesheet" th:href="@{/css/howto.css}">
+<!-- GOOGLE FONTS -->
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+<link href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
+
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/assets/img/apple-icon.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/assets/img/favicon.png}">
+<link rel = "stylesheet" th:href="@{/css/mystyle.css}">
+<link rel="stylesheet" th:href="@{/css/mailbox.css}"> 
+<link rel="stylesheet" href="/css/admin-category.css">
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:insert="/admin/shared/navbar::navbar"></div>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<div th:insert="/admin/shared/sidebar::sidebar"></div>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="container">
+				<div class="row">
+					<!-- BEGIN INBOX -->
+					<div class="col-md-12" style="min-height: 100vh;">
+						<div class="grid email" style="min-height: 90vh;">
+							<div class="grid-body">
+								<h2>Quản lý danh mục</h2>
+								<div class="search-box mb-1">
+									<form action="/manage/category" method="get">
+										<input type="text" placeholder="Tên tài khoản cần tìm" name="key">
+										<input class="btn btn-success" type="submit" value = "Tìm kiếm" style="margin-bottom: 5px;">
+									</form>
+								</div>
+								<div class="mb-1">
+									<a href="#" class="btn btn-info" id="btn-create" data-toggle="modal" data-target="#examTable">Thêm mới</a>
+									<a href="#" class="btn btn-info" id="btn-edit" data-toggle="modal" data-target="#questionTable">Sửa</a>
+									<a href="#" class="btn btn-danger" id="btn-delete">Xóa</a>
+								</div>
+								<table class="table table-bordered"
+									data-toggle="table"
+								 	data-single-select="true"
+									data-click-to-select="true"
+								>
+									<thead>
+										<tr> 
+											<th data-field="state" data-checkbox="true"></th>
+											<th>ID</th>
+											<th>Tên danh mục</th>
+											<th>Số đề thi</th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:each="category: ${categoryList}">
+											<tr>
+												<td th:name = "btSelectItem"> </td>
+												<td th:utext="${category.categoryID}"> </td>
+												<td th:utext="${category.categoryName}">vipcaqb</td>
+												<td th:utext="${category.examPackages.size()}">Lê Văn Vũ</td>
+										</tr>
+										</th:block>
+									</tbody>
+									
+								</table>
+								
+								<nav aria-label="Page navigation example">
+								  <ul class="pagination justify-content-center">
+								    <li class="page-item" th:if="${page.hasPrevious()}">
+								      <a class="page-link"  th:href="@{'/manage/category/'+${page.number}}">Previous</a>
+								    </li>
+								    <li class="page-item disabled" th:if="${!page.hasPrevious()}">
+								      <a class="page-link">Previous</a>
+								    </li>
+								    
+								    <th:block th:each="i : ${#numbers.sequence(1, page.totalPages)}">
+								    
+								    	<li class="page-item" th:if="${i!=page.number+1}">
+								    		<a class="page-link" th:href="@{'/manage/category/'+${i}}" th:utext="${i}">1</a>
+								    	</li>
+								    	<li class="page-item active" th:if="${i==page.number+1}">
+								    		<a class="page-link" th:href="@{'/manage/category/'+${i}}" th:utext="${i}">1</a>
+								    	</li>
+								    
+								    </th:block>
+								    
+								    <li class="page-item" th:if="${page.hasNext()}">
+								      <a class="page-link" th:href="@{'/manage/category/'+${page.number+2}}">Next</a>
+								    </li>
+								    
+								    <li class="page-item disabled" th:if="${!page.hasNext()}">
+								      <a class="page-link">Next</a>
+								    </li>
+								  </ul>
+								</nav>
+							</div>
+						</div>
+					</div>
+					<!-- END INBOX -->
+				</div>
+			</div>
+			
+			
+			
+			<!-- END MAIN CONTENT -->
+			
+		</div>
+		<!-- END MAIN -->
+		<div id="background" class="hide">
+				<div class = "panel" id="category-detail">
+					<div class="header">
+						Thêm/sửa danh mục
+					</div>
+					<form id="category-form" action="" method="post">
+						<label for="cName">Tên danh mục: </label>
+						<input class="form-control" id="cName" name = "categoryName"> 
+						<div class="mt-2" style="display: flex;justify-content: space-between;">
+							<input class="btn btn-success ml-1" type="submit" value = "OK" >
+							<div class="btn btn-secondary mr-1" id= "cancel">Cancel</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		<div class="clearfix"></div>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+	<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#dm').addClass('active');
+			
+			//cancel
+			
+			$('#cancel').click(function(){
+				$('#background').addClass('hide');
+			})
+			
+			//When click create
+			$('#btn-create').click(function(){
+				var url = '/manage/category/create';
+				$('#background .header').first().html('Tạo danh mục mới');
+				$('#category-form').attr('action',url);
+				$('#background').removeClass('hide');
+			})
+			
+			//When click edit
+			$('#btn-edit').click(function(){
+				var listSelected = $('input[name=btSelectItem]').filter(function(){
+					return this["checked"]==true;
+				});
+				if(listSelected.length == 0){
+					alert("Bạn chưa chọn danh mục.")
+					event.preventDefault();
+				}
+				else {
+					
+					var row = listSelected.first().parent().parent().parent();
+					var categoryID = $(row).find('td:nth-child(2)').text();
+					var categoryName = $(row).find('td:nth-child(3)').text();
+					var url = '/manage/category/edit/'+categoryID;
+					$('#background .header').first().html('Sửa danh mục');
+					$('#category-form').attr('action',url);
+					$('#cName').val(categoryName);
+					$('#background').removeClass('hide');
+				}
+				
+			})
+			//When click delete
+			$('#btn-delete').click(function(){
+				var listSelected = $('input[name=btSelectItem]').filter(function(){
+					return this["checked"]==true;
+				});
+				if(listSelected.length == 0){
+					alert("Bạn chưa chọn danh mục.")
+					event.preventDefault();
+				}
+				else {
+					
+					var row = listSelected.first().parent().parent().parent();
+					var categoryID = $(row).find('td:nth-child(2)').text();
+					var form = $('<form></form>');
+					form.attr('action','/manage/category/delete/'+categoryID);
+					form.attr('method','post');
+					
+					$('body').append(form);
+					form.submit();
+				}
+			})
+			
+		})
+		
+	</script>
+</body>
+
+</html>

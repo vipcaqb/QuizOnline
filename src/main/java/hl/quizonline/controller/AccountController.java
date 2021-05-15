@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -20,10 +22,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,16 +56,19 @@ public class AccountController {
 	}
 	
 	@GetMapping("/register")
-	public String registerForm(Model model) {
+	public String registerForm(Account account) {
 		return "register";
 	}
 	
 	@PostMapping("/register")
-	public String register(@ModelAttribute Account acc,Model model) {
+	public String register(@Valid Account account, BindingResult bindingResult) {
 		System.out.println("post register");
-		acc.setRole("ROLE_USER");
-		acc.setEnable(true);
-		accountService.registerAccount(acc);
+		if (bindingResult.hasErrors()) {
+			return "register";
+		}
+		account.setRole("ROLE_USER");
+		account.setEnable(true);
+		accountService.registerAccount(account);
 		
 		return "redirect:/profile";
 	}

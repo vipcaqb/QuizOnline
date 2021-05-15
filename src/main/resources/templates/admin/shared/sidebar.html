@@ -15,6 +15,9 @@
 						<li sec:authorize="hasRole('ADMIN')">
 							<a id="tk" href="/manage/account"><i class="lnr lnr-user"></i> <span>Quản lý tài khoản</span><span class="badge badge-danger"> admin</span></a>
 						</li>
+						<li sec:authorize="hasRole('ADMIN')">
+							<a id="dm" href="/manage/category"><i class="lnr lnr-user"></i> <span>Quản lý danh mục</span><span class="badge badge-danger"> admin</span></a>
+						</li>
 						<li><a href="/manage/exam" id="qlde"><i class="lnr lnr-pencil"></i> <span>Đề thi của tôi</span></a></li>
 						<li><a href="/manage/question"  id="qlch"><i class="lnr lnr-question-circle"></i> <span>Câu hỏi của tôi</span></a></li>
 						<li><a href="/history" id="ls"><i class="lnr lnr-history"></i> <span>Lịch sử thi</span></a></li>

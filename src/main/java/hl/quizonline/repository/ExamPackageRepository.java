@@ -146,4 +146,9 @@ public interface ExamPackageRepository extends JpaRepository<ExamPackage, Intege
 			+ "WHERE acc.username LIKE %?1% AND ep.isPublic = true")
 	Page<ExamPackage> findByAccountUsernameContains(String username, Pageable pageable);
 
+	@Query("SELECT ep "
+			+ "FROM ExamPackage ep "
+			+ "INNER JOIN ep.categories c "
+			+ "WHERE c.categoryID = ?1")
+	List<ExamPackage> findByCategoryID(int categoryID);
 }

@@ -2,6 +2,8 @@ package hl.quizonline.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.Category;
@@ -62,5 +64,7 @@ public interface CategoryService {
 	 * @return true, if successful
 	 */
 	boolean exist(String categoryName);
+	
+	Page<Category> searchByName(String name, int pageNo);
 
 }

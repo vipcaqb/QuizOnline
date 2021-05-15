@@ -181,9 +181,16 @@ public interface ExamPackageService {
 	Page<ExamPackage> getPageByUsername(String username, int pageNo, int pageSize);
 	
 	/**
-	 * Tăng số lượt thi
+	 * Tăng số lượt thi.
 	 *
+	 * @param examPackageID the exam package ID
 	 * @param doExamTimes the do exam times
 	 */
 	void inscreaseDoExamTimes(int examPackageID,int doExamTimes);
+	
+	/**
+	 * Xóa tất cả danh mục mà nó tham chiếu tới
+	 */
+	void clearCategory(ExamPackage examPackage);
+	
 }

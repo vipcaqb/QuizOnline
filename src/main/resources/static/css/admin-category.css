@@ -1,0 +1,21 @@
+@charset "ISO-8859-1";
+#category-detail{
+	width: 400px;
+	left: 50%;
+	top: 50%;
+	position: fixed;
+	transform: translate(-50%, -50%);
+	height: 160px;
+}
+
+#category-detail .header{
+	background: #347ab7;
+	color: white;
+	padding: 5px 10px;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+#category label{
+	margin-left: 5px;
+}

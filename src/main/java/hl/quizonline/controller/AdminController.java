@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,11 +27,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hl.quizonline.config.MyConstances;
 import hl.quizonline.entity.Account;
+import hl.quizonline.entity.Category;
 import hl.quizonline.entity.ExamPackage;
 import hl.quizonline.entity.QuestionPackage;
 import hl.quizonline.model.ExamTable;
 import hl.quizonline.model.QuestionTable;
+import hl.quizonline.repository.CategoryRepository;
 import hl.quizonline.service.AccountService;
+import hl.quizonline.service.CategoryService;
 import hl.quizonline.service.ExamPackageService;
 import hl.quizonline.service.QuestionPackageService;
 
@@ -42,6 +47,9 @@ public class AdminController {
 	
 	@Autowired 
 	ExamPackageService examPackageService;
+	
+	@Autowired
+	CategoryService categoryService;
 	
 	@Autowired
 	QuestionPackageService questionPackageService;
@@ -117,5 +125,53 @@ public class AdminController {
 	@GetMapping("/overview")
 	public String showOverview() {
 		return "manage/overview";
+	}
+
+	@GetMapping(value = {"/category","/category/{pageNo}"})
+	public String showCategoryList(@PathVariable(name = "pageNo", required =false) Integer pageNo,
+			@RequestParam(name= "key",required = false) String key,
+			Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String currentUserName = authentication.getName();
+			if(key==null) key = "";
+			if(pageNo== null) pageNo=1;
+			Page<Category> page = categoryService.searchByName(key, pageNo);
+			List<Category> categoryList = page.getContent();
+			
+			model.addAttribute("page", page);
+			model.addAttribute("categoryList", categoryList);
+			return "admin/admin-category";
+		}
+		return "redirect:/login";
+	}
+	
+	@PostMapping("/category/create")
+	public String createCategory(@RequestParam("categoryName") String categoryName) {
+		
+		Category category = new Category();
+		category.setCategoryName(categoryName);
+		categoryService.create(category);
+		
+		return "redirect:/manage/category";
+	}
+	
+	@PostMapping("/category/edit/{categoryID}")
+	public String createCategory(@PathVariable(name="categoryID") Integer categoryID,
+			@RequestParam("categoryName") String categoryName) {
+		
+		Category category = categoryService.findByID(categoryID);
+		category.setCategoryName(categoryName);
+		categoryService.edit(category);
+		return "redirect:/manage/category";
+	}
+	
+	@PostMapping("/category/delete/{categoryID}")
+	public String deleteCategory(@PathVariable(name = "categoryID") Integer categoryID) {
+		
+		categoryService.delete(categoryID);
+		
+		
+		return "redirect:/manage/category";
 	}
 }

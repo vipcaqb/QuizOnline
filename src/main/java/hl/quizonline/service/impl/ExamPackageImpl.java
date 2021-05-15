@@ -1,5 +1,6 @@
 package hl.quizonline.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import hl.quizonline.entity.Account;
+import hl.quizonline.entity.Category;
 import hl.quizonline.entity.ExamPackage;
 import hl.quizonline.entity.Examination;
 import hl.quizonline.entity.JoinExamination;
@@ -213,6 +215,12 @@ public class ExamPackageImpl implements ExamPackageService {
 		if(opExamPackage.isEmpty()) return;
 		ExamPackage examPackage = opExamPackage.get();
 		examPackage.setDoExamTime(examPackage.getDoExamTime()+examPackageID);
+		examPackageRepository.save(examPackage);
+	}
+
+	@Override
+	public void clearCategory(ExamPackage examPackage) {
+		examPackage.setCategories(new ArrayList<Category>());
 		examPackageRepository.save(examPackage);
 	}
 }

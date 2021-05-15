@@ -15,17 +15,27 @@
 	
 	<!--===============================================================================================-->
 	<link rel="stylesheet" th:href="@{/css/login.css}">
+	<link rel="stylesheet" href="/css/mystyle.css">
 <!--===============================================================================================-->
 </head>
 <body>
 <div class="login-page">
   <div class="form">
-    <form class="register-form" action="/register" method="post"> 
+    <form class="register-form" action="/register" th:object="${account}" method="post"> 
     	<h4>Đăng ký</h4>
+    	
+    	<div class="err-msg" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username bị trùng</div>
     	<input type="text" placeholder="Username" name="username"/>
+    	
+    	<div class="err-msg" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}">Họ tên không được để trống</div>
       	<input type="text" placeholder="Họ và tên" name="fullname"/>
+      	
+      	<div class="err-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Mật khẩu phải có độ dài từ 6-30 ký tự</div>
       	<input type="password" placeholder="Mật khẩu" name = "password"/>
+      	
       	<input type="password" placeholder="Nhập lại mật khẩu"/>
+      	
+      	<div class="err-msg" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}">Chưa chọn ngày sinh</div>
       	<input type="date" placeholder="Ngày sinh" name="dateOfBirth">
       	<select name="gender">
 		  <option value="MALE">Nam</option>
