@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import hl.quizonline.config.MyConstances;
 import hl.quizonline.entity.Account;
 import hl.quizonline.entity.ExamQuestion;
 import hl.quizonline.entity.Question;
@@ -101,6 +102,12 @@ public class QuestionPackageServiceImpl implements QuestionPackageService {
 		Account acc = accountRepository.findByUsername(username).get();
 		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
 		return questionPackageRepository.findByAccount(acc, pageable);
+	}
+
+	@Override
+	public Page<QuestionPackage> searchByName(String name, int pageNo) {
+		Pageable pageable = PageRequest.of(pageNo-1, MyConstances.PAGE_SIZE);
+		return questionPackageRepository.findByNameContains(name, pageable);
 	}
 
 }

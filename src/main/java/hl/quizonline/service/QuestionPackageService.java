@@ -66,4 +66,6 @@ public interface QuestionPackageService {
 	 */
 	void delete(QuestionPackage questionPackage);
 	
+	Page<QuestionPackage> searchByName(String name, int pageNo);
+	
 }

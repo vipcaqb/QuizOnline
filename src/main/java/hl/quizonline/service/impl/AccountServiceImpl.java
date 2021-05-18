@@ -116,4 +116,10 @@ public class AccountServiceImpl implements AccountService{
 		return accRepository.findByUsernameContainsOrFullnameContains(key, key, pageable);
 	}
 
+
+	@Override
+	public long countAll() {
+		return accRepository.count();
+	}
+
 }

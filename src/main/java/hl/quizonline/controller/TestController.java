@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 import hl.quizonline.entity.Account;
 import hl.quizonline.entity.Answer;
 import hl.quizonline.entity.Question;
+import hl.quizonline.repository.ExamPackageRepository;
 import hl.quizonline.service.QuestionService;
 import hl.quizonline.service.impl.MyHelper;
 
@@ -53,10 +55,15 @@ public class TestController {
 	@Autowired
 	QuestionService questionService;
 	
+	@Autowired
+	ExamPackageRepository examPackageRepository;
+	
 	private String fileLocation;
 	
 	@GetMapping("")
 	public String test() {
+		Long a = examPackageRepository.getViewsMonth(new Date(), new Date());
+		System.out.println(a);
 		return "manage/manage-question-addexcel";
 	}
 	@PostMapping("/addexcel")

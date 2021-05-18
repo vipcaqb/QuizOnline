@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import hl.quizonline.entity.ExamPackage;
+import hl.quizonline.model.LineChartModel;
 import javassist.NotFoundException;
 
 // TODO: Auto-generated Javadoc
@@ -189,8 +190,70 @@ public interface ExamPackageService {
 	void inscreaseDoExamTimes(int examPackageID,int doExamTimes);
 	
 	/**
-	 * Xóa tất cả danh mục mà nó tham chiếu tới
+	 * Xóa tất cả danh mục mà nó tham chiếu tới.
+	 *
+	 * @param examPackage the exam package
 	 */
 	void clearCategory(ExamPackage examPackage);
 	
+	/**
+	 * Search all.
+	 *
+	 * @param pageNo the page no
+	 * @param key the key
+	 * @return the page
+	 */
+	Page<ExamPackage> searchAll(int pageNo, String key);
+	
+	/**
+	 * Inscrease view.
+	 *
+	 * @param examPackageID the exam package ID
+	 */
+	void inscreaseView(int examPackageID);
+	
+	/**
+	 * Lấy toàn bộ lượt xem của các bộ đề.
+	 *
+	 * @return the total view
+	 */
+	long getTotalView();
+	
+	/**
+	 * Lấy tổng số đề thi.
+	 *
+	 * @return the total exam package
+	 */
+	long getTotalExamPackage();
+
+	/**
+	 * Gets the total do exam time.
+	 *
+	 * @return the total do exam time
+	 */
+	long getTotalDoExamTime();
+	
+	/**
+	 * Lấy lượt xem của 1 tháng trong 1 năm cho trước
+	 *
+	 * @param month the month
+	 * @param year the year
+	 * @return the views month
+	 */
+	long getViewsMonth(int month, int year);
+	
+	/**
+	 * Lấy thông tin về line chart
+	 *
+	 * @param year the year
+	 * @return the line chart data
+	 */
+	LineChartModel getLineChartData(int year);
+	
+	/**
+	 * Lấy năm nhỏ nhất mà đề thi đã tạo
+	 *
+	 * @return the min year
+	 */
+	long getMinYear();
 }

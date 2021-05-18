@@ -1,6 +1,7 @@
 package hl.quizonline.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,11 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import hl.quizonline.config.MyConstances;
 import hl.quizonline.entity.Account;
 import hl.quizonline.entity.Category;
 import hl.quizonline.entity.ExamPackage;
 import hl.quizonline.entity.Examination;
 import hl.quizonline.entity.JoinExamination;
+import hl.quizonline.model.LineChartModel;
 import hl.quizonline.repository.AccountRepository;
 import hl.quizonline.repository.ExamPackageRepository;
 import hl.quizonline.repository.JoinExamRepository;
@@ -154,7 +157,7 @@ public class ExamPackageImpl implements ExamPackageService {
 		Pageable pageable = PageRequest.of(pageNo-1, pageSize, sort);
 		Page<ExamPackage> page = null;
 		if(categoryID <0) {
-			page = examPackageRepository.findByExamPackageTitleContains(examPackageTitlte, pageable);
+			page = examPackageRepository.findByExamPackageTitleContains1(examPackageTitlte, pageable);
 		}
 		else {
 			page = examPackageRepository.findByExamPackageTitleContainsAndHasCategoryID(examPackageTitlte, categoryID, pageable);
@@ -214,7 +217,7 @@ public class ExamPackageImpl implements ExamPackageService {
 		Optional<ExamPackage> opExamPackage = examPackageRepository.findById(examPackageID);
 		if(opExamPackage.isEmpty()) return;
 		ExamPackage examPackage = opExamPackage.get();
-		examPackage.setDoExamTime(examPackage.getDoExamTime()+examPackageID);
+		examPackage.setDoExamTime(examPackage.getDoExamTime()+doExamTimes);
 		examPackageRepository.save(examPackage);
 	}
 
@@ -223,4 +226,83 @@ public class ExamPackageImpl implements ExamPackageService {
 		examPackage.setCategories(new ArrayList<Category>());
 		examPackageRepository.save(examPackage);
 	}
+
+	@Override
+	public Page<ExamPackage> searchAll(int pageNo, String key) {
+		Pageable pageable = PageRequest.of(pageNo-1, MyConstances.PAGE_SIZE);
+		return examPackageRepository.findByExamPackageTitleContains(key, pageable);
+	}
+
+	@Override
+	public void inscreaseView(int examPackageID) {
+		ExamPackage examPackage = this.getExamPackage(examPackageID);
+		examPackage.setViews(examPackage.getViews()+1);
+		examPackageRepository.save(examPackage);
+	}
+
+	@Override
+	public long getTotalView() {
+		return examPackageRepository.countView();
+	}
+
+	@Override
+	public long getTotalExamPackage() {
+		return examPackageRepository.countAll();
+	}
+
+	@Override
+	public long getTotalDoExamTime() {
+		return examPackageRepository.sumNumberOfTimes();
+	}
+
+	@Override
+	public LineChartModel getLineChartData(int year) {
+		LineChartModel lineChart = new LineChartModel();
+		List<Long> viewsList = new ArrayList<Long>();
+		long sum = 0;
+		for(int i =0;i<12;i++) {
+			long view = getViewsMonth(i+1, year);
+			if(view < 0) view = 0;
+			viewsList.add(view);
+			sum += view;
+		}
+		
+		lineChart.setYear(year);
+		lineChart.setViewsList(viewsList);
+		lineChart.setViewSumary(sum);
+		return lineChart;
+	}
+
+	@Override
+	public long getViewsMonth(int month, int year) {
+		Date startDate,endDate;
+		Calendar cal = Calendar.getInstance();
+		cal.set(year, month-1, 1);
+		startDate = cal.getTime();
+		cal.set(year, month, 1);
+		endDate = cal.getTime();
+		
+		Date now = new Date(System.currentTimeMillis());
+		
+		Long views = examPackageRepository.getViewsMonth(startDate, endDate);
+		if(startDate.getTime()>now.getTime())
+			return -1;
+		else {
+			if(views !=null)
+				return views;
+			else return 0;
+		}
+	}
+
+	@Override
+	public long getMinYear() {
+		Date minCreateDatetime = examPackageRepository.getEPHasMinCreateDatetime();
+		if(minCreateDatetime == null) {
+			return -1;
+		}
+		else {
+			return minCreateDatetime.getYear();
+		}
+	}
+	
 }

@@ -21,4 +21,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 	
 	Page<Account> findByUsernameContainsOrFullnameContains(String usernameKey, String fullnameKey, Pageable pageable);
 	
+	@Query("SELECT COUNT(a) FROM Account a")
+	long countAll();
 }

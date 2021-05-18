@@ -66,7 +66,7 @@
 			                    <div class="col-md-3">
 			                      <div class="card card-mini mb-4">
 			                        <div class="card-body">
-			                          <h2 class="mb-1">71,503</h2>
+			                          <h2 class="mb-1" th:utext="${totalViews}">71,503</h2>
 			                          <p>Tổng số lượt xem</p>
 			                          <div class="chartjs-wrapper">
 			                            <canvas id="barChart"></canvas>
@@ -77,7 +77,7 @@
 			                    <div class="col-md-3">
 			                      <div class="card card-mini  mb-4">
 			                        <div class="card-body">
-			                          <h2 class="mb-1">9,503</h2>
+			                          <h2 class="mb-1" th:utext="${totalAccount}">9,503</h2>
 			                          <p>Tài khoản đã đăng ký</p>
 			                          <div class="chartjs-wrapper">
 			                            <canvas id="dual-line"></canvas>
@@ -88,7 +88,7 @@
 			                    <div class="col-md-3">
 			                      <div class="card card-mini mb-4">
 			                        <div class="card-body">
-			                          <h2 class="mb-1">71,503</h2>
+			                          <h2 class="mb-1" th:utext="${totalExams}">71,503</h2>
 			                          <p>Số bài thi đã tạo</p>
 			                          <div class="chartjs-wrapper">
 			                            <canvas id="area-chart"></canvas>
@@ -99,7 +99,7 @@
 			                    <div class="col-md-3">
 			                      <div class="card card-mini mb-4">
 			                        <div class="card-body">
-			                          <h2 class="mb-1">9,503</h2>
+			                          <h2 class="mb-1" th:utext="${totalDoExamTimes}">9,503</h2>
 			                          <p>Tổng số lượt thi</p>
 			                          <div class="chartjs-wrapper">
 			                            <canvas id="line"></canvas>
@@ -108,35 +108,41 @@
 			                      </div>
 			                    </div>
 			                  </div>
-			                  
 			                  <div class="row">
 			                  	<div class="col-md-8">
 			                      <!-- Sales Graph -->
 			                      <div class="card card-default">
 			                        <div class="card-header">
-			                          <h2>Lượt ghé thăm</h2>
+			                          <h3>Lượt ghé thăm</h3>
+			                          <form action="/manage/overview">
+			                          	<select name="year">
+				                          	<th:block th:each="i : ${#numbers.sequence( minYear, maxYear, 1)}">
+				                          		<option th:unless="${i==selectedYear}" th:value="${i}" th:utext="${i}">2021 </option>
+				                          		
+				                          		<option th:if="${i==selectedYear}" selected="selected" th:value="${i}" th:utext="${i}">2021 </option>
+				                          		
+				                          	</th:block>
+				                          </select>
+				                          <input class="btn btn-info" type="submit" value="OK">
+			                          </form>
+			                          
 			                        </div>
 			                        <div class="card-body">
-			                          <canvas id="linechart" style="max-height: 200px;" class="chartjs"></canvas>
+			                          <canvas id="linechart" th:data-linechart-data="${dataLineChart}" 
+			                          style="max-height: 200px;" class="chartjs"></canvas>
 			                        </div>
 			                        <div class="card-footer d-flex flex-wrap bg-white p-0">
 			                          <div class="col-6 px-0">
 			                            <div class="text-center p-4">
-			                              <h4>$6,308</h4>
-			                              <p class="mt-2">Total orders of this year</p>
-			                            </div>
-			                          </div>
-			                          <div class="col-6 px-0">
-			                            <div class="text-center p-4 border-left">
-			                              <h4>$70,506</h4>
-			                              <p class="mt-2">Total revenue of this year</p>
+			                              <h4 th:utext="${lineChart.viewSumary}">$6,308</h4>
+			                              <p class="mt-2">Tổng lượt truy cập trong năm <span th:utext="${lineChart.year}"></span> </p>
 			                            </div>
 			                          </div>
 			                        </div>
 			                      </div>
 								</div>
 								
-								<div class="col-md-4">
+								<div class="col-md-4" th:if="${categoryList!=null}">
 				                  <!-- Doughnut Chart -->
 				                  <div class="card card-default">
 				                    <div class="card-header justify-content-center">
@@ -145,131 +151,30 @@
 				                    <div class="card-body" >
 				                      <canvas id="doChart" style="max-height: 160px;" ></canvas>
 				                    </div>
-				                    <a href="#" class="pb-5 d-block text-center text-muted"><i class="mdi mdi-download mr-2"></i> Download overall report</a>
 				                    <div class="card-footer d-flex flex-wrap bg-white p-0">
-				                      <div class="col-6">
+				                      <div class="col-md-12">
 				                        <div class="py-4 px-4">
 				                          <ul class="d-flex flex-column justify-content-between">
-				                            <li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2" style="color: #4c84ff"></i>Order Completed</li>
-				                            <li><i class="mdi mdi-checkbox-blank-circle-outline mr-2" style="color: #80e1c1 "></i>Order Unpaid</li>
-				                          </ul>
-				                        </div>
-				                      </div>
-				                      <div class="col-6 border-left">
-				                        <div class="py-4 px-4 ">
-				                          <ul class="d-flex flex-column justify-content-between">
-				                            <li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2" style="color: #8061ef"></i>Order Pending</li>
-				                            <li><i class="mdi mdi-checkbox-blank-circle-outline mr-2" style="color: #ffa128"></i>Order Canceled</li>
+				                          	<th:block th:each="category,itor: ${categoryList}")>
+				                          		<li>
+					                            	<i class="mdi mdi-checkbox-blank-circle mr-2" 
+					                            	th:style="@{'color: #000'}"
+					                            	></i> 
+					                            	<span th:utext="@{${category.categoryName}+ ': ' + ${category.examPackages.size()}}"
+					                            	 data-role="category-info"
+					                            	 th:data-label="${category.categoryName}" 
+					                            	 th:data-index-category="${itor.index}"
+					                            	 th:data-color="${myHelper.getRandomHexColor()}"
+					                            	 th:data-totalEP="${category.examPackages.size()}"
+					                            	 >Toán</span> 
+					                            </li>
+				                          	</th:block>
 				                          </ul>
 				                        </div>
 				                      </div>
 				                    </div>
 				                  </div>
 								</div>
-			                  </div>
-			                  
-			                  <div class="row">
-			                  <!-- Latest notice -->
-			                  	<div class="col-md-4">
-			                  		<div class="card card-default">
-			                          <div class="card-header justify-content-between mb-1">
-			                            <h2>Latest Notifications</h2>
-			                            <div>
-			                                <button class="text-black-50 mr-2 font-size-20"><i class="mdi mdi-cached"></i></button>
-			                                <div class="dropdown show d-inline-block widget-dropdown">
-			                                    <a class="dropdown-toggle icon-burger-mini" href="#" role="button" id="dropdown-notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static"></a>
-			                                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-notification">
-			                                      <li class="dropdown-item"><a  href="#">Action</a></li>
-			                                      <li class="dropdown-item"><a  href="#">Another action</a></li>
-			                                      <li class="dropdown-item"><a  href="#">Something else here</a></li>
-			                                    </ul>
-			                                  </div>
-			                            </div>
-			
-			                          </div>
-			                          <div class="card-body compact-notifications" data-simplebar style="height: 434px;">
-			                            <div class="media pb-3 align-items-center justify-content-between">
-			                              <div class="d-flex rounded-circle align-items-center justify-content-center mr-3 media-icon iconbox-45 bg-primary text-white">
-			                                <i class="mdi mdi-cart-outline font-size-20"></i>
-			                              </div>
-			                              <div class="media-body pr-3 ">
-			                                <a class="mt-0 mb-1 font-size-15 text-dark" href="#">New Order</a>
-			                                <p >Selena has placed an new order</p>
-			                              </div>
-			                              <span class=" font-size-12 d-inline-block"><i class="mdi mdi-clock-outline"></i> 10 AM</span>
-			                            </div>
-			
-			                            <div class="media py-3 align-items-center justify-content-between">
-			                              <div class="d-flex rounded-circle align-items-center justify-content-center mr-3 media-icon iconbox-45 bg-success text-white">
-			                                <i class="mdi mdi-email-outline font-size-20"></i>
-			                              </div>
-			                              <div class="media-body pr-3">
-			                                <a class="mt-0 mb-1 font-size-15 text-dark" href="#">New Enquiry</a>
-			                                <p >Phileine has placed an new order</p>
-			                              </div>
-			                              <span class=" font-size-12 d-inline-block"><i class="mdi mdi-clock-outline"></i> 9 AM</span>
-			                            </div>
-			
-			
-			                            <div class="media py-3 align-items-center justify-content-between">
-			                              <div class="d-flex rounded-circle align-items-center justify-content-center mr-3 media-icon iconbox-45 bg-warning text-white">
-			                                <i class="mdi mdi-stack-exchange font-size-20"></i>
-			                              </div>
-			                              <div class="media-body pr-3">
-			                                <a class="mt-0 mb-1 font-size-15 text-dark" href="#">Support Ticket</a>
-			                                <p >Emma has placed an new order</p>
-			                              </div>
-			                              <span class=" font-size-12 d-inline-block"><i class="mdi mdi-clock-outline"></i> 10 AM</span>
-			                            </div>
-			
-			                            <div class="media py-3 align-items-center justify-content-between">
-			                              <div class="d-flex rounded-circle align-items-center justify-content-center mr-3 media-icon iconbox-45 bg-primary text-white">
-			                                <i class="mdi mdi-cart-outline font-size-20"></i>
-			                              </div>
-			                              <div class="media-body pr-3">
-			                                <a class="mt-0 mb-1 font-size-15 text-dark" href="#">New order</a>
-			                                <p >Ryan has placed an new order</p>
-			                              </div>
-			                              <span class=" font-size-12 d-inline-block"><i class="mdi mdi-clock-outline"></i> 10 AM</span>
-			                            </div>
-			
-			                            <div class="media py-3 align-items-center justify-content-between">
-			                              <div class="d-flex rounded-circle align-items-center justify-content-center mr-3 media-icon iconbox-45 bg-info text-white">
-			                                <i class="mdi mdi-calendar-blank font-size-20"></i>
-			                              </div>
-			                              <div class="media-body pr-3">
-			                                <a class="mt-0 mb-1 font-size-15 text-dark" href="">Comapny Meetup</a>
-			                                <p >Phileine has placed an new order</p>
-			                              </div>
-			                              <span class=" font-size-12 d-inline-block"><i class="mdi mdi-clock-outline"></i> 10 AM</span>
-			                            </div>
-			
-			                            <div class="media py-3 align-items-center justify-content-between">
-			                              <div class="d-flex rounded-circle align-items-center justify-content-center mr-3 media-icon iconbox-45 bg-warning text-white">
-			                                <i class="mdi mdi-stack-exchange font-size-20"></i>
-			                              </div>
-			                              <div class="media-body pr-3">
-			                                <a class="mt-0 mb-1 font-size-15 text-dark" href="#">Support Ticket</a>
-			                                <p >Emma has placed an new order</p>
-			                              </div>
-			                              <span class=" font-size-12 d-inline-block"><i class="mdi mdi-clock-outline"></i> 10 AM</span>
-			                            </div>
-			
-			                            <div class="media py-3 align-items-center justify-content-between">
-			                              <div class="d-flex rounded-circle align-items-center justify-content-center mr-3 media-icon iconbox-45 bg-success text-white">
-			                                <i class="mdi mdi-email-outline font-size-20"></i>
-			                              </div>
-			                              <div class="media-body pr-3">
-			                                <a class="mt-0 mb-1 font-size-15 text-dark" href="#">New Enquiry</a>
-			                                <p >Phileine has placed an new order</p>
-			                              </div>
-			                              <span class=" font-size-12 d-inline-block"><i class="mdi mdi-clock-outline"></i> 9 AM</span>
-			                            </div>
-			
-			                          </div>
-			                          <div class="mt-3"></div>
-			                        </div>
-			                  	</div>
 			                  </div>
 						</div>
 					</div>
@@ -303,7 +208,6 @@
     <script src='/assets/plugins/daterangepicker/moment.min.js'></script>
     <script src='/assets/plugins/daterangepicker/daterangepicker.js'></script>
     <script src='/assets/js/date-range.js'></script>
-	
 </body>
 
 </html>

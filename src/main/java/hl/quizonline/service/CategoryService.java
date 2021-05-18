@@ -66,5 +66,4 @@ public interface CategoryService {
 	boolean exist(String categoryName);
 	
 	Page<Category> searchByName(String name, int pageNo);
-
 }

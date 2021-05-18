@@ -95,4 +95,6 @@ public interface AccountService extends UserDetailsService  {
 	 * @param account the account
 	 */
 	void lockAccount(Account account);
+	
+	long countAll();
 }

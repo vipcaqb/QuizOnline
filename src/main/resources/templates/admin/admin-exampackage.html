@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Quản lý tài khoản người dùng</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- VENDOR CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+<link rel="stylesheet" th:href="@{/css/manage-exam.css}">
+<link rel="stylesheet" th:href="@{/css/manage-account.css}">
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+<link rel="stylesheet" th:href="@{/css/howto.css}">
+<!-- GOOGLE FONTS -->
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+<link href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- ICONS -->
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/assets/img/apple-icon.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/assets/img/favicon.png}">
+<link rel = "stylesheet" th:href="@{/css/mystyle.css}">
+<link rel="stylesheet" th:href="@{/css/mailbox.css}"> 
+<link rel="stylesheet" href="/css/admin-category.css">
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:insert="/admin/shared/navbar::navbar"></div>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<div th:insert="/admin/shared/sidebar::sidebar"></div>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="container">
+				<div class="row">
+					<!-- BEGIN INBOX -->
+					<div class="col-md-12" style="min-height: 100vh;">
+						<div class="grid email" style="min-height: 90vh;">
+							<div class="grid-body">
+								<h2>Quản lý đề thi</h2>
+								
+								<div class="search-box mb-1 mt-1">
+									<form action="/manage/allexam" method="get">
+										<input type="text" placeholder="Nhập tên đề thi cần tìm" name="key">
+										<input class="btn btn-success" type="submit" value = "Tìm kiếm" style="margin-bottom: 5px;">
+									</form>
+								</div>
+								
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th> Tên đề thi </th>
+											<th> Người tạo </th>
+											<th> Số đề thi </th>
+											<th> Số câu hỏi khi làm bài </th>
+											<th> Loại đề </th>
+											<th> Trạng thái </th>
+											<th> </th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:each="exam : ${examPackageList}">
+											<tr> 
+												<td> <a th:href="@{'/manage/exam/editpackage/'+${exam.examPackageID}}" th:utext="${exam.examPackageTitle}"></a> </td>
+												<td> <a th:utext="${exam.account.fullname}" href="#"></a> </td>
+												<td th:utext="${exam.examinations.size()}"> 2 </td>
+												<td th:utext="${exam.numberOfQuestion}"> 15 </td>
+												<td th:if="${exam.isExerciseExam}"> Ôn tập </td>
+												<td th:if="${!exam.isExerciseExam}"> Đề thi </td>
+												<td class="alert alert-success" th:if="${exam.isPublic}"> Công khai </td>
+												<td class="alert alert-warning" th:unless="${exam.isPublic}"> Chưa công khai </td>
+												<td> 
+													<a th:href="@{'/manage/exam/deletePackage/'+${exam.examPackageID}}" class="fa fa-trash fa-2x" aria-hidden="true" style="color:red;transform: scale(1.2);padding-left: 5px;"></a>
+												</td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>	
+								
+								<nav aria-label="Page navigation example">
+								  <ul class="pagination justify-content-center">
+								    <li class="page-item" th:if="${page.hasPrevious()}">
+								      <a class="page-link"  th:href="@{'/manage/allexam?pageNo='+${page.number}}">Previous</a>
+								    </li>
+								    <li class="page-item disabled" th:if="${!page.hasPrevious()}">
+								      <a class="page-link">Previous</a>
+								    </li>
+								    
+								    <th:block th:each="i : ${#numbers.sequence(1, page.totalPages)}">
+								    
+								    	<li class="page-item" th:if="${i!=page.number+1}">
+								    		<a class="page-link" th:href="@{'/manage/allexam?pageNo='+${i}}" th:utext="${i}">1</a>
+								    	</li>
+								    	<li class="page-item active" th:if="${i==page.number+1}">
+								    		<a class="page-link" th:href="@{'/manage/allexam?pageNo='+${i}}" th:utext="${i}">1</a>
+								    	</li>
+								    
+								    </th:block>
+								    
+								    <li class="page-item" th:if="${page.hasNext()}">
+								      <a class="page-link" th:href="@{'/manage/allexam?pageNo='+${page.number+2}}">Next</a>
+								    </li>
+								    
+								    <li class="page-item disabled" th:if="${!page.hasNext()}">
+								      <a class="page-link">Next</a>
+								    </li>
+								  </ul>
+								</nav>
+							</div>
+						</div>
+					</div>
+					<!-- END INBOX -->
+				</div>
+			</div>
+			
+			
+			
+			<!-- END MAIN CONTENT -->
+			
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script th:src="@{/assets/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+	<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#admin-dt').addClass('active');
+			
+			//cancel
+			
+			$('#cancel').click(function(){
+				$('#background').addClass('hide');
+			})
+			
+			
+		})
+		
+	</script>
+</body>
+
+</html>

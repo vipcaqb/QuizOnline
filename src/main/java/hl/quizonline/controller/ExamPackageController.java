@@ -194,7 +194,7 @@ public class ExamPackageController {
 		    String currentUserName = authentication.getName();
 		    Account acc = accountService.getAccountByUsername(currentUserName).get();	    
 		    ExamPackage ep = new ExamPackage(examPackageTitle,acc);
-		    
+		    ep.setCreateDatetime(new Date(System.currentTimeMillis()));
 		    ep.setDescription(description);
 
 		   //if the exam is exercise

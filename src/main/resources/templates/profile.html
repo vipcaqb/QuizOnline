@@ -36,9 +36,9 @@
 	<!-- WRAPPER -->
 	<div id="wrapper">
 		<!-- NAVBAR -->
-		<div th:insert="/admin/shared/navbar::navbar"></div>
+		<div th:insert="/shared/navbar::navbar"></div>
 		<!-- END NAVBAR -->
-		<!-- MAIN -->
+		<!-- MAIN -->	
 		<div class="main">
 			<!-- MAIN CONTENT -->
 			<div class="main-content">
@@ -46,15 +46,19 @@
 					<div class="container bootstrap snippet">
 						<div class="row">
 							<div class="col-sm-10">
-								<h1>User name</h1>
+								<h1 th:utext="${account.fullname}">User name</h1>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-3">
 								<!--left col-->
 								<div class="text-center">
-									<img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
+									<img  th:if='${account.urlAvatar!=null&&!account.urlAvatar.equals("")}' 
+									th:src="@{'/getimage/'+${account.urlAvatar}}"
 										class="avatar img-circle img-thumbnail" alt="avatar">
+									<img  th:unless='${account.urlAvatar!=null&&!account.urlAvatar.equals("")}' 
+									th:src="@{'https://ui-avatars.com/api/?name='+${account.fullname}}" 
+									class="avatar img-circle img-thumbnail" alt="avatar">
 								</div>
 								</hr>
 								<div style="text-align: center;margin-top: 10px;">
@@ -80,27 +84,27 @@
 											id="registrationForm">
 											<div class="form-group">
 												<div class="col-xs-6">
-													<label for="first_name"><h4>Họ và tên: Hoàng Văn Sĩ</h4></label>
+													<label for="first_name"><h4 th:utext="@{'Họ và tên: '+${account.fullname}}">Họ và tên: Hoàng Văn Sĩ</h4></label>
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-xs-6">
-													<label for="phone"><h4>Số điện thoại: 0565913856</h4></label> 
+													<label for="phone"><h4 th:utext="@{'Số điện thoại: '+ ${account.phone}}">Số điện thoại: 0565913856</h4></label> 
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-xs-6">
-													<label for="email"><h4>Email: HVS@gmail.com</h4></label> 
+													<label for="email"><h4 th:utext="@{'Email: '+${account.email}}">Email: HVS@gmail.com</h4></label> 
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-xs-6">
-													<label for="gender"><h4>Giới tính: Nam</h4></label>
+													<label for="gender"><h4 th:utext="@{'Giới tính: '+${account.gender.displayValue}}">Giới tính: Nam</h4></label>
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-xs-6">
-													<label for="dob"><h4>Ngày sinh: 22/2/2000</h4></label>
+													<label for="dob"><h4 th:utext="@{'Ngày sinh: '+${account.dateOfBirth}}">Ngày sinh: 22/2/2000</h4></label>
 												</div>
 											</div>
 										</div>

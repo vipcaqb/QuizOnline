@@ -59,6 +59,10 @@ public class ExamPackage implements Serializable {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private Date createDatetime;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date startDatetime;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -282,6 +286,20 @@ public class ExamPackage implements Serializable {
 		examination.setExamPackage(null);
 
 		return examination;
+	}
+	
+	
+
+	public Date getCreateDatetime() {
+		return createDatetime;
+	}
+
+	public void setCreateDatetime(Date createDatetime) {
+		this.createDatetime = createDatetime;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public ExamPackage(String examPackageTitle) {

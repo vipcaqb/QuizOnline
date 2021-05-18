@@ -3,6 +3,7 @@ package hl.quizonline.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,30 +32,50 @@ import hl.quizonline.entity.Category;
 import hl.quizonline.entity.ExamPackage;
 import hl.quizonline.entity.QuestionPackage;
 import hl.quizonline.model.ExamTable;
+import hl.quizonline.model.LineChartModel;
 import hl.quizonline.model.QuestionTable;
 import hl.quizonline.repository.CategoryRepository;
 import hl.quizonline.service.AccountService;
 import hl.quizonline.service.CategoryService;
 import hl.quizonline.service.ExamPackageService;
 import hl.quizonline.service.QuestionPackageService;
+import hl.quizonline.service.impl.MyHelper;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AdminController.
+ */
 @Controller
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/manage")
 public class AdminController {
+	
+	/** The account service. */
 	@Autowired
 	AccountService accountService;
 	
+	/** The exam package service. */
 	@Autowired 
 	ExamPackageService examPackageService;
 	
+	/** The category service. */
 	@Autowired
 	CategoryService categoryService;
 	
+	/** The question package service. */
 	@Autowired
 	QuestionPackageService questionPackageService;
 	
 	//Manage account form
+	
+	/**
+	 * Manage form.
+	 *
+	 * @param pageNo the page no
+	 * @param key the key
+	 * @param model the model
+	 * @return the string
+	 */
 	@GetMapping(value = {"/account","/account/{pageNo}"})
 	public String manageForm(@PathVariable(name ="pageNo",required = false) Integer pageNo,
 			@RequestParam(name = "key", required = false) String key,
@@ -79,6 +100,12 @@ public class AdminController {
 		return "/manage/manage-account";
 	}
 	
+	/**
+	 * Lock or unlock account.
+	 *
+	 * @param username the username
+	 * @return the string
+	 */
 	@GetMapping(value ="/account/lockaccount/{username}")
 	public String lockOrUnlockAccount(@PathVariable(name = "username") String username) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -92,6 +119,13 @@ public class AdminController {
 		return "redirect:/login";
 	}
 	
+	/**
+	 * Gets the exam table list.
+	 *
+	 * @param username the username
+	 * @param pageNo the page no
+	 * @return the exam table list
+	 */
 	@GetMapping("/account/getExamList/{username}")
 	@ResponseBody
 	public ResponseEntity<List<ExamTable>> getExamTableList(@PathVariable("username") String username, @RequestParam("pageNo") Integer pageNo) {
@@ -107,6 +141,12 @@ public class AdminController {
 		return ResponseEntity.ok().body(examTableList);
 	}
 	
+	/**
+	 * Gets the question table list.
+	 *
+	 * @param username the username
+	 * @return the question table list
+	 */
 	@GetMapping("/account/getQuestionPackageList/{username}")
 	@ResponseBody
 	public ResponseEntity<List<QuestionTable>> getQuestionTableList(@PathVariable("username") String username) {
@@ -122,11 +162,66 @@ public class AdminController {
 		return ResponseEntity.ok().body(questionTableList);
 	}
 
+	/**
+	 * Show overview.
+	 *
+	 * @return the string
+	 */
 	@GetMapping("/overview")
-	public String showOverview() {
+	public String showOverview(@RequestParam(name= "year", required = false) Integer year,Model model) {
+		if(year == null) year = Calendar.getInstance().get(Calendar.YEAR);
+		int maxYear = Calendar.getInstance().get(Calendar.YEAR);
+		long totalAccount = accountService.countAll();
+		long totalViews = examPackageService.getTotalView();
+		long totalExams = examPackageService.getTotalExamPackage();
+		long totalDoExamTimes = examPackageService.getTotalDoExamTime();
+		//De thi theo danh muc
+		List<Category> categoryList = categoryService.getAll();
+		
+		//sap xep giam dan theo so luong de thi
+		for(int i = 0; i< categoryList.size()-1;i++) {
+			for(int j= i+1; j<categoryList.size();j++) {
+				if(categoryList.get(i).getExamPackages().size()<categoryList.get(j).getExamPackages().size()) {
+					Category temp = categoryList.get(i);
+					categoryList.set(i, categoryList.get(j));
+					categoryList.set(j, temp);
+				}
+			}
+		}
+		MyHelper myHelper = new MyHelper();
+		
+		//Line chart
+		LineChartModel lineChart = examPackageService.getLineChartData(year);
+		
+		String dataLineChart = lineChart.getJSList();
+		//Lấy năm nhỏ nhất có trong db
+		long minYear = examPackageService.getMinYear()+1900;
+		if(minYear>year) minYear = year;
+		if(minYear>maxYear) minYear = maxYear;
+		
+		
+		model.addAttribute("minYear", minYear);
+		model.addAttribute("selectedYear", year);
+		model.addAttribute("maxYear", maxYear);
+		model.addAttribute("lineChart", lineChart);
+		model.addAttribute("dataLineChart", dataLineChart);
+		model.addAttribute("myHelper", myHelper);
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("totalAccount", totalAccount);
+		model.addAttribute("totalViews", totalViews);
+		model.addAttribute("totalExams", totalExams);
+		model.addAttribute("totalDoExamTimes", totalDoExamTimes);
 		return "manage/overview";
 	}
 
+	/**
+	 * Show category list.
+	 *
+	 * @param pageNo the page no
+	 * @param key the key
+	 * @param model the model
+	 * @return the string
+	 */
 	@GetMapping(value = {"/category","/category/{pageNo}"})
 	public String showCategoryList(@PathVariable(name = "pageNo", required =false) Integer pageNo,
 			@RequestParam(name= "key",required = false) String key,
@@ -146,6 +241,12 @@ public class AdminController {
 		return "redirect:/login";
 	}
 	
+	/**
+	 * Creates the category.
+	 *
+	 * @param categoryName the category name
+	 * @return the string
+	 */
 	@PostMapping("/category/create")
 	public String createCategory(@RequestParam("categoryName") String categoryName) {
 		
@@ -156,6 +257,13 @@ public class AdminController {
 		return "redirect:/manage/category";
 	}
 	
+	/**
+	 * Creates the category.
+	 *
+	 * @param categoryID the category ID
+	 * @param categoryName the category name
+	 * @return the string
+	 */
 	@PostMapping("/category/edit/{categoryID}")
 	public String createCategory(@PathVariable(name="categoryID") Integer categoryID,
 			@RequestParam("categoryName") String categoryName) {
@@ -166,6 +274,12 @@ public class AdminController {
 		return "redirect:/manage/category";
 	}
 	
+	/**
+	 * Delete category.
+	 *
+	 * @param categoryID the category ID
+	 * @return the string
+	 */
 	@PostMapping("/category/delete/{categoryID}")
 	public String deleteCategory(@PathVariable(name = "categoryID") Integer categoryID) {
 		
@@ -173,5 +287,35 @@ public class AdminController {
 		
 		
 		return "redirect:/manage/category";
+	}
+	
+	@GetMapping("/allexam")
+	public String manageAllExamPackageForm(
+			@RequestParam(name="pageNo",required = false) Integer pageNo,
+			@RequestParam(name="key",required = false) String key,
+			Model model
+			) {
+		if(pageNo == null) pageNo = 1;
+		if(key == null) key = "";
+		Page<ExamPackage> page = examPackageService.searchAll(pageNo, key);
+		List<ExamPackage> examPackageList = page.getContent();
+		
+		model.addAttribute("examPackageList", examPackageList);
+		model.addAttribute("page", page);
+		return "admin/admin-exampackage";
+	}
+	
+	@GetMapping("/allquestion")
+	public String manageAllQuestionForm(@RequestParam(name="pageNo",required = false) Integer pageNo,
+			@RequestParam(name="key",required = false) String key,
+			Model model) {
+		if(pageNo == null) pageNo = 1;
+		if(key == null) key = "";
+		Page<QuestionPackage> page = questionPackageService.searchByName(key, pageNo);
+		List<QuestionPackage> questionPackageList = page.getContent();
+		
+		model.addAttribute("questionPackageList", questionPackageList);
+		model.addAttribute("page", page);
+		return "admin/admin-question";
 	}
 }

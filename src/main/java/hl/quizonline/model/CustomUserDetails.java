@@ -69,4 +69,7 @@ public class CustomUserDetails implements UserDetails {
 		return account.getEnable();
 	}
 
+	public String getUrlAvatar() {
+		return account.getUrlAvatar();
+	}
 }

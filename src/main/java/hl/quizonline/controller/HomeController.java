@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -257,6 +258,7 @@ public class HomeController {
 	 */
 	@GetMapping(value = "/examdetail/{examPackageID}")
 	public String examDetailShow(@PathVariable(name="examPackageID",required = false) Integer examPackageID,Model model) {
+		examPackageService.inscreaseView(examPackageID);
 		//de thi sap dien ra
 		List<ExamPackage> examPackageIsCommingList = examPackageService.getListIsComing();
 		//danh sách xếp hạng tạo đề
@@ -493,6 +495,11 @@ public class HomeController {
 	@GetMapping("/profile/{username}")
 	public String showInfoSomeone(@PathVariable("username") String username, Model model) {
 		
+		Optional<Account> oa = accountService.getAccountByUsername(username);
+		if(oa.isEmpty()) return "redirect:/login";
+		
+		Account account = oa.get();
+		model.addAttribute("account", account);
 		return "profile";
 	}
 

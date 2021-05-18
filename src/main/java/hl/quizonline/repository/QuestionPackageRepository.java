@@ -36,6 +36,6 @@ public interface QuestionPackageRepository extends JpaRepository<QuestionPackage
 	 */
 	Page<QuestionPackage> findByAccount(Account acc, Pageable pageable);
 	
-	
+	Page<QuestionPackage> findByNameContains(String key, Pageable pageable);
 	
 }

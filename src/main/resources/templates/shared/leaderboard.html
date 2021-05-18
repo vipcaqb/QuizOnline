@@ -19,7 +19,7 @@
 					th:src="@{'https://ui-avatars.com/api/?name='+${acc.fullname}}" 
 					alt="Avatar" class="img-circle pull-left avatar">
 					</div>
-					<p><a href="#" th:utext="${acc.fullname}">Văn Tèo</a> 
+					<p><a th:href="@{'/profile/'+${acc.username}}" th:utext="${acc.fullname}">Văn Tèo</a> 
 					<span class="float-right" th:utext="${acc.numberOfExam}">20 đề</span> </p>
 				</li>
 			</th:block>
