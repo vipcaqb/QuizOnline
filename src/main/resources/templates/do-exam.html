@@ -49,8 +49,12 @@
 					<div class="card" style="width: 100%;" id="question-list">
 						<div class="question" th:each="question,itor : ${questionList}">
 							<h4 th:data-questionid="${question.questionID}" th:id="@{'q'+${itor.index}}" th:utext="@{'Câu: '+${itor.index+1}}">Câu hỏi số 1</h4>
-							<div>
-								<img alt="" src="">
+							<div style="display: flex;">
+								<th:block th:each="image: ${question.images}">
+									<img th:src="@{'/getQuestionImage/'+${image.url}}" 
+									style="width:100px;cursor: zoom-in; justify-content: space-between;"
+									data-enlargeable>
+								</th:block>
 							</div>
 							<p th:utext="${question.questionContent}">
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
@@ -138,6 +142,35 @@
 	
 	<script type="text/javascript" th:inline="javascript">
 		$(document).ready(function(){
+			//Show full screen image on click
+			$('img[data-enlargeable]').addClass('img-enlargeable').click(function() {
+			  var src = $(this).attr('src');
+			  var modal;
+			
+			  function removeModal() {
+			    modal.remove();
+			    $('body').off('keyup.modal-close');
+			  }
+			  modal = $('<div>').css({
+			    background: 'RGBA(0,0,0,.5) url(' + src + ') no-repeat center',
+			    backgroundSize: 'contain',
+			    width: '100%',
+			    height: '100%',
+			    position: 'fixed',
+			    zIndex: '10000',
+			    top: '0',
+			    left: '0',
+			    cursor: 'zoom-out'
+			  }).click(function() {
+			    removeModal();
+			  }).appendTo('body');
+			  //handling ESC
+			  $('body').on('keyup.modal-close', function(e) {
+			    if (e.key === 'Escape') {
+			      removeModal();
+			    }
+			  });
+			})
 			//Nộp bài
 			$('#finish').click(function(){
 				event.preventDefault();
@@ -354,6 +387,9 @@
 		        display = document.querySelector('#time');
 		    startTimer(fiveMinutes, display);
 		};
+		
+		
+		
 	</script>
 </body>
 

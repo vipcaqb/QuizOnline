@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>admin</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<!-- VENDOR CSS -->
+	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/assets/vendor/font-awesome/css/font-awesome.min.css}">
+	<link rel="stylesheet" th:href="@{/assets/vendor/linearicons/style.css}">
+	<link rel="stylesheet" th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
+	<link rel="stylesheet" th:href="@{/css/danhsachde.css}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+	<link rel="stylesheet" href="/css/howto.css">
+
+	<!-- MAIN CSS -->
+	<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+	<!-- GOOGLE FONTS -->
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+	<!-- ICONS -->
+	<link rel="apple-touch-icon" sizes="76x76" th:href="@{/assets/img/apple-icon.png}">
+	<link rel="icon" type="image/png" sizes="96x96" th:href="@{/assets/img/favicon.png}">
+	
+	<link rel="stylesheet" th:href="@{/css/mystyle.css}">
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:insert="/shared/navbar::navbar">
+		</div>
+		<!-- END NAVBAR -->
+		<!-- CONTENT -->
+		<div class="container-fluid" id="content">
+			<div class="row">
+				<div class="col-md-9 main-content" >
+				<div class="col-md-12 panel">
+					<h3>Cách làm bài thi</h3>
+					<ul class="mb-2">
+						<li>
+						<img class="shadow" src="/images/howto/selectAnswer.jpg"> <label>Click vào đáp án tương ứng để trả lời.</label>
+						</li>
+						<li>
+							<label>Những câu hỏi chỉ có 1 phương án đúng, phương án trả lời sẽ hiển thị ở dạng radio box <img class="shadow" src="/images/howto/radio.jpg"></label>
+						</li>
+						<li>
+							<label>Đối với những câu hỏi có hơn 1 phương án đúng, các phương án sẽ hiển thị ở dạng checkbox : <img class="shadow" src="/images/howto/checkbox.jpg"></label>
+						</li>
+						<li>
+						<img class="shadow" src="/images/howto/questionlist.jpg"><label>Các phương án đã trả lời sẽ hiển thị sang màu xanh</label>
+						</li>
+						<li>
+						<label>Sau khi trả lời hết tất cả câu hỏi, có thể chọn <img class="shadow" src="/images/howto/submit.jpg"> để nộp bài.</label>
+						</li>
+						<li>
+						<label>Thời gian <img class="shadow" src="/images/howto/timer.jpg"> là thời gian còn lại để làm bài thi, thời gian hết sẽ tự động nộp bài.</label>
+						</li>
+						
+					</ul>
+				</div>
+				<div class="col-md-12 panel" style="padding-bottom: 10px;">
+					<h3>Tạo đề thi đầu tiên</h3>
+					<ul>
+						<li>
+							<label>Bước 1: Tạo gói câu hỏi</label>
+							<br>
+							Truy cập vào <a class="font-weight-bold" href="/manage/question" >Giao diện tạo câu hỏi</a>, nhập tên gói câu hỏi vào bấm "Thêm"
+						</li>
+						<li>
+							<label>Bước 2: Thêm câu hỏi cho gói câu hỏi</label>
+							<br>
+							Tiếp tục chọn gói câu hỏi rồi chọn thêm câu hỏi.
+							<br>
+							Tại giao diện thêm câu hỏi, có thể nhập thủ công các câu hỏi để thêm vào hoặc thêm bằng file excel( <a>Hướng dẫn thêm bằng file excel</a> )
+							
+						</li>
+						
+						<li>
+							<label>Bước 3: Tạo bộ đề mới</label>
+							<br>
+							Chuyển đến <a class="font-weight-bold" href="/manage/exam">Giao diện quản lý đề</a>
+							<br>
+							Chọn 'Thêm' để thêm bộ đề
+							<br>
+							Điền các thông tin cho bộ đề và nhấn "Xác nhận".
+						</li>
+						<li>
+							<label>Bước 4: Thêm đề cho bộ đề</label>
+							<br>
+							Quay lại <a class="font-weight-bold" href="/manage/exam">Giao diện quản lý đề</a>, chọn bộ đề vừa tạo và chọn thêm đề.
+						</li>
+						
+						<li>
+							<label>Bước 5: Công khai đề thi</label>
+							<br>
+							Sau khi đã tạo hoàn thiện 1 bộ đề, lúc này người dùng khác vẫn chưa thể nhìn thấy được bộ đề vừa tạo đó, nên chúng ta cần công khai bộ đề.
+							<br>
+							Tại <a class="font-weight-bold" href="/manage/exam">Giao diện quản lý đề</a>, chọn bộ đề vừa tạo và nhấn "Công khai".
+						</li>
+					</ul>
+				</div>
+				
+				<div class="col-md-12 panel">
+					<h3>Upload câu hỏi bằng file excel</h3>
+					<ul>
+						<li>
+							<label>Bước 1:</label>
+							<br>
+							Trong <span class="font-weight-bold">Giao diện thêm câu hỏi</span>, 
+							chọn <span class="btn btn-info">Thêm bằng file excel</span> sẽ dẫn đến giao diện thêm bằng file excel.
+						</li>
+						<li>
+							<label>Bước 2:</label>
+							<br>
+							Nhấn tải xuống để tải file mẫu.
+							<br>
+							Tiến hành chỉnh sửa lại file mẫu cho phù hợp , sau đó upload lên.
+						</li>
+					</ul>
+				</div>
+				</div>
+				<div class="col-md-3">
+				<p>
+				<!-- TIMELINE -->
+					<div class="panel panel-scrolling">
+						<div class="panel-heading">
+							<h3 class="panel-title">Cuộc thi sắp diễn ra</h3>
+						</div>
+						<div class="alert alert-danger" th:if="${examPackageIsCommingList==null || examPackageIsCommingList.size()==0}">
+							Chưa có cuộc thi nào sắp diễn ra
+						</div>
+						<div class="panel-body">
+							<ul class="list-unstyled activity-list">
+								<th:block th:each="examComming: ${examPackageIsCommingList}">
+									<li>
+										<img src="assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
+										<p th:utext="${examComming.examPackageTitle}"><a th:href="@{'/examdetail/' + ${examComming.examPackageID}}">Thi tiếng anh B1</a> trong khoảng 3 tiếng nữa <span class="timestamp">Văn Tèo</span></p>
+									</li>
+								</th:block>
+							</ul>
+							<button type="button" class="btn btn-primary btn-bottom center-block">Hiển thị tất cả</button>
+						</div>
+					</div>
+				<!-- END TIMELINE -->
+				<!-- LEADERBOARD -->
+					<div th:insert="shared/leaderboard::leaderboard">
+					
+					</div>
+				<!-- END LEADERBOARD -->
+				</p>
+				</div>
+			</div>
+		</div>
+		
+		<!-- END CONTENT -->
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+		<footer>
+			<div class="container-fluid">
+				<p class="copyright">&copy; 2017 <a href="https://www.themeineed.com" target="_blank">Theme I Need</a>. All Rights Reserved.</p>
+			</div>
+		</footer>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script src="/assets/vendor/jquery/jquery.min.js"></script>
+	<script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/js/howto.js"></script>
+	<script type="text/javascript">
+		
+	</script>
+</body>
+
+</html>

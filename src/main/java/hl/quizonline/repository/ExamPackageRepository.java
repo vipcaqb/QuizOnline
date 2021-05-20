@@ -57,6 +57,14 @@ public interface ExamPackageRepository extends JpaRepository<ExamPackage, Intege
 	List<ExamPackage> findByIsExerciseExam(boolean isExercise);
 	
 	/**
+	 * Find by is exercise exam.
+	 *
+	 * @param isExercise the is exercise
+	 * @return the list
+	 */
+	List<ExamPackage> findByIsExerciseExamAndIsPublic(boolean isExercise, boolean isPublic);
+	
+	/**
 	 * Lấy danh sách cuộc thi đang diễn ra và đã được public.
 	 *
 	 * @param currentDateTime the current date time

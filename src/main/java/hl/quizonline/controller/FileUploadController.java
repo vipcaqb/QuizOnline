@@ -62,4 +62,26 @@ public class FileUploadController {
 		}
 		return ResponseEntity.badRequest().build();
 	}
+	
+	
+	@RequestMapping(value = "getQuestionImage/{imageName}",method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<ByteArrayResource> getQuestionImage(@PathVariable("imageName") String photo){
+		if(!photo.equals("")||photo !=null) {
+			try {
+				Path filename = Paths.get("upload-question-image",photo);
+				byte[] buffer = Files.readAllBytes(filename);
+				
+				ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+				return ResponseEntity.ok().contentLength(buffer.length)
+						.contentType(MediaType.parseMediaType("image/png"))
+						.body(byteArrayResource);
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("da lay xong anh");
+		return ResponseEntity.badRequest().build();
+	}
 }

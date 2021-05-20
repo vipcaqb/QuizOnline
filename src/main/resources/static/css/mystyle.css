@@ -230,3 +230,28 @@
 	background: #2ca547;
 	color: #fff;
 }
+
+.direction-bar{
+	width: 100%;
+	background: white;
+	box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
+	margin-bottom: 10px;
+	margin-top: -16px;
+}
+
+.btn-delete-image{
+	position: absolute;
+	margin-left: -23px;
+	margin-top: -5px;
+	color: red;
+}
+
+.btn-delete-image:hover {
+	color: #f4a261;
+	transition: linear .2s;	
+}
+
+.shadow{
+	box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
+}
+

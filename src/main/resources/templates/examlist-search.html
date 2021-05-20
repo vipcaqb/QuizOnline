@@ -42,19 +42,28 @@
 						<h2>Tìm kiếm nâng cao</h2>
 						<div class="search-box">
 						<form action="/examlist/search" method = "get">
-							<input type="text" name = "key" placeholder="Từ khóa" style="width: 100%">
+							<input type="text" name = "key" placeholder="Từ khóa" style="width: 100%" th:value="${key}">
 							<br>
 							<div class="row">
 								<div class="col-md-2">
 									<label>Tìm theo</label>
 									<select class="form-control" name = "findBy">
-										<option value = "title">
+										<option value = "title" th:if="${#strings.equals(findBy,'title')}" selected="selected">
 											Tiêu đề
 										</option>
-										<option value = "fullname">
+										<option value = "title" th:unless="${#strings.equals(findBy,'title')}">
+											Tiêu đề
+										</option>
+										<option value = "fullname" th:if="${#strings.equals(findBy,'fullname')}" selected="selected">
 											Tên người tạo
 										</option>
-										<option value = "username">
+										<option value = "fullname" th:unless="${#strings.equals(findBy,'fullname')}">
+											Tên người tạo
+										</option>
+										<option value = "username" th:if="${#strings.equals(findBy,'username')}" selected="selected">
+											Username người tạo
+										</option>
+										<option value = "username" th:unless="${#strings.equals(findBy,'username')}">
 											Username người tạo
 										</option>
 									</select>
@@ -66,7 +75,12 @@
 											Tất cả
 										</option>
 										<th:block th:each="category: ${categoryList}")>
-											<option th:utext="${category.categoryName}" th:value="${category.categoryID}">
+											<option th:utext="${category.categoryName}" 
+											th:value="${category.categoryID}" 
+											th:if="${categoryID==category.categoryID}"
+											selected="selected">
+											</option>
+											<option th:utext="${category.categoryName}" th:value="${category.categoryID}" th:unless="${categoryID==category.categoryID}">
 											</option>
 										</th:block>
 									</select>
@@ -75,13 +89,22 @@
 								<div class="col-md-2">
 									<label>Sắp xếp theo</label>
 									<select class="form-control" name = "sortBy">
-										<option value = "examPackageTitle">
+										<option value = "examPackageTitle" th:if="${#strings.equals(sortBy,'examPackageTitle')}" selected="selected">
 											Tiêu đề
 										</option>
-										<option value = "startDatetime">
+										<option value = "examPackageTitle" th:unless="${#strings.equals(sortBy,'examPackageTitle')}">
+											Tiêu đề
+										</option>
+										<option value = "startDatetime" th:if="${#strings.equals(sortBy,'startDatetime')}" selected="selected">
 											Ngày tạo
 										</option>
-										<option value = "doExamTime">
+										<option value = "startDatetime" th:unless="${#strings.equals(sortBy,'startDatetime')}">
+											Ngày tạo
+										</option>
+										<option value = "doExamTime" th:if="${#strings.equals(sortBy,'doExamTime')}" selected="selected">
+											Lượt thi
+										</option>
+										<option value = "doExamTime" th:unless="${#strings.equals(sortBy,'doExamTime')}">
 											Lượt thi
 										</option>
 									</select>
@@ -90,10 +113,16 @@
 								<div class="col-md-2">
 									<label>Thứ tự</label>
 									<select class="form-control" name="direction">
-										<option value = "ASC">
+										<option value = "ASC" th:if="${#strings.equals(direction,'ASC')}" selected="selected">
 											Tăng dần
 										</option>
-										<option value = "DESC">
+										<option value = "ASC" th:unless="${#strings.equals(direction,'ASC')}">
+											Tăng dần
+										</option>
+										<option value = "DESC" th:if="${#strings.equals(direction,'DESC')}" selected="selected">
+											Giảm dần
+										</option>
+										<option value = "DESC" th:unless="${#strings.equals(direction,'DESC')}">
 											Giảm dần
 										</option>
 									</select>

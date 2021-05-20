@@ -35,15 +35,16 @@ public interface QuestionService {
 	 * Creates the.
 	 *
 	 * @param question the question
+	 * @return the question
 	 */
-	void create(Question question);
+	Question create(Question question);
 	
 	/**
 	 * Edits the.
 	 *
 	 * @param question the question
 	 */
-	void edit(Question question);
+	Question edit(Question question);
 	
 	/**
 	 * Delete.
@@ -97,10 +98,17 @@ public interface QuestionService {
 	Page<Question> getAll(int qpID, int pageNo, int pageSize);
 	
 	/**
-	 * Thêm danh sách câu hỏi questionList vào bộ đề có ID là questionPackageID
+	 * Thêm danh sách câu hỏi questionList vào bộ đề có ID là questionPackageID.
 	 *
 	 * @param questionPackageID the question package ID
 	 * @param questionList the question list
 	 */
 	void addListQuestionToQuestionPackage(int questionPackageID, List<Question> questionList);
+	
+	/**
+	 * Xóa tất cả phương án trong 1 câu hỏi
+	 *
+	 * @param questionID the question ID
+	 */
+	void deleteAllAnswer(int questionID);
 }

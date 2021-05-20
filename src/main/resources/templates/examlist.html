@@ -37,6 +37,22 @@
 		<div class="container-fluid" id="content">
 			<div class="row">
 				<div class="col-md-9 main-content" >
+					<div class="direction-bar">
+						<ul class="nav navbar-nav navbar-left">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
+								<span>Danh mục</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+								<ul class="dropdown-menu">
+									<th:block th:each="category: ${categoryList}">
+										<li><a 
+										th:href="@{'/examlist/search?categoryID='+${category.categoryID}}"
+										th:utext="${category.categoryName}">Toán</a></li>
+									</th:block>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				
 					<div class="most-popular">Phổ biến nhất</div>
 					<div class="search-box">
 						<form action="/examlist/search">
@@ -141,27 +157,6 @@
 					
 					</div>
 				<!-- END LEADERBOARD -->
-				<!-- TIMELINE -->
-					<div class="panel panel-scrolling">
-								<div class="panel-heading">
-									<h3 class="panel-title">Các hoạt động khác</h3>
-								</div>
-								<div class="panel-body">
-									<ul class="list-unstyled activity-list">
-										<li>
-											<img src="assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
-											
-											<p><a href="#">Văn Tèo</a> đã mở một bài thi<span class="timestamp">20 minutes ago</span></p>
-										</li>
-										<li>
-											<img src="assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-											<p><a href="#">Quân Kun</a> đã mở một đề ôn tập <span class="timestamp">Yesterday</span></p>
-										</li>
-									</ul>
-									<button type="button" class="btn btn-primary btn-bottom center-block">Load More</button>
-								</div>
-							</div>
-				<!-- END TIMELINE -->
 				</p>
 				</div>
 			</div>

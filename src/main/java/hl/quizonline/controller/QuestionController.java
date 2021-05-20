@@ -3,6 +3,7 @@ package hl.quizonline.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,9 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,13 +39,16 @@ import hl.quizonline.config.MyConstances;
 import hl.quizonline.entity.Account;
 import hl.quizonline.entity.Answer;
 import hl.quizonline.entity.ExamPackage;
+import hl.quizonline.entity.Image;
 import hl.quizonline.entity.Question;
 import hl.quizonline.entity.QuestionPackage;
 import hl.quizonline.service.AccountService;
 import hl.quizonline.service.AnswerService;
+import hl.quizonline.service.ImageService;
 import hl.quizonline.service.MailboxService;
 import hl.quizonline.service.QuestionPackageService;
 import hl.quizonline.service.QuestionService;
+import hl.quizonline.service.impl.FileUploadUtil;
 import hl.quizonline.service.impl.MyHelper;
 
 
@@ -70,6 +76,8 @@ public class QuestionController {
 	@Autowired
 	AnswerService answerService;
 
+	@Autowired
+	ImageService imageService;
 	
 	@Autowired
 	MailboxService mailboxService;
@@ -110,6 +118,10 @@ public class QuestionController {
 		    			questionService.searchQuestionByContent(key,questionPackageID, pageNo, MyConstances.PAGE_SIZE);
 //		    	List<Question> questionList = questionService.getAll(questionPackageID);
 		    	List<Question> questionList = page.getContent();
+		    	QuestionPackage selectedQuestionPackage = questionPackageService.findByID(questionPackageID);
+		    	
+		    	
+		    	model.addAttribute("selectedQuestionPackage", selectedQuestionPackage);
 		    	model.addAttribute("questionList", questionList);
 		    	model.addAttribute("page", page);
 		    }
@@ -142,6 +154,27 @@ public class QuestionController {
 		return "redirect:/manage/question";
 	}
 	
+	@PostMapping("/editpackage/{questionPackageID}")
+	public String editQuestionPackage(@PathVariable("questionPackageID") Integer questionPackageID,
+			@RequestParam(name = "name") String name) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String currentUserName = authentication.getName();
+			Account currentAccount = accountService.getAccountByUsername(currentUserName).get();
+			
+			QuestionPackage questionPackage = questionPackageService.findByID(questionPackageID);
+			if(questionPackage.getAccount().getAccountID() == currentAccount.getAccountID()) {
+				questionPackage.setName(name);
+				questionPackageService.edit(questionPackage);
+			}
+			
+			return "redirect:/manage/question";
+		}
+		
+		return "redirect:/login";
+		
+	}
+	
 	/**
 	 * Adds the question form.
 	 *
@@ -169,12 +202,15 @@ public class QuestionController {
 	 * @param txtPhuongAn the txt phuong an
 	 * @param cbPhuongAn the cb phuong an
 	 * @return the string
+	 * @throws IOException 
 	 */
 	@PostMapping("/addquestion/{questionPackageID}")
 	@Transactional
 	public String addQuestion(@PathVariable(name = "questionPackageID") Integer questionPackageID,
+			@RequestParam(name="files",required = false) MultipartFile[] multipartFiles,
 			@RequestParam("content") String content,
-			@RequestParam("txt-pa") List<String> txtPhuongAn,@RequestParam(name = "cb-pa",required = false) List<Integer> cbPhuongAn) {
+			@RequestParam("txt-pa") List<String> txtPhuongAn,
+			@RequestParam(name = "cb-pa",required = false) List<Integer> cbPhuongAn) throws IOException {
 		QuestionPackage qp = questionPackageService.findByID(questionPackageID);
 		Question question = new Question();
 		
@@ -192,13 +228,46 @@ public class QuestionController {
 			answerService.create(ans);
 			answerList.add(ans);
 		}
+		//Xu ly upload file
+		String uploadDir = "upload-question-image/";
+		List<Image> imageList = new ArrayList<Image>();
+		if(multipartFiles!=null) {
+			System.out.println("Phat hien co anh can upload");
+			
+			//Upload file
+			System.out.println("dang upload");
+			for(MultipartFile item : multipartFiles) {
+				
+				if(item.getSize()==0) continue;
+				
+				//upload
+				String fileName = StringUtils.cleanPath(item.getOriginalFilename()) + System.currentTimeMillis();
+				String encodedFilename = Base64.getEncoder().encodeToString(fileName.getBytes()) + ".jpg";
+				FileUploadUtil.saveFile(uploadDir, encodedFilename, item);
+				//Them vao list de them vao db
+				Image img = new Image();
+				img.setUrl(encodedFilename);
+				imageList.add(img);
+			}
+			
+			//set image list to question
+			question.setImages(imageList);
+			System.out.println("upload thanh cong");
+		}
+		
 		//set question
 		question.setQuestionContent(content);
 		question.setAnswers(answerList);
 		question.setQuestionPackage(qp);
 		//do add question
-		questionService.create(question);
+		Question createdQuestion =  questionService.create(question);
 		System.out.println("Đã tạo xong câu hỏi");
+		System.out.println("Thêm ảnh");
+		for(Image item : imageList) {
+			item.setQuestion(createdQuestion);
+			imageService.createImage(item);
+		}
+		System.out.println("Hoàn thành việc thêm ảnh.");
 		return "redirect:/manage/question/addquestion/"+questionPackageID;
 	}
 	
@@ -226,6 +295,75 @@ public class QuestionController {
 		model.addAttribute("questionPackageID", questionPackageID);
 		model.addAttribute("questionList", questionList);
 		return "manage/manage-question-edit";
+	}
+
+	@PostMapping(value = "/editquestion/{questionID}")
+	@Transactional
+	public String editQuestion(@PathVariable(name = "questionID") Integer questionID,
+			@RequestParam(name="files",required = false) MultipartFile[] multipartFiles,
+			@RequestParam("content") String content,
+			@RequestParam("txt-pa") List<String> txtPhuongAn,
+			@RequestParam(name = "cb-pa",required = false) List<Integer> cbPhuongAn) throws IOException {
+		
+		Question question = questionService.getByID(questionID);
+		QuestionPackage qp = question.getQuestionPackage();
+		List<Answer> answerList = new ArrayList<Answer>();
+		//xóa các phương án cũ
+		questionService.deleteAllAnswer(questionID);
+		
+		//set answer
+		for(int i =0; i< txtPhuongAn.size();i++) {
+			boolean isCorrect = false;
+			for(int j=0;j<cbPhuongAn.size();j++) {
+				if(i==cbPhuongAn.get(j)-1) {
+					isCorrect=true;
+					break;
+				}
+			}
+			Answer ans = new Answer(txtPhuongAn.get(i), isCorrect, question);
+			answerService.create(ans);
+			answerList.add(ans);
+		}
+		//Xu ly upload file
+		String uploadDir = "upload-question-image/";
+		List<Image> imageList = new ArrayList<Image>();
+		if(multipartFiles!=null) {
+			System.out.println("Phat hien co anh can upload");
+			
+			//Upload file
+			System.out.println("dang upload");
+			for(MultipartFile item : multipartFiles) {
+				
+				if(item.getSize()==0) continue;
+				
+				//upload
+				String fileName = StringUtils.cleanPath(item.getOriginalFilename()) + System.currentTimeMillis();
+				String encodedFilename = Base64.getEncoder().encodeToString(fileName.getBytes()) + ".jpg";
+				FileUploadUtil.saveFile(uploadDir, encodedFilename, item);
+				//Them vao list de them vao db
+				Image img = new Image();
+				img.setUrl(encodedFilename);
+				imageList.add(img);
+			}
+			
+			System.out.println("upload thanh cong");
+		}
+		
+		//set question
+		question.setQuestionContent(content);
+		question.setAnswers(answerList);
+		question.setQuestionPackage(qp);
+		//do add question
+		Question createdQuestion =  questionService.edit(question);
+		System.out.println("Đã tạo xong câu hỏi");
+		System.out.println("Thêm ảnh");
+		for(Image item : imageList) {
+			item.setQuestion(createdQuestion);
+			System.out.println(item);
+			imageService.createImage(item);
+		}
+		System.out.println("Hoàn thành việc thêm ảnh.");
+		return "redirect:/manage/question/editquestion/"+qp.getQuestionPackageID()+"/"+ question.getQuestionID();
 	}
 	
 	/**
@@ -446,5 +584,27 @@ public class QuestionController {
     	questionService.delete(questionID);
     	
     	return "redirect:/manage/question";
+    }
+    
+    @PostMapping("/deleteImage/{imageID}")
+    public String deleteImage(@PathVariable("imageID") Integer imageID) {
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String currentUserName = authentication.getName();
+			Image img = imageService.getImageByID(imageID);
+			String urlRedirect = "/manage/question/editquestion/"+ 
+			img.getQuestion().getQuestionPackage().getQuestionPackageID() + 
+			"/" + img.getQuestion().getQuestionID();
+			//kiem tra xem nguoi dung co quyen xoa anh hay khong
+			Account account = accountService.getAccountByUsername(currentUserName).get();
+			if(account.getUsername().equals(img.getQuestion().getQuestionPackage().getAccount().getUsername())|| account.getRole().equals("ROLE_ADMIN")) {
+				imageService.deleteImage(imageID);
+				return "redirect:"+urlRedirect;
+			}else {
+				return "redirect:/login";
+			}
+			
+		}
+		return "redirect:/login";
     }
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -62,9 +63,10 @@ public class TestController {
 	
 	@GetMapping("")
 	public String test() {
-		Long a = examPackageRepository.getViewsMonth(new Date(), new Date());
-		System.out.println(a);
-		return "manage/manage-question-addexcel";
+		String originalInput = "test input" + System.currentTimeMillis();
+		String encodedString = Base64.getEncoder().encodeToString(originalInput.getBytes());
+		System.out.println(encodedString);
+		return "login";
 	}
 	@PostMapping("/addexcel")
 	@Transactional

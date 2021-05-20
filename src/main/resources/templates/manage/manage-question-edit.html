@@ -51,11 +51,28 @@
 					</div>
 					<div class="row">
 						<a class="btn btn-info">Thêm bằng file excel</a>
-						<form class="col-md-6" th:action="@{'/manage/question/addquestion/'+${questionPackage.questionPackageID}}" method="post">
+						<form class="col-md-6" th:action="@{'/manage/question/editquestion/'+${question.questionID}}" 
+						method="post" enctype="multipart/form-data">
 							<div class="form-group">
 								<label for="exampleFormControlInput1">Danh sách ảnh</label>
-								<div class="alert alert-info">Trống</div>
-								<input type="file">
+								<div class="alert alert-info" 
+								th:if="${question.images== null && question.images.size()==0}">Chưa có ảnh nào!</div>
+								<div class="mb-1" style="display: flex;">
+									<th:block th:each="image: ${question.images}">
+										<div>
+											<img th:src="@{'/getQuestionImage/'+${image.url}}"
+											style="max-width: 100px;cursor: zoom-in;"
+											data-enlargeable
+											 />
+											 <span 
+											 class="btn-delete-image fa fa-times-circle-o fa-2x"
+											 th:data-image-id="${image.imageID}"></span>
+										</div>
+									</th:block>
+								</div>
+								<input class="mb-1" type="file" name="files" accept="image/png, image/jpeg">
+								<input class="mb-1" type="file" name="files" accept="image/png, image/jpeg">
+								<input class="mb-1" type="file" name="files" accept="image/png, image/jpeg">
 							</div>
 							<div class="form-group">
 								<label for="exampleFormControlInput1">Nội dung câu hỏi</label>
@@ -89,9 +106,12 @@
 							<div>Danh sách câu hỏi</div>
 							<div class="d-flex">
 								<a class="btn btn-outline-primary" th:href="@{'/manage/question/addquestion/' + ${questionPackage.questionPackageID}}">+</a>
-								<th:block th:each="question,itor : ${questionList}">
-									<a class="btn btn-outline-primary"
-									th:href="@{'/manage/question/editquestion/'+${questionPackage.questionPackageID}+'/'+${question.questionID}}"
+								<th:block th:each="q,itor : ${questionList}">
+									<a class="btn btn-primary" th:if="${question.questionID == q.questionID}"
+									th:href="@{'/manage/question/editquestion/'+${questionPackage.questionPackageID}+'/'+${q.questionID}}"
+									 th:utext="${itor.index+1}">1</a>
+									 <a class="btn btn-outline-primary" th:unless="${question.questionID == q.questionID}"
+									th:href="@{'/manage/question/editquestion/'+${questionPackage.questionPackageID}+'/'+${q.questionID}}"
 									 th:utext="${itor.index+1}">1</a>
 								</th:block>
 							</div>
@@ -111,7 +131,50 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#qlch').addClass('active');
+			
+			$('.btn-delete-image').click(function(){
+				var cfm = confirm('Bạn chắc chắc muốn xóa ảnh chứ?');
+				if(cfm){
+					var imageID = $(this).attr('data-image-id');
+					// send data to delete image
+					var form = $("<form></form>");
+					form.attr('action', '/manage/question/deleteImage/'+imageID);
+					form.attr('method','POST');
+					$('body').append(form);
+					form.submit();
+				}
+			})
 		})
+		
+		//Show full screen image on click
+		$('img[data-enlargeable]').addClass('img-enlargeable').click(function() {
+		  var src = $(this).attr('src');
+		  var modal;
+		
+		  function removeModal() {
+		    modal.remove();
+		    $('body').off('keyup.modal-close');
+		  }
+		  modal = $('<div>').css({
+		    background: 'RGBA(0,0,0,.5) url(' + src + ') no-repeat center',
+		    backgroundSize: 'contain',
+		    width: '100%',
+		    height: '100%',
+		    position: 'fixed',
+		    zIndex: '10000',
+		    top: '0',
+		    left: '0',
+		    cursor: 'zoom-out'
+		  }).click(function() {
+		    removeModal();
+		  }).appendTo('body');
+		  //handling ESC
+		  $('body').on('keyup.modal-close', function(e) {
+		    if (e.key === 'Escape') {
+		      removeModal();
+		    }
+		  });
+		});
 	</script>
 </body>
 

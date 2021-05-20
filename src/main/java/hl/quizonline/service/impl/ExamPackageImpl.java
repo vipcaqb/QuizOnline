@@ -117,7 +117,7 @@ public class ExamPackageImpl implements ExamPackageService {
 
 	@Override
 	public List<ExamPackage> getListExercise() {
-		return examPackageRepository.findByIsExerciseExam(true);
+		return examPackageRepository.findByIsExerciseExamAndIsPublic(true,true);
 	}
 
 	@Override

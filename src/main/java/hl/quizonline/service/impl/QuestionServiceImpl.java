@@ -47,16 +47,17 @@ public List<Question> getAll(int questionPackageID) {
 	}
 
 	@Override
-	public void create(Question question) {
-		questionRepository.save(question);
+	public Question create(Question question) {
+		return questionRepository.save(question);
 	}
 
 	@Override
-	public void edit(Question question) {
+	public Question edit(Question question) {
 		Optional<Question> oq = questionRepository.findById(question.getQuestionID());
 		if(oq.isPresent()) {
-			questionRepository.save(question);
+			return questionRepository.save(question);
 		}
+		return null;
 	}
 
 	@Override
@@ -162,5 +163,18 @@ public List<Question> getAll(int questionPackageID) {
 			}
 		}
 		System.out.println("Đưa dữ liệu lên thành công");
+	}
+
+	@Override
+	public void deleteAllAnswer(int questionID) {
+		Question question = getByID(questionID);
+		if(question!= null) {
+			if(question.getAnswers()!= null) {
+				List<Answer> answerList = question.getAnswers();
+				for(Answer answer: answerList) {
+					answerRepository.delete(answer);
+				}
+			}
+		}
 	}
 }

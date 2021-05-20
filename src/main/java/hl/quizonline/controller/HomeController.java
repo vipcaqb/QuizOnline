@@ -100,7 +100,8 @@ public class HomeController {
 	 */
 	@GetMapping(value = "/examlist")
 	public String showListExamination(Model model) {
-		
+		//Lấy danh sách tất cả danh mục
+		List<Category> categoryList = categoryService.getAll();
 		//lay danh sach cuoc thi dang dien ra
 		List<ExamPackage> examPackagePresentList = examPackageService.getListPresent();
 		//danh sach de on tap
@@ -135,6 +136,7 @@ public class HomeController {
 		System.out.println(accountList.size());
 		System.out.println("------------------end exam package present------------------");
 		
+		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("currentMiliSecond", System.currentTimeMillis());
 		model.addAttribute("accountList", accountList);
 		model.addAttribute("examPackagePresentList",examPackagePresentList);
@@ -246,6 +248,13 @@ public class HomeController {
 		model.addAttribute("categoryID", categoryID);
 		model.addAttribute("sortBy", sortBy);
 		model.addAttribute("direction", direction);
+		
+		model.addAttribute("key", key);
+		model.addAttribute("findBy", findBy);
+		model.addAttribute("categoryID", categoryID);
+		model.addAttribute("sortBy", sortBy);
+		model.addAttribute("direction", direction);
+		
 		return "examlist-search";
 	}
 	
@@ -285,6 +294,7 @@ public class HomeController {
 		}
 		ExamPackage examPackage = examPackageService.getExamPackage(examPackageID);
 		
+		model.addAttribute("currentMiliSecond", System.currentTimeMillis());
 		model.addAttribute("examPackageIsCommingList", examPackageIsCommingList);
 		model.addAttribute("accountList", accountList);
 		model.addAttribute("examPackage", examPackage);

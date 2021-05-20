@@ -17,6 +17,7 @@
 	th:href="@{/assets/vendor/chartist/css/chartist-custom.css}">
 <link rel="stylesheet" th:href="@{/css/manage-exam.css}">
 <link rel="stylesheet" th:href="@{/assets/css/mystyle.css}">
+<link rel="stylesheet" th:href="@{/css/manage-question.css}">
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" th:href="@{/assets/css/main.css}">
@@ -51,7 +52,7 @@
 							<div class="panel-title">Các gói câu hỏi</div>
 						</div>
 						<div class="ml-1 mb-1">
-							<button class="btn btn-primary">Sửa</button>
+							<div class="btn btn-primary" id="btn-edit-question">Sửa</div>
 							<a th:href="@{'/manage/question/deletePackage/'+${questionPackageID}}" class= "btn btn-danger btn-delete">Xóa</a>
 						</div>
 						<div id="add-exampackage border" style="padding-left: 10px;margin-bottom: 10px;	">
@@ -111,7 +112,9 @@
 				<div class="col-md-9">
 					<div class="panel" style="min-height: 100vh;">
 						<div class="panel-heading">
-							<div class="panel-title" th:if="${questionPackageID}!=null" >Danh sách câu hỏi trong "Gói câu hỏi về toán học"</div>
+							<div class="panel-title" style="font-weight: bold;"
+							th:if="${selectedQuestionPackage!=null}"
+							th:utext="@{'Danh sách câu hỏi trong '+${selectedQuestionPackage.name}}" >Danh sách câu hỏi trong "Gói câu hỏi về toán học"</div>
 						</div>
 						<div class="ml-1">
 							<div class="alert alert-info" th:if="${questionPackageID} == null">Vui lòng tạo trước gói câu hỏi</div>
@@ -210,6 +213,24 @@
 			<!-- END MAIN CONTENT -->
 		</div>
 		<!-- END MAIN -->
+		
+		<div id="background" class="hide">
+			<div class="panel edit-question">
+				<div class="header">Sửa tên gói câu hỏi</div>
+				<div class="mt-1 ml-1 mr-1">
+					<form th:action="@{'/manage/question/editpackage/'+${questionPackageID}}" method="post">
+						<label class="form-group">Tên gói câu hỏi: 
+						<input class="form-control" type="text" th:value="${selectedQuestionPackage.name}" name="name"> 
+						</label>
+						<div class="mb-1">
+							<input class="btn btn-success" type="submit" value ="Sửa">
+							<div class="btn btn-secondary" id="edit-question-cancel">Cancel</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
 		<div class="clearfix"></div>
 	</div>
 	<!-- END WRAPPER -->
@@ -225,6 +246,16 @@
 				  event.preventDefault();
 				} 
 			})
+			
+			// edit question
+			$('#edit-question-cancel').click(function(){
+				$('#background').addClass('hide');
+			})
+			
+			$('#btn-edit-question').click(function(){
+				$('#background').removeClass('hide');
+			})
+			
 		})
 	</script>
 </body>

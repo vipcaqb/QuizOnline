@@ -208,7 +208,7 @@ public class ExamPackageController {
 					ep.setExerciseExam(false);
 			    	ep.setStartDatetime(date);
 			    	ep.setEndDatetime(endDate);
-			    	ep.setDoExamTime(doExamTime);
+			    	ep.setDoExamTime(0);
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -346,7 +346,6 @@ public class ExamPackageController {
 					ep.setExerciseExam(false);
 			    	ep.setStartDatetime(date);
 			    	ep.setEndDatetime(date2);
-			    	ep.setDoExamTime(doExamTime);
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

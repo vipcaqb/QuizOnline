@@ -18,7 +18,7 @@ public class Image implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int imageID;
 
-	@Column
+	@Column(unique = true)
 	private String url;
 
 	//bi-directional many-to-one association to Question
@@ -52,5 +52,12 @@ public class Image implements Serializable {
 	public void setQuestion(Question question) {
 		this.question = question;
 	}
+
+	@Override
+	public String toString() {
+		return "Image [imageID=" + imageID + ", url=" + url + ", question=" + question + "]";
+	}
+	
+	
 
 }

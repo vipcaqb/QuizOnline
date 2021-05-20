@@ -78,7 +78,7 @@
 										<th:block th:each="exam : ${examPackageList}">
 											<tr> 
 												<td> <a th:href="@{'/manage/exam/editpackage/'+${exam.examPackageID}}" th:utext="${exam.examPackageTitle}"></a> </td>
-												<td> <a th:utext="${exam.account.fullname}" href="#"></a> </td>
+												<td> <a th:utext="${exam.account.fullname}" th:href="@{'/profile/'+${exam.account.username}}"></a> </td>
 												<td th:utext="${exam.examinations.size()}"> 2 </td>
 												<td th:utext="${exam.numberOfQuestion}"> 15 </td>
 												<td th:if="${exam.isExerciseExam}"> Ôn tập </td>

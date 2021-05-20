@@ -65,6 +65,9 @@
 									<a class="btn btn-success">
 									Gửi thư
 									</a>
+									<a class="btn btn-danger" sec:authorize="hasRole('ADMIN')">
+										Khóa tài khoản này
+									</a>
 								</div>
 								<br>
 							</div>
