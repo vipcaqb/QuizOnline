@@ -1,5 +1,7 @@
 package hl.quizonline.model;
 
+import java.util.Date;
+
 import hl.quizonline.entity.Account;
 
 public class LeaderboardModel {
@@ -7,6 +9,7 @@ public class LeaderboardModel {
 	int examTimes;
 	int score;
 	boolean isSuccess;
+	Date finishDatetime;
 	public Account getAccount() {
 		return account;
 	}
@@ -30,6 +33,14 @@ public class LeaderboardModel {
 	}
 	public void setSuccess(boolean isSuccess) {
 		this.isSuccess = isSuccess;
+	}
+	
+	
+	public Date getFinishDatetime() {
+		return finishDatetime;
+	}
+	public void setFinishDatetime(Date finishDatetime) {
+		this.finishDatetime = finishDatetime;
 	}
 	public LeaderboardModel(Account account, int examTimes, int score, boolean isSuccess) {
 		super();

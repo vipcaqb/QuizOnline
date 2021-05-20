@@ -86,8 +86,7 @@ public class HomeController {
 	public String showMyHome(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-		    String currentUserName = authentication.getName();
-		    System.out.println(currentUserName);
+		    return "redirect:/examlist";
 		}
 		return "index";
 	}
@@ -266,7 +265,8 @@ public class HomeController {
 	 * @return the string
 	 */
 	@GetMapping(value = "/examdetail/{examPackageID}")
-	public String examDetailShow(@PathVariable(name="examPackageID",required = false) Integer examPackageID,Model model) {
+	public String examDetailShow(@PathVariable(name="examPackageID",required = false) Integer examPackageID,
+			@RequestParam(name="err",required = false) String err,Model model) {
 		examPackageService.inscreaseView(examPackageID);
 		//de thi sap dien ra
 		List<ExamPackage> examPackageIsCommingList = examPackageService.getListIsComing();
@@ -298,6 +298,7 @@ public class HomeController {
 		model.addAttribute("examPackageIsCommingList", examPackageIsCommingList);
 		model.addAttribute("accountList", accountList);
 		model.addAttribute("examPackage", examPackage);
+		model.addAttribute("err", err);
 		return "exam-detail";
 	}
 	
@@ -309,7 +310,17 @@ public class HomeController {
 	 * @return the string
 	 */
 	@GetMapping(value = "/doexam/{examPackageID}")
-	public String doExamForm(@PathVariable(name="examPackageID") Integer examPackageID,Model model) {
+	public String doExamForm(@PathVariable(name="examPackageID") Integer examPackageID,
+			@RequestParam(name="password",required =  false) String password,
+			Model model) {
+		ExamPackage examPackage = examPackageService.getExamPackage(examPackageID);
+		//Kiểm tra mật khẩu nếu có yêu cầu
+		if(examPackage.isUsePassword()) {
+			if(password== null || !password.equals(examPackage.getPassword())) {
+				return "redirect:/examdetail/"+examPackageID+"?err=wrongpass";
+			}
+		}
+		
 		//danh sách xếp hạng tạo đề
 		Page<Account> pageAccount = accountService.getTop10();
 		List<Account> aList = pageAccount.getContent();
@@ -330,7 +341,7 @@ public class HomeController {
 			}
 		}
 		Random generator = new Random();
-		ExamPackage examPackage = examPackageService.getExamPackage(examPackageID);
+		
 		int max = examPackage.getExaminations().size()-1,min = 0;
 		
 		int value = generator.nextInt((max - min) + 1) + min;
@@ -482,13 +493,36 @@ public class HomeController {
 		    	
 		    	leaderboardModel.setExamTimes(joinExamList.get(i).getExamTimes());
 		    	leaderboardModel.setScore(joinExamList.get(i).getScore());
-		    	
+		    	leaderboardModel.setFinishDatetime(joinExamList.get(i).getTimeFinish());
 		    	leaderboardList.add(leaderboardModel);
 		    }
+		    //de thi sap dien ra
+			List<ExamPackage> examPackageIsCommingList = examPackageService.getListIsComing();
+			//danh sách xếp hạng tạo đề
+			Page<Account> pageAccount = accountService.getTop10();
+			List<Account> aList = pageAccount.getContent();
+				//Chuyển vào model
+			List<ExamDonation> accountList = new ArrayList<ExamDonation>();
+			for(int i =0;i<aList.size();i++) {
+				accountList.add(new ExamDonation(aList.get(i).getUsername(),
+						aList.get(i).getFullname(), aList.get(i).getUrlAvatar(), aList.get(i).getExamPackages().size()));
+			}
+				//Sắp xếp lại theo thứ tạo giảm dần của số lượng đề thi
+			for(int i =0;i<accountList.size()-1;i++) {
+				for(int j=i+1;j<accountList.size();j++) {
+					if(accountList.get(i).getNumberOfExam()<accountList.get(j).getNumberOfExam()) {
+						ExamDonation temp = accountList.get(i);
+						accountList.set(i, accountList.get(j));
+						accountList.set(j, temp);
+					}
+				}
+			}
 			
 		    model.addAttribute("page", page);
 			model.addAttribute("leaderboardList", leaderboardList);
+			model.addAttribute("examPackageIsCommingList", examPackageIsCommingList);
 			model.addAttribute("examPackage", examPackage);
+			model.addAttribute("accountList", accountList);
 			return "exam-leaderboard";
 		}
 		

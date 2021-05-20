@@ -88,4 +88,17 @@ public class ExaminationServiceImpl implements ExaminationService {
 		return examinationRepository.findByExamPackageAndExaminationTitleContains(examPackage, examinationTitle, pageable);
 	}
 
+	@Override
+	public long countQuestionAmounts(int examID) {
+		Optional<Examination> oe = examinationRepository.findById(examID);
+		if(oe.isEmpty()) return 0;
+		Examination exam = oe.get();
+		
+		long count = 0;
+		for(ExamQuestion eq : exam.getExamQuestions()) {
+			count += eq.getQuestionPackage().getQuestions().size();
+		}
+		return count;
+	}
+
 }

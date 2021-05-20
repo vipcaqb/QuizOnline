@@ -58,6 +58,7 @@
 							      <th>Người dùng</th>
 							      <th>Lần thi</th>
 							      <th>Điểm số</th>
+							      <th>Trạng thái</th>
 							    </tr>
 							  </thead>
 							  <tbody>
@@ -66,6 +67,14 @@
 								      <td><a href="#" th:utext="${leaderboard.account.fullname}">Lê văn tèo</a></td>
 								      <td th:utext="${leaderboard.examTimes}">1</td>
 								      <td th:utext="${leaderboard.score}">85</td>
+								      <td 
+								      class="alert alert-success"
+								      th:if="${leaderboard.finishDatetime.getTime()<examPackage.endDatetime.getTime()}"
+								      > Thành công </td>
+								      <td 
+								      class="alert alert-warning"
+								      th:unless="${leaderboard.finishDatetime.getTime()<examPackage.endDatetime.getTime()}"
+								      > Nộp muộn </td>
 								    </tr>
 								  </th:block>
 							    </tbody>
@@ -109,74 +118,30 @@
 				<div class="col-md-3">
 				<p>
 				<!-- TIMELINE -->
-					<div class="panel panel-scrolling">
-						<div class="panel-heading">
-							<h3 class="panel-title">Cuộc thi sắp diễn ra</h3>
-						</div>
-						<div class="panel-body">
-							<ul class="list-unstyled activity-list">
-								<li>
-									<img src="/assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Thi tiếng anh B1</a> trong khoảng 3 tiếng nữa <span class="timestamp">Văn Tèo</span></p>
-								</li>
-								<li>
-									<img src="/assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Thi sinh học lớp 12</a> Trong khoảng 6 tiếng nữa<span class="timestamp">Quân Kun</span></p>
-								</li>
-								<li>
-									<img src="/assets/img/user3.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Quân kun</a> created a new heatmap view <a href="#">Landing Page</a> <span class="timestamp">2 days ago</span></p>
-								</li>
-							</ul>
-							<button type="button" class="btn btn-primary btn-bottom center-block">Hiển thị tất cả</button>
-						</div>
+				<div class="panel panel-scrolling">
+					<div class="panel-heading">
+						<h3 class="panel-title">Cuộc thi sắp diễn ra</h3>
 					</div>
-				<!-- END TIMELINE -->
-				<!-- LEADERBOARD -->
-					<div class="panel panel-scrolling">
-						<div class="panel-heading">
-							<h3 class="panel-title">Bảng xếp hạng</h3>
-						</div>
-						<div class="panel-body">
-							<ul class="list-unstyled activity-list">
+					<div class="alert alert-danger" th:if="${examPackageIsCommingList==null || examPackageIsCommingList.size()==0}">
+						Chưa có cuộc thi nào sắp diễn ra
+					</div>
+					<div class="panel-body">
+						<ul class="list-unstyled activity-list">
+							<th:block th:each="examComming: ${examPackageIsCommingList}">
 								<li>
-									<div class="top-avatar">
-									
-									<img src="/assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
-									</div>
-									
-									<p><a href="#">Văn Tèo</a></p>
+									<img src="assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
+									<p th:utext="${examComming.examPackageTitle}"><a th:href="@{'/examdetail/' + ${examComming.examPackageID}}">Thi tiếng anh B1</a> trong khoảng 3 tiếng nữa <span class="timestamp">Văn Tèo</span></p>
 								</li>
-								<li>
-									<img src="/assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Quân Kun</a></p>
-								</li>
-							</ul>
-						</div>
+							</th:block>
+						</ul>
 						<button type="button" class="btn btn-primary btn-bottom center-block">Hiển thị tất cả</button>
 					</div>
-				<!-- END LEADERBOARD -->
-				<!-- TIMELINE -->
-					<div class="panel panel-scrolling">
-						<div class="panel-heading">
-							<h3 class="panel-title">Các hoạt động khác</h3>
-						</div>
-						<div class="panel-body">
-							<ul class="list-unstyled activity-list">
-								<li>
-									<img src="/assets/img/user1.png" alt="Avatar" class="img-circle pull-left avatar">
-									
-									<p><a href="#">Văn Tèo</a> đã tạo một đề thi<span class="timestamp">20 minutes ago</span></p>
-								</li>
-								<li>
-									<img src="/assets/img/user2.png" alt="Avatar" class="img-circle pull-left avatar">
-									<p><a href="#">Quân Kun</a> đã tạo một đề thi <span class="timestamp">Yesterday</span></p>
-								</li>
-							</ul>
-							<button type="button" class="btn btn-primary btn-bottom center-block">Load More</button>
-						</div>
-					</div>
+				</div>
 				<!-- END TIMELINE -->
+				<!-- LEADERBOARD -->
+				<div th:insert="shared/leaderboard::leaderboard">
+				</div>
+				<!-- END LEADERBOARD -->
 				</p>
 				</div>
 			</div>

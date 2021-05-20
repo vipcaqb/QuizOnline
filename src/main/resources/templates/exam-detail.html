@@ -59,10 +59,14 @@
 								<p th:utext="@{'Mô tả: '+${examPackage.description}}" th:if="${examPackage.description}!=null">Mô tả: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non. Quis hendrerit dolor magna eget est lorem ipsum dolor sit. Volutpat odio facilisis mauris sit amet massa. Commodo odio aenean sed adipiscing diam donec adipiscing tristique. </p>
 								<p th:utext="@{'Số câu hỏi: ' + ${examPackage.numberOfQuestion}}">Số câu hỏi: 50 </p>
 								<p th:if="${!examPackage.isExerciseExam}" >Thời gian còn lại: 
-								<span class="timer" 
-								style="color: red;"
+								<span class="timer font-weight-bold" 
+								style="color: red;" th:if="${(examPackage.endDatetime.getTime()-currentMiliSecond)/1000>0}"
 								 th:utext="${(examPackage.endDatetime.getTime()-currentMiliSecond)/1000}"></span> 
+								 <span class="font-weight-bold" 
+								th:unless="${(examPackage.endDatetime.getTime()-currentMiliSecond)/1000>0}"
+								style="color: red;">Đã kết thúc.</span>
 								</p>
+								
 								<p th:if="${examPackage.showResults}">Cho phép xem lại đáp án: Có </p>
 								<p th:unless="${examPackage.showResults}">Cho phép xem lại đáp án: Không </p>
 								<p>Tổng số lượt làm bài: <span th:utext="${examPackage.doExamTime}"></span> </p>
@@ -74,9 +78,18 @@
 								<img th:src="@{/images/examdetail.png}">
 								
 								<br>
-								<a class="btn btn-success" 
+								<a class="btn btn-success" th:unless="@{examPackage.userPassword}"
 								th:href="@{'/doexam/'+${examPackage.examPackageID}}" 
 								th:data-packageid="${examPackage.examPackageID}">Bắt đầu thi</a>
+								<form th:action="@{'/doexam/'+${examPackage.examPackageID}}" 
+								th:if="@{examPackage.userPassword}">
+								<div class="form-inline mb-1">
+									<label>Mật khẩu: </label>
+									<input class="form-control" type="text" name="password">
+								</div>
+								<input class="btn btn-success" type="submit" value="Bắt đầu thi">
+								<div class="alert alert-danger mt-1" th:if="${err!=null&&#strings.equals(err,'wrongpass')}">Sai mật khẩu</div>
+								</form>
 							</div>
 						</div>
 					</div>

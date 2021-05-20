@@ -56,7 +56,7 @@
 								id="exampleFormControlInput1" th:field="*{examinationTitle}" placeholder="Tiêu đề">
 						</div>
 						<label>Thuộc bộ đề:</label>
-						<select class="form-group" name="examPackageID">
+						<select class="form-control mb-1" name="examPackageID">
 							<th:block th:each="examPackage : ${examPackageList}">
 								<option th:value= "${examPackage.examPackageID}" th:utext="${examPackage.examPackageTitle}">
 								
@@ -85,7 +85,7 @@
 						</div>	
 						
 						<div class="alert alert-success">
-						Tổng cộng có : 0 câu hỏi
+						Tổng cộng có : <span th:utext="${numberOfQuestions}">0</span> câu hỏi
 						</div>
 						
 						<div class="alert alert-danger">Số câu tối thiểu cần có : <span th:utext="${exam.examPackage.numberOfQuestion}">30</span> </div>

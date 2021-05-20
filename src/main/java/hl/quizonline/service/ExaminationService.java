@@ -79,4 +79,11 @@ public interface ExaminationService {
 	 */
 	Page<Examination> searchPageOfExamPackageByTitle(int examPackageID, String examinationTitle, int pageNo, int pageSize);
 	
+	/**
+	 * Đếm số lượng câu hỏi có trong đề.
+	 *
+	 * @param examID the exam ID
+	 * @return the long
+	 */
+	long countQuestionAmounts(int examID);
 }

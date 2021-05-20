@@ -82,6 +82,12 @@
 								<i class="fas fa-user" th:utext="@{'Người tạo: '+${examPresent.account.fullname}}">Người tạo: Tèo Văn</i>
 								<br>
 							</div>
+							<i class="fa fa-lock fa-2x" th:if="${examPresent.usePassword}" 
+							style="
+							float: right;
+							margin-top: 20px;
+							"
+							aria-hidden="true"></i>
 							<a th:href="@{'/examdetail/'+${examPresent.examPackageID}}" class="btn btn-outline-primary mt-1">Chi tiết</a>
 						</div>
 					</th:block>
@@ -105,6 +111,12 @@
 								<i class="fas fa-user" th:utext="@{'Người tạo: '+${examExpired.account.fullname}}">Người tạo: Tèo Văn</i>
 								<br>
 							</div>
+							<i class="fa fa-lock fa-2x" th:if="${examExpired.usePassword}" 
+							style="
+							float: right;
+							margin-top: 20px;
+							"
+							aria-hidden="true"></i>
 							<a th:href="@{'/examdetail/'+${examExpired.examPackageID}}" class="btn btn-outline-primary mt-1">Chi tiết</a>
 						</div>
 					</th:block>
@@ -125,6 +137,12 @@
 								<i class="fas fa-user" th:utext="@{'Người tạo: ' + ${examExercise.account.fullname}}">Người tạo: Tèo Văn</i>
 								<br>
 							</div>
+							<i class="fa fa-lock fa-2x" th:if="${examExercise.usePassword}" 
+							style="
+							float: right;
+							margin-top: 20px;
+							"
+							aria-hidden="true"></i>
 							<a th:href="@{'/examdetail/'+${examExercise.examPackageID}}" class="btn btn-outline-primary mt-1">Chi tiết</a>
 						</div>
 					</th:block>

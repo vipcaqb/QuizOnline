@@ -54,6 +54,7 @@
 						<div class="form-group">
 							<label>Tiêu đề:</label>
 							<input class="form-control" type="text" name="examPackageTitle">
+							<div class="alert alert-danger" th:if="${err1!=null}">Tiêu đề không được để trống</div>
 						</div>
 						
 						<div class="form-group">
@@ -69,6 +70,7 @@
 									</option>
 								</th:block>
 							</select>
+							<div class="alert alert-danger" th:if="${err2!=null}">Phải chọn ít nhất 1 danh mục</div>
 						</div>
 						
 						<div class="form-check">
@@ -80,38 +82,34 @@
 						<div class="form-group">
 							<label>Thời gian bắt đầu thi:</label>
 							<input type="datetime-local" name="startDatetime">
+							<div class="alert alert-danger" 
+							th:if="${err5!=null}">Thời gian bắt đầu không được để trống.</div>
 						</div>
 						
 						<div class="form-group">
 							<label>Thời gian kết thúc thi:</label>
 							<input type="datetime-local" name="endDatetime">
+							<div class="alert alert-danger" 
+							th:if="${err6!=null}">Thời gian kết thúc thi không được để trống.</div>
+							<div class="alert alert-danger" 
+							th:if="${err7!=null}">Thời gian kết thúc thi không được nhỏ hơn ngày bắt đầu thi</div>
 						</div>
-						
-						<div class="form-group">
-							<label>Thời gian làm bài (phút) :</label>
-							<input class="form-control" type="number" name = "doExamTime">
-						</div>
+						<div class="alert alert-danger" 
+							th:if="${er8!=null}">Lỗi định dạng ngày tháng</div>
 						</div>
 						
 						<div class="form-group">
 							<label>Số câu hỏi sẽ thi :</label>
 							<input class="form-control" type="number" name = "numberOfQuestion">
+							<div class="alert alert-danger" 
+							th:if="${err3!=null}">Số câu hỏi sẽ thi không được để trống, đây là số câu mà người dùng sẽ thi.</div>
+							<div class="alert alert-danger" 
+							th:if="${err4!=null}">Số câu hỏi sẽ thi không được phép bằng 0.</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="cb-mix">Xáo trộn câu hỏi :</label>
 							<input class="form-check-input" type="checkbox" name="isMix" id="cb-mix" value="1" >
-						</div>
-						
-						<div class="form-group">
-							<label for="cb-late">Cho phép thi ngay cả khi cuộc thi đã kết thúc:</label>
-							<input class="form-check-input" type="checkbox" id="cb-late">
-							
-						</div>
-						
-						<div class="form-group">
-							<label for="cb-show-leaderboard">Mọi người đều có thể xem bảng xếp hạng:</label>
-							<input class="form-check-input" type="checkbox" id="cb-show-leaderboard">
 						</div>
 						
 						<div class="form-group">
@@ -131,7 +129,7 @@
 						
 						<div class="mb-3">
 							<button class="btn btn-success">Xác nhận</button>
-							<button class="btn btn-secondary">Reset</button>
+							<div class="btn btn-secondary btn-reset">Reset</div>
 						</div>
 					</form>
 				</div>
@@ -172,7 +170,9 @@
 					$('#pass').prop('hidden',true);
 				}
 			})
-			
+			$('.btn-reset').click(function(){
+				location.reload();
+			})
 		})
 	</script>
 	<script type="text/javascript">

@@ -105,6 +105,7 @@ public class ExamPackageController {
 			@RequestParam(name = "page",required = false) Integer pageNo,
 			@RequestParam(name = "key",required = false) String key,
 			@RequestParam(name = "packPage",required = false) Integer packPageNo,
+			@RequestParam(name = "err", required = false) String errMsg,
 			Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -135,6 +136,7 @@ public class ExamPackageController {
 				model.addAttribute("page", page);
 			}
 			
+			model.addAttribute("errMsg", errMsg);
 			model.addAttribute("packPage", pageExamPackage);
 			model.addAttribute("examPackageID", packageid);
 			model.addAttribute("key", key);
@@ -183,15 +185,60 @@ public class ExamPackageController {
 			 @RequestParam(name = "isMix",required = false) Integer isMix,
 			 @RequestParam(name="usePass",required = false) Integer userPass,
 			 @RequestParam(name="pass",required = false) String pass,
-			 @RequestParam(name="categoryID") List<Integer> categoryIDList,
+			 @RequestParam(name="categoryID",required = false) List<Integer> categoryIDList,
 			 @RequestParam(name="showResult",required =  false) Integer showResult ,
 			 @RequestParam(name="numberOfQuestion",required = false) Integer numberOfQuestion,
 			 @RequestParam(name="endDatetime",required = false) String endDatetime,
-			 @RequestParam(name="description",required = false) String description
+			 @RequestParam(name="description",required = false) String description,
+			 Model model
 			 ) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 		    String currentUserName = authentication.getName();
+		  //get all category
+			List<Category> allCategory = categoryService.getAll();
+			model.addAttribute("categoryList", allCategory);
+			boolean hasError = false;
+		    //validate
+		    if(examPackageTitle==null||examPackageTitle.isEmpty()) {
+		    	model.addAttribute("err1", 1);
+		    	hasError=true;
+		    }
+		    if(categoryIDList==null) {
+		    	model.addAttribute("err2", 1);
+		    	hasError=true;
+		    }
+		    if (numberOfQuestion == null) {
+		    	model.addAttribute("err3", 1);
+		    	hasError=true;
+		    }
+		    else if (numberOfQuestion==0) {
+		    	model.addAttribute("err4", 1);
+		    	hasError=true;
+		    }
+		    if (isExerciseExam==null && (startDatetime == null||startDatetime.isBlank())) {
+		    	model.addAttribute("err5", 1);
+		    	hasError=true;
+		    }
+		    if(isExerciseExam==null && (endDatetime == null||endDatetime.isBlank())) {
+		    	model.addAttribute("err6", 1);
+		    	hasError=true;
+		    }
+		    if(endDatetime!=null && startDatetime!=null) {
+		    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+		    	try {
+					if(sdf.parse(endDatetime).before(sdf.parse(startDatetime))){
+						model.addAttribute("err7", 1);
+						hasError=true;
+					}
+				} catch (ParseException e) {
+					model.addAttribute("err8", 1);
+					hasError=true;
+				}
+		    }
+		    if(hasError) {
+		    	return "manage/manage-exampackage-add";
+		    }
 		    Account acc = accountService.getAccountByUsername(currentUserName).get();	    
 		    ExamPackage ep = new ExamPackage(examPackageTitle,acc);
 		    ep.setCreateDatetime(new Date(System.currentTimeMillis()));
@@ -489,7 +536,9 @@ public class ExamPackageController {
 				}
 				int size =0;
 				if(questionPackageList.get(i).getExamQuestions().size()>0) {
-					size = questionPackageList.get(i).getExamQuestions().size();
+					for(ExamQuestion eq : questionPackageList.get(i).getExamQuestions()) {
+						size +=eq.getQuestionPackage().getQuestions().size();
+					}
 				}
 				questionPackageModelList.add(new QuestionPackageModel(questionPackageList.get(i).getQuestionPackageID(),
 						questionPackageList.get(i).getName(),
@@ -500,7 +549,10 @@ public class ExamPackageController {
 			
 			//get exampackageList
 			List<ExamPackage> examPackageList = examPackageService.getList(currentUserName);
+			//Đếm số câu hỏi đang có trang đề
+			long count = examinationService.countQuestionAmounts(examID);
 			
+			model.addAttribute("numberOfQuestions", count);
 			model.addAttribute("examPackageList", examPackageList);
 			model.addAttribute("examPackageModelList", questionPackageModelList);
 			model.addAttribute("exam", exam);
@@ -622,7 +674,17 @@ public class ExamPackageController {
 		ExamPackage examPackage = examPackageService.getExamPackage(examPackageID);
 		
 		if(examPackage.isPublic() == false) {
-			examPackage.setPublic(true);
+			boolean readyToPublic = true;
+			for(Examination exam : examPackage.getExaminations()) {
+				if(examinationService.countQuestionAmounts(exam.getExaminationID())<examPackage.getNumberOfQuestion()) {
+					readyToPublic = false;
+					
+					return "redirect:/manage/exam/"+examPackageID+"?err=e1";
+				}
+			}
+			if(readyToPublic) {
+				examPackage.setPublic(true);
+			}
 		}
 		else {
 			examPackage.setPublic(false);

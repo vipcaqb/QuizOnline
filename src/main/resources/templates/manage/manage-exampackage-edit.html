@@ -88,10 +88,6 @@
 							<input type="datetime-local" name="endDatetime" th:field="*{endDatetime}">
 						</div>
 						
-						<div class="form-group">
-							<label>Thời gian làm bài (phút) :</label>
-							<input class="form-control" type="number" name = "doExamTime" th:field="*{doExamTime}">
-						</div>
 						</div>
 						
 						<div class="form-group">
@@ -102,17 +98,6 @@
 						<div class="form-group">
 							<label>Xáo trộn câu hỏi :</label>
 							<input class="form-check-input" type="checkbox" name="isMix" th:checked="${examPackage.mixQuestion}" value="1" >
-						</div>
-						
-						<div class="form-group">
-							<label for="cb-late">Cho phép thi ngay cả khi cuộc thi đã kết thúc:</label>
-							<input class="form-check-input" type="checkbox" id="cb-late">
-							
-						</div>
-						
-						<div class="form-group">
-							<label for="cb-show-leaderboard">Mọi người đều có thể xem bảng xếp hạng:</label>
-							<input class="form-check-input" type="checkbox" id="cb-show-leaderboard">
 						</div>
 						
 						<div class="form-group">
@@ -132,7 +117,7 @@
 						
 						<div class="mb-3">
 							<button class="btn btn-success">Xác nhận</button>
-							<button class="btn btn-secondary">Reset</button>
+							<div class="btn btn-secondary btn-reset">Reset</div>
 						</div>
 					</form>
 				</div>
@@ -179,6 +164,10 @@
 				else {
 					$('#pass').prop('hidden',true);
 				}
+			})
+
+			$('.btn-reset').click(function(){
+				location.reload();
 			})
 			
 		})

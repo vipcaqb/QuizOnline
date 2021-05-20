@@ -206,15 +206,17 @@
 					event.preventDefault();
 				}
 				else {
-					
-					var row = listSelected.first().parent().parent().parent();
-					var categoryID = $(row).find('td:nth-child(2)').text();
-					var form = $('<form></form>');
-					form.attr('action','/manage/category/delete/'+categoryID);
-					form.attr('method','post');
-					
-					$('body').append(form);
-					form.submit();
+					var cfm = confirm("Chắc chắn xóa?");
+					if(cfm){
+						var row = listSelected.first().parent().parent().parent();
+						var categoryID = $(row).find('td:nth-child(2)').text();
+						var form = $('<form></form>');
+						form.attr('action','/manage/category/delete/'+categoryID);
+						form.attr('method','post');
+						
+						$('body').append(form);
+						form.submit();
+					}
 				}
 			})
 			

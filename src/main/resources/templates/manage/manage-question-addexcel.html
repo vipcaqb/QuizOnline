@@ -56,18 +56,22 @@
 					<h3>
 						Tải lên:
 					</h3>
-					<form action="/test/addexcel" method="post" enctype="multipart/form-data">
+					<form th:action="@{'/manage/question/addexcel/'+${examPackageID}}" method="post" enctype="multipart/form-data">
 						<label>
 							Chọn file:
 						</label>
 						<input type="file" name="excelfile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
 						<input class="btn btn-success mt-2" type="submit" value="Tải lên">
 					</form>
-					<div class="alert alert-danger mt-1 hide">
-						Tải lên thất bại: sai định dạng.
+					<div class="alert alert-danger mt-1" th:if="${msgerr!=null}">
+						Tải lên thất bại: <span th:utext="${msgerr}"></span>
 						<br>
-						Chi tiết:<span>	</span>
-						
+						<div th:if="${msgdetail!=null}">Chi tiết:<span th:utext="${msgdetail}">	</span></div>
+					</div>
+					<div class="alert alert-success" th:if="${msgsuccess}">
+						Tải câu hỏi bằng file excel thành công.
+						<br>
+						Đã thêm <span th:utext="${msgsuccess}">40</span> câu hỏi.
 					</div>
 				</div>
 			</div>

@@ -29,7 +29,7 @@ public class ExamPackage implements Serializable {
 	@Nationalized
 	private String examPackageTitle;
 	
-	@Column
+	@Column(length = 1000)
 	@Nationalized
 	private String description;
 	

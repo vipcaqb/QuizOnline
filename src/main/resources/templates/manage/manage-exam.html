@@ -111,7 +111,7 @@
 					<div th:if="${currentPackage!=null}" class="panel" style="min-height: 100vh;">
 						<h3 class="ml-1 mt-1" style="font-weight: bold;"
 						th:if="${currentPackage!=null}" 
-						th:utext="${currentPackage.examPackageTitle}">
+						th:utext="@{'Các đề trong'+${currentPackage.examPackageTitle}}">
 						Các đề trong "Đề thi toán học lớp 12 khối không chuyên"
 						</h3>
 						
@@ -122,6 +122,11 @@
 						<a th:if="${currentPackage.isPublic==true}" 
 						class='btn btn-warning ml-2' 
 						th:href="@{'/manage/exam/public/'+${currentPackage.examPackageID}}">Hủy công khai</a>
+						
+						<div class="alert alert-danger mt-1 mb-1" th:if="${errMsg!=null&&#strings.equals(errMsg,'e1')}">
+							Công khai thất bại: Một hoặc một số đề chưa có đủ câu hỏi
+						</div>
+						
 						<div class="search-box ml-2 mt-1">
 							<h4 style="font-weight: bold;">Danh sách đề</h4>
 							<form th:if="${page!=null}" th:action="@{'/manage/exam/'+${examPackageID}+'?page='+${page.number+1}}" method= "get">

@@ -76,9 +76,11 @@ public class QuestionController {
 	@Autowired
 	AnswerService answerService;
 
+	/** The image service. */
 	@Autowired
 	ImageService imageService;
 	
+	/** The mailbox service. */
 	@Autowired
 	MailboxService mailboxService;
 	/**
@@ -154,6 +156,13 @@ public class QuestionController {
 		return "redirect:/manage/question";
 	}
 	
+	/**
+	 * Edits the question package.
+	 *
+	 * @param questionPackageID the question package ID
+	 * @param name the name
+	 * @return the string
+	 */
 	@PostMapping("/editpackage/{questionPackageID}")
 	public String editQuestionPackage(@PathVariable("questionPackageID") Integer questionPackageID,
 			@RequestParam(name = "name") String name) {
@@ -198,11 +207,12 @@ public class QuestionController {
 	 * Adds the question.
 	 *
 	 * @param questionPackageID the question package ID
+	 * @param multipartFiles the multipart files
 	 * @param content the content
 	 * @param txtPhuongAn the txt phuong an
 	 * @param cbPhuongAn the cb phuong an
 	 * @return the string
-	 * @throws IOException 
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@PostMapping("/addquestion/{questionPackageID}")
 	@Transactional
@@ -297,6 +307,17 @@ public class QuestionController {
 		return "manage/manage-question-edit";
 	}
 
+	/**
+	 * Edits the question.
+	 *
+	 * @param questionID the question ID
+	 * @param multipartFiles the multipart files
+	 * @param content the content
+	 * @param txtPhuongAn the txt phuong an
+	 * @param cbPhuongAn the cb phuong an
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@PostMapping(value = "/editquestion/{questionID}")
 	@Transactional
 	public String editQuestion(@PathVariable(name = "questionID") Integer questionID,
@@ -374,7 +395,8 @@ public class QuestionController {
 	 * @return the string
 	 */
 	@GetMapping("addexcel/{examPackageID}")
-	public String addWithExcelForm(@PathVariable("examPackageID") Integer examPackageID, Model model) {
+	public String addWithExcelForm(@PathVariable("examPackageID") Integer examPackageID,
+			Model model) {
 		
 		model.addAttribute("examPackageID", examPackageID);
 		return "manage/manage-question-addexcel";
@@ -389,8 +411,9 @@ public class QuestionController {
 	 * @return the string
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	@PostMapping("addexcel/{examPackageID}")
-	public String addWithExcel(@PathVariable("examPackageID") Integer examPackageID,@RequestParam("excelfile") MultipartFile file, Model model) throws IOException {
+	@PostMapping("/addexcel/{examPackageID}")
+	public String addWithExcel(@PathVariable("examPackageID") Integer examPackageID,@RequestParam("excelfile") MultipartFile file, 
+			Model model) throws IOException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			//Tải file cần xử lý lên
@@ -452,14 +475,23 @@ public class QuestionController {
 	                        }
 	            			answer.setAnswerContent(cell.getStringCellValue());
 	            			boolean isCorrect;
-	            			if((Double)cellValue2 == 0 ) {
-	            				isCorrect=false;
-	            			}
-	            			else {
-	            				isCorrect = true;
-	            			}
-	            			answer.setIdCorrect(isCorrect);
-	            			answerList.add(answer);
+	            			try {
+	            				if((Double)cellValue2 == 0 ) {
+		            				isCorrect=false;
+		            			}
+		            			else {
+		            				isCorrect = true;
+		            			}
+	            				answer.setIdCorrect(isCorrect);
+		            			answerList.add(answer);
+							} catch (ClassCastException e) {
+								int column = cell2.getColumnIndex();
+								char c = (char)(column+ 'A');
+								model.addAttribute("msgerr", "Sai kiểu dữ liệu.");
+								model.addAttribute("msgdetail","Sai ở ô : "+(cell2.getRowIndex()+1)+"-"+c);
+						    	return "manage/manage-question-addexcel";
+							}
+	            			
 	            		}
 	            	}
 	            }
@@ -471,12 +503,12 @@ public class QuestionController {
 		    //Kết quả có được là questionList danh sách các câu hỏi
 		    //Thêm vào db
 		    questionService.addListQuestionToQuestionPackage(examPackageID, questionList);
-		    
 		    wb.close();
+		    model.addAttribute("msgsuccess", questionList.size());
 			return "manage/manage-question-addexcel";
 		}
 		
-		return "redirect:/test";
+		return "redirect:/login";
 		
 	}
 
@@ -520,6 +552,8 @@ public class QuestionController {
      * Delete question package.
      *
      * @param questionPackageID the question package ID
+     * @param reasonID the reason ID
+     * @param reason the reason
      * @return the string
      */
     @GetMapping("/deletePackage/{questionPackageID}")
@@ -580,12 +614,18 @@ public class QuestionController {
      */
     @GetMapping("/deleteQuestion/{questionID}")
     public String deleteQuestion(@PathVariable("questionID") Integer questionID) {
-    	
+    	Question question = questionService.getByID(questionID);
     	questionService.delete(questionID);
     	
-    	return "redirect:/manage/question";
+    	return "redirect:/manage/question/addquestion/"+question.getQuestionPackage().getQuestionPackageID();
     }
     
+    /**
+     * Delete image.
+     *
+     * @param imageID the image ID
+     * @return the string
+     */
     @PostMapping("/deleteImage/{imageID}")
     public String deleteImage(@PathVariable("imageID") Integer imageID) {
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
