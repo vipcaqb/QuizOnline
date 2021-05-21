@@ -86,7 +86,7 @@
 												<td class="alert alert-success" th:if="${exam.isPublic}"> Công khai </td>
 												<td class="alert alert-warning" th:unless="${exam.isPublic}"> Chưa công khai </td>
 												<td> 
-													<a th:href="@{'/manage/exam/deletePackage/'+${exam.examPackageID}}" class="fa fa-trash fa-2x btn-delete" aria-hidden="true" style="color:red;transform: scale(1.2);padding-left: 5px;"></a>
+													<a th:href="@{'/manage/exam/deletePackage/'+${exam.examPackageID}+'?redirectUrl=/manage/allexam'}" class="fa fa-trash fa-2x btn-delete" aria-hidden="true" style="color:red;transform: scale(1.2);padding-left: 5px;"></a>
 												</td>
 											</tr>
 										</th:block>

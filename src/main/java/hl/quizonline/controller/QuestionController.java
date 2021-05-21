@@ -560,7 +560,8 @@ public class QuestionController {
     @Transactional
     public String deleteQuestionPackage(@PathVariable("questionPackageID") Integer questionPackageID,
     		@RequestParam(name = "reasonID",required =  false) Integer reasonID,
-			@RequestParam(name = "reason", required = false) String reason
+			@RequestParam(name = "reason", required = false) String reason,
+			@RequestParam(name="redirectUrl",required = false) String redirectUrl
 			) {
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -574,10 +575,8 @@ public class QuestionController {
 					return "redirect:/login";
 				}
 			}
-			
 			//xóa questionPackage
 			questionPackageService.delete(questionPackageID);
-			
 			//Sau khi xóa, kiểm tra xem người xóa là ai, nếu người xóa là admin và không phải
 			//chủ sở hữu thì tiến hành gửi thư thông báo rằng ExamPackage đã bị admin xóa
 			if(!currentUserName.equals(questionPackage.getAccount().getUsername())) {
@@ -595,12 +594,22 @@ public class QuestionController {
 				}
 				//Tiến hành gửi thông báo
 				mailboxService.noticeUserWhenAdminDeleteQuestionPackage(questionPackage.getAccount(), questionPackage, reasonMessage);
-				return "redirect:/manage/account";
+				System.out.println(redirectUrl);
+				if(redirectUrl!=null) {
+					return "redirect:"+ redirectUrl;
+				}
+				else {
+					return "redirect:/manage/account";
+				}
 			}
 			
+			if(redirectUrl!=null) {
+				return "redirect:"+ redirectUrl;
+			}
+			else {
+				return "redirect:/manage/question";
+			}
     	
-    	
-    	return "redirect:/manage/question";
 		}
 		
 		return "redirect:/login";

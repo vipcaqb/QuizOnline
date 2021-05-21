@@ -220,7 +220,7 @@
 				<div class="mt-1 ml-1 mr-1">
 					<form th:action="@{'/manage/question/editpackage/'+${questionPackageID}}" method="post">
 						<label class="form-group">Tên gói câu hỏi: 
-						<input class="form-control" type="text" th:value="${selectedQuestionPackage.name}" name="name"> 
+						<input class="form-control" type="text" th:if="${selectedQuestionPackage!=null}" th:value="${selectedQuestionPackage.name}" name="name"> 
 						</label>
 						<div class="mb-1">
 							<input class="btn btn-success" type="submit" value ="Sửa">

@@ -610,7 +610,8 @@ public class ExamPackageController {
 	@Transactional
 	public String deleteExamPackage(@PathVariable("examPackageID") Integer examPackageID,
 			@RequestParam(name = "reasonID",required =  false) Integer reasonID,
-			@RequestParam(name = "reason", required = false) String reason
+			@RequestParam(name = "reason", required = false) String reason,
+			@RequestParam(name = "redirectUrl") String redirectUrl
 			) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -644,9 +645,16 @@ public class ExamPackageController {
 				}
 				//Tiến hành gửi thông báo
 				mailBoxService.noticeUserWhenAdminDeleteExamPackage(examPackage.getAccount(), examPackage, reasonMessage);
-				return "redirect:/manage/account";
+				if(redirectUrl!=null) {
+					return "redirect:"+redirectUrl;
+				}
+				else return "redirect:/manage/account";
 			}
-			return "redirect:/manage/exam";
+			if(redirectUrl!=null) {
+				return "redirect:"+redirectUrl;
+			}
+			else 
+				return "redirect:/manage/exam";
 		}
 		return "redirect:/login";
 	}
